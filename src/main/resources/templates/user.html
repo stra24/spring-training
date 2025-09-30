@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>User</title></head>
+<body>
+  <h2>ユーザー情報</h2>
+
+  <p>▼オブジェクトを表示する方法1（ドット記法を使用する）</p>
+  <p>ユーザーID: <span th:text="${user.id}">ユーザーIDがここに表示されます。</span></p>
+  <p>名: <span th:text="${user.profile.fullName.firstName}">名がここに表示されます。</span></p>
+  <p>姓: <span th:text="${user.profile.fullName.lastName}">姓がここに表示されます。</span></p>
+  <p>年齢: <span th:text="${user.profile.age}">年齢がここに表示されます。</span></p>
+
+  <p>▼オブジェクトを表示する方法2（th:objectを使用する）</p>
+  <div th:object="${user}">
+    <p>ユーザーID: <span th:text="*{id}">ユーザーIDがここに表示されます。</span></p>
+    <div th:object="${user.profile}">
+      <div th:object="${user.profile.fullName}">
+        <p>名: <span th:text="*{firstName}">名がここに表示されます。</span></p>
+        <p>姓: <span th:text="*{lastName}">姓がここに表示されます。</span></p>
+      </div>
+      <p>年齢: <span th:text="*{age}">年齢がここに表示されます。</span></p>
+    </div>
+  </div>
+</body>
+</html>
