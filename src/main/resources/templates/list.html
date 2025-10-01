@@ -19,9 +19,9 @@
     </thead>
     <tbody>
       <!-- th:each="要素, ステータス : ${コレクション}" -->
-      <tr th:each="student, stat : ${studentList}">
-        <!-- stat.index は 0 始まり → 表示は +1 -->
-        <td th:text="${stat.index + 1}"></td>
+      <tr th:each="student, status : ${studentList}">
+        <!-- status.index は 0 始まり -->
+        <td th:text="${status.index + 1}"></td>
         <td th:text="${student.id}"></td>
         <td th:text="${student.name}"></td>
         <td th:text="${student.grade}"></td>
