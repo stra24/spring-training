@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>部活動</title>
+</head>
+<body>
+  <h1>部活動</h1>
+
+  <ul>
+    <li th:each="club : ${clubSet}" th:text="${club}"></li>
+  </ul>
+
+  <p th:if="${#sets.isEmpty(clubSet)}">データがありません</p>
+
+</body>
+</html>

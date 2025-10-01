@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>学生一覧</title>
+</head>
+<body>
+  <h1>学生一覧</h1>
+
+  <table border="1" cellpadding="6">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>氏名</th>
+        <th>学年</th>
+        <th>選択科目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- th:each="要素, ステータス : ${コレクション}" -->
+      <tr th:each="student, stat : ${studentList}">
+        <!-- stat.index は 0 始まり → 表示は +1 -->
+        <td th:text="${stat.index + 1}"></td>
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.name}"></td>
+        <td th:text="${student.grade}"></td>
+        <td>
+          <!-- #lists.isEmpty(...) で空のときだけ '-' を表示 -->
+          <span th:if="${#lists.isEmpty(student.subjects)}">-</span>
+          <!-- 受験科目があるときは箇条書きで表示 -->
+          <ul th:if="${!#lists.isEmpty(student.subjects)}" style="margin:0;padding-left:16px">
+            <li th:each="subject : ${student.subjects}" th:text="${subject}"></li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- 一覧自体が空のとき -->
+  <p th:if="${#lists.isEmpty(studentList)}">データがありません</p>
+</body>
+</html>

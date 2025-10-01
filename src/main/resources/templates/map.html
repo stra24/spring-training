@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>フルーツ在庫</title>
+</head>
+<body>
+  <h1>フルーツ在庫</h1>
+
+  <ul>
+    <!-- entrySet() なら key と value を同時に扱える -->
+    <li th:each="entry : ${fruitNameAndStockMap.entrySet()}"
+        th:text="|${entry.key} : ${entry.value}|"></li>
+  </ul>
+
+  <h3>フルーツ名だけ</h3>
+  <p th:each="key : ${fruitNameAndStockMap.keySet()}" th:text="${key}"></p>
+
+  <h3>在庫数だけ</h3>
+  <p th:each="value : ${fruitNameAndStockMap.values()}" th:text="${value}"></p>
+
+  <!-- #maps.isEmpty(...) で空のときだけ表示 -->
+  <p th:if="${#maps.isEmpty(fruitNameAndStockMap)}">データがありません</p>
+</body>
+</html>
