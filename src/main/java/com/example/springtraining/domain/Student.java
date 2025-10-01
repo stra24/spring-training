@@ -24,5 +24,5 @@ public class Student {
   /**
    * 選択科目
    */
-  private final List<String> subjects;
+  private final List<String> subjectList;
 }

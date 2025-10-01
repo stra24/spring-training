@@ -27,10 +27,10 @@
         <td th:text="${student.grade}"></td>
         <td>
           <!-- #lists.isEmpty(...) で空のときだけ '-' を表示 -->
-          <span th:if="${#lists.isEmpty(student.subjects)}">-</span>
+          <span th:if="${#lists.isEmpty(student.subjectList)}">-</span>
           <!-- 受験科目があるときは箇条書きで表示 -->
-          <ul th:if="${!#lists.isEmpty(student.subjects)}" style="margin:0;padding-left:16px">
-            <li th:each="subject : ${student.subjects}" th:text="${subject}"></li>
+          <ul th:if="${!#lists.isEmpty(student.subjectList)}" style="margin:0;padding-left:16px">
+            <li th:each="subject : ${student.subjectList}" th:text="${subject}"></li>
           </ul>
         </td>
       </tr>
