@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>タスク一覧</title>
+  <style>
+    .badge { padding: 2px 8px; border-radius: 12px; color: #fff; font-size: 12px; }
+    .low    { background:#10b981; }  /* 低 */
+    .medium { background:#f59e0b; }  /* 中 */
+    .high   { background:#ef4444; }  /* 高 */
+
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; }
+  </style>
+</head>
+<body>
+  <h1>タスク一覧（Enumの表示と分岐）</h1>
+
+  <p th:if="${#lists.isEmpty(taskList)}">データがありません</p>
+
+  <table th:if="${!#lists.isEmpty(taskList)}">
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>タスクID</th>
+      <th>件名</th>
+      <th>優先度</th>
+      <th>メモ</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row, status : ${taskList}">
+      <td th:text="${status.count}"></td>
+      <td th:text="${row.id}"></td>
+      <td th:text="${row.title}"></td>
+
+      <td>
+        <span class="badge"
+              th:text="${row.priority.name()}"
+              th:classappend="${#strings.toLowerCase(row.priority.name())}">
+        </span>
+      </td>
+
+      <td th:switch="${row.priority}">
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).HIGH}">至急対応する</span>
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).MEDIUM}">今日中に対応できれば良い</span>
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).LOW}">余裕があれば対応する</span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <p th:text="|件数：${#lists.size(taskList)}件|"></p>
+
+  <hr>
+
+  <h2>Enumの列挙子一覧（2通り）</h2>
+
+  <h3>方法1: Controllerから渡した候補（priorityValues）</h3>
+  <ul>
+    <li th:each="p : ${priorityValues}"
+        th:text="${p.name()}"></li>
+  </ul>
+
+  <h3>方法2: テンプレートで直接取得：T(パッケージ.クラス).values()</h3>
+  <ul>
+    <li th:each="p : ${T(com.example.springtraining.domain.TaskPriority).values()}"
+        th:text="${p.name()}"></li>
+  </ul>
+
+</body>
+</html>
