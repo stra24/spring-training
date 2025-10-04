@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>Nullや空の安全な扱い</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.7; }
+    code { background:#f5f5f5; padding:2px 6px; border-radius:4px; }
+    .card { border:1px solid #ddd; border-radius:8px; padding:14px; margin:12px 0; }
+    .muted { color:#888; }
+    ul { padding-left: 1.25rem; }
+  </style>
+</head>
+<body>
+<h1>Nullや空の安全な扱い</h1>
+
+<!-- A. Elvis演算子 -->
+<div class="card">
+  <h2>■Elvis演算子 (<code>?:</code>)を使うと・・・</h2>
+  <p>▼値が null のとき → デフォルト値が表示される。</p>
+  <p>ニックネーム（値がnull）: <strong th:text="${nickname ?: '（未設定）'}"></strong></p>
+  <p>▼値が 空文字 のとき → デフォルト値が表示される。</p>
+  <p>ニックネーム（値が空文字）: <strong th:text="${nicknameEmpty ?: '（未設定）'}"></strong></p>
+</div>
+
+<!-- 安全呼び出し ?. -->
+<div class="card">
+  <h2>■安全呼び出し (<code>?.</code>)を使うと・・・</h2>
+  <p><code>greeting</code> が <code>null</code> でも例外にせず、<code>length()</code> を安全に呼びます。</p>
+  <p>greeting の長さ:
+    <strong th:text="${greeting?.length() ?: 0}"></strong>
+  </p>
+  <p class="muted">
+    ↑ <code>greeting</code> を Controller で非 null に変えて再読み込みし、表示の変化を確認してみましょう。
+  </p>
+</div>
+
+<!-- リストが空かそうでないかで出し分け -->
+<div class="card">
+  <h2>■リストが空かそうでないかで出し分け (<code>#lists.isEmpty</code> / <code>th:if</code> / <code>th:unless</code>)</h2>
+  <p th:if="${#lists.isEmpty(emptyList)}">リストがありません。</p>
+  <p th:unless="${#lists.isEmpty(emptyList)}">リストがあります。</p>
+</div>
+
+<!-- マップが空かそうでないかで出し分け -->
+<div class="card">
+  <h2>■マップが空かそうでないかで出し分け (<code>#maps.isEmpty</code> / <code>th:if</code> / <code>th:unless</code>)</h2>
+  <p th:if="${#maps.isEmpty(emptyMap)}">マップがありません。</p>
+  <p th:unless="${#maps.isEmpty(emptyMap)}">マップがあります。</p>
+</div>
+
+<!-- セットが空かそうでないかで出し分け -->
+<div class="card">
+  <h2>■セットが空かそうでないかで出し分け (<code>#sets.isEmpty</code> / <code>th:if</code> / <code>th:unless</code>)</h2>
+  <div th:if="${#sets.isEmpty(emptySet)}">セットがありません。</div>
+  <p th:unless="${#sets.isEmpty(emptySet)}">セットがあります。</p>
+</div>
+
+<!-- 要素内のテキストについての確認ポイント -->
+<div class="card">
+  <h2>■「要素の中のテキスト」はどんなときに表示される？</h2>
+  <p class="muted">
+    下のspan要素内の「（ここはフォールバック文言）」は、<strong>Thymeleaf が実行されないとき</strong>＝
+    HTML を直接ブラウザで開いたときのみ表示されます。通常（Spring起動時）は <code>th:text</code> が優先されるため表示されません。
+  </p>
+  <p>
+    例：
+    <span th:text="${nickname ?: '（未設定）'}">（ここはフォールバック文言）</span>
+  </p>
+</div>
+</body>
+</html>
