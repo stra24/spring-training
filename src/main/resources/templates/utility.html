@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>ユーティリティ関数</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.7; }
+    h1 { margin-bottom: .4rem; }
+    dt { font-weight: 700; margin-top: .9rem; }
+    code { background: #f6f8fa; padding: 0 .25rem; border-radius: 4px; }
+    ul.list { margin: .4rem 0 .8rem 1.2rem; }
+  </style>
+</head>
+<body>
+<h1>ユーティリティ関数</h1>
+
+<dl>
+  <dt>LocalDateTime</dt>
+  <dd>
+    <div>生の値: <span th:text="${ldt}"></span></div>
+    <div>整形後の値: <span th:text="${#temporals.format(ldt, 'yyyy年MM月dd日 HH時mm分ss秒')}"></span></div>
+  </dd>
+
+  <dt>LocalDate</dt>
+  <dd>
+    <div>生の値: <span th:text="${ld}"></span></div>
+    <div>整形後の値: <span th:text="${#temporals.format(ld, 'yyyy/MM/dd')}"></span></div>
+  </dd>
+
+  <dt>LocalTime</dt>
+  <dd>
+    <div>生の値: <span th:text="${lt}"></span></div>
+    <div>整形後の値: <span th:text="${#temporals.format(lt, 'HH:mm:ss')}"></span></div>
+  </dd>
+
+  <dt>個数のゼロ埋め</dt>
+  <dd><span th:text="${#numbers.formatInteger(num, 3)}"></span></dd>
+
+  <dt>大文字にして表示</dt>
+  <dd><span th:text="${#strings.toUpperCase(upperSrc)}"></span></dd>
+
+  <dt>小文字にして表示</dt>
+  <dd><span th:text="${#strings.toLowerCase(lowerSrc)}"></span></dd>
+
+  <dt>省略表示</dt>
+  <dd><span th:text="${#strings.abbreviate(longText, 20)}"></span></dd>
+
+  <dt>繰り返し</dt>
+  <dd>
+    <ul class="list">
+      <li th:each="i : ${#numbers.sequence(1,5)}">
+        No.<span th:text="${i}"></span>
+      </li>
+    </ul>
+  </dd>
+</dl>
+
+</body>
+</html>
