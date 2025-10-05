@@ -1,6 +1,7 @@
 package com.example.springtraining.controller;
 
 import com.example.springtraining.config.AppConfig;
+import com.example.springtraining.domain.Dog;
 import com.example.springtraining.domain.FullName;
 import com.example.springtraining.domain.Profile;
 import com.example.springtraining.domain.Student;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class HelloController {
@@ -129,5 +132,32 @@ public class HelloController {
     model.addAttribute("longText", "Thymeleaf utilities are handy for view-level formatting.");
 
     return "utility";
+  }
+
+  /**
+   * フォーム画面を表示する。
+   *
+   * @param model Model
+   * @return フォーム画面のテンプレート名
+   */
+  @GetMapping("/dog/form")
+  public String showDogForm(Model model) {
+    model.addAttribute(
+        "dog",
+        new Dog(null, null)
+    );
+    return "dog-form";
+  }
+
+  /**
+   * フォームの送信結果画面を表示する。
+   *
+   * @param model Model
+   * @return フォームの送信結果画面のテンプレート名
+   */
+  @PostMapping("/dog/form")
+  public String submitDogForm(@ModelAttribute Dog dog, Model model) {
+    model.addAttribute("submittedDog", dog);
+    return "dog-result";
   }
 }

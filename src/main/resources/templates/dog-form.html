@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dog Form</title>
+</head>
+<body>
+<h2>犬の入力フォーム</h2>
+
+<!-- dogオブジェクトとフォームを結びつける -->
+<form th:action="@{/dog/form}" th:object="${dog}" method="post">
+  <p>
+    名前: <input type="text" th:field="*{name}" />
+  </p>
+  <p>
+    年齢: <input type="number" th:field="*{age}" />
+  </p>
+  <button type="submit">送信</button>
+</form>
+
+</body>
+</html>
