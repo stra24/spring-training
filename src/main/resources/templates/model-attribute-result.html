@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>@ModelAttribute デモ 結果画面</title></head>
+<body>
+<h1>@ModelAttribute デモ 結果画面</h1>
+<table border="1" cellpadding="6" th:object="${registerForm}">
+  <tr><th>氏名</th><td th:text="*{name}">-</td></tr>
+  <tr><th>年齢</th><td th:text="*{age}">-</td></tr>
+</table>
+<p><a th:href="@{/model-attribute}">戻る</a></p>
+</body>
+</html>

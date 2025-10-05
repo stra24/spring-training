@@ -4,6 +4,7 @@ import com.example.springtraining.config.AppConfig;
 import com.example.springtraining.domain.Dog;
 import com.example.springtraining.domain.FullName;
 import com.example.springtraining.domain.Profile;
+import com.example.springtraining.domain.RegisterForm;
 import com.example.springtraining.domain.Student;
 import com.example.springtraining.domain.Task;
 import com.example.springtraining.domain.TaskPriority;
@@ -25,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HelloController {
@@ -159,5 +161,57 @@ public class HelloController {
   public String submitDogForm(@ModelAttribute Dog dog, Model model) {
     model.addAttribute("submittedDog", dog);
     return "dog-result";
+  }
+
+  /**
+   * `@RequestParam`をつけると、リクエストパラメータが代入されることを確認する用。
+   */
+  @GetMapping("/request-param")
+  public String requestParam(@RequestParam String keyword, Model model) {
+    model.addAttribute("keyword", keyword);
+    return "request-param-result";
+  }
+
+  /**
+   * `@ModelAttribute`をつけると、
+   * - リクエストパラメータが代入されること
+   * - Modelに自動的にオブジェクトが登録されること
+   * を確認する用のフォーム画面。
+   */
+  @GetMapping("/model-attribute")
+  public String modelAttributeFrom(Model model) {
+    model.addAttribute("registerForm", new RegisterForm());
+    return "model-attribute-form";
+  }
+
+  /**
+   * `@ModelAttribute`をつけると、
+   * - リクエストパラメータが代入されること
+   * - Modelに自動的にオブジェクトが登録されること
+   * を確認する用の結果画面。
+   */
+  @PostMapping("/model-attribute")
+  public String modelAttributeResult(@ModelAttribute RegisterForm form) {
+    return "model-attribute-result";
+  }
+
+  /**
+   * `@RequestParam`を省略しても、リクエストパラメータが代入されることを確認する用。
+   */
+  @GetMapping("/request-param-omit")
+  public String requestParamOmit(String keyword, Model model) {
+    model.addAttribute("keyword", keyword);
+    return "request-param-result";
+  }
+
+  /**
+   * `@ModelAttribute`を省略しても、
+   * - リクエストパラメータが代入されること
+   * - Modelに自動的にオブジェクトが登録されること
+   * を確認する用の結果画面。
+   */
+  @PostMapping("/model-attribute-omit")
+  public String modelAttributeOmitResult(RegisterForm form) {
+    return "model-attribute-result";
   }
 }

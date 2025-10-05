@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><title>@ModelAttribute デモ フォーム画面</title></head>
+<body>
+  <h1>@ModelAttribute デモ フォーム画面</h1>
+
+  <form th:action="@{/model-attribute}" th:object="${registerForm}" method="post">
+    <p>氏名: <input type="text" th:field="*{name}" /></p>
+    <p>年齢: <input type="number" th:field="*{age}" /></p>
+    <button type="submit">@ModelAttributeありのハンドラーメソッドへ送信</button>
+  </form>
+
+  <form th:action="@{/model-attribute-omit}" th:object="${registerForm}" method="post">
+    <p>氏名: <input type="text" th:field="*{name}" /></p>
+    <p>年齢: <input type="number" th:field="*{age}" /></p>
+    <button type="submit">@ModelAttribute省略のハンドラーメソッドへ送信</button>
+  </form>
+</body>
+</html>
