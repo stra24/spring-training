@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <h2 th:text="${appName}">App</h2>
+  <p>今日: <span th:text="${today}">-</span></p>
+
+  <h3>役割一覧</h3>
+  <ul>
+    <li th:each="r : ${roles}" th:text="${r}">role</li>
+  </ul>
+
+  <h3>ユーザー登録フォーム</h3>
+  <form th:action="@{/ma-demo}" th:object="${registerForm}" method="post">
+    <label>名前: <input th:field="*{name}"></label><br/>
+    <label>年齢: <input th:field="*{age}"></label><br/>
+    <button type="submit">送信</button>
+  </form>
+</body>
+</html>

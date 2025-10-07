@@ -1,0 +1,10 @@
+<!-- src/main/resources/templates/ma-demo-result.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <h2>@ModelAttributeの動作確認 結果画面</h2>
+  <p>名前: <span th:text="${registerForm.name}">-</span></p>
+  <p>年齢: <span th:text="${registerForm.age}">-</span></p>
+  <p><a th:href="@{/ma-demo}">戻る</a></p>
+</body>
+</html>
