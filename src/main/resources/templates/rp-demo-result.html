@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>@RequestParam 動作確認 結果画面</title>
+  <style>
+    .table{
+      width: auto;               /* 必要幅ベースでコンパクトに */
+      max-width: 860px;          /* 横幅の上限 */
+      table-layout: fixed;       /* 列幅を固定して詰める */
+      border-collapse: separate; /* 角の丸み用に separate */
+      border-spacing: 0;         /* 余分な隙間はゼロ */
+      display: block;            /* はみ出す場合のみ横スクロール */
+      overflow-x: auto;
+      margin: 8px 0 18px 0;      /* 左寄せ（中央にしない） */
+    }
+    .table th, .table td{
+      text-align: left !important; /* 左寄せを強制 */
+      padding: 6px 10px;           /* ちょいタイト */
+      border: 1px solid #e6e6e6;
+      white-space: nowrap;         /* 折り返しなし（2行にしない） */
+      overflow: hidden;            /* こぼれたら省略 */
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      font-size: .95em;
+    }
+    /* 列ごとの視認性：見出し列＝やや濃い、値列＝ごく薄い */
+    .table th{
+      width: 360px;                /* 項目列の固定幅（お好みで調整可） */
+      background: #eef2ff;         /* 薄い青（見出し列） */
+      color: #1f2937;
+      font-weight: 700;
+    }
+    .table td{
+      max-width: 460px;            /* 値列の最大幅（お好みで調整可） */
+      background: #f8fafc;         /* ごく薄いグレー（値列） */
+      color: #111827;
+    }
+    /* 行のゼブラ（値列だけ淡めに強調） */
+    .table tbody tr:nth-child(even) td{ background:#f1f5f9; }
+
+    /* 角丸（一体感＋可読性） */
+    .table tbody tr:first-child th{ border-top-left-radius: 10px; }
+    .table tbody tr:first-child td{ border-top-right-radius: 10px; }
+    .table tbody tr:last-child  th{ border-bottom-left-radius: 10px; }
+    .table tbody tr:last-child  td{ border-bottom-right-radius: 10px; }
+
+    /* codeは読みやすい配色で左寄せのまま */
+    .table code{
+      background:#e9eefc;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    /* 見出し（h3）は左寄せのまま余白だけ整える */
+    h3{ margin: 16px 0 8px; }
+
+    .table th, .table td{
+      border-color:#94a3b8;          /* 枠線も少し濃く */
+    }
+    .table th{
+      background:#c7d2fe;            /* 見出し列：濃いめの青（indigo-200相当） */
+      color:#0f172a;                  /* 文字は濃いネイビーでコントラスト確保 */
+    }
+    .table td{
+      background:#fff;            /* 値列：白 */
+      color:#0b1324;
+    }
+    .table code{
+      background:#bfdbfe;            /* code 背景も少し濃く */
+      color:#0f172a;
+    }
+  </style>
+</head>
+<body>
+<h2 th:text="${title}">@RequestParam 動作確認 結果画面</h2>
+
+<h3>▼required属性のテスト</h3>
+<table class="table">
+  <tbody>
+  <tr>
+    <th>xの型</th>
+    <td><code th:text="${type}">-</code></td>
+  </tr>
+  <tr>
+    <th>xの値</th>
+    <td><code th:text="${x}">-</code></td>
+  </tr>
+  <tr>
+    <th>optionalの値が存在するか</th>
+    <td><code th:text="${optionalPresent}">-</code></td>
+  </tr>
+  <tr>
+    <th>optionalの値</th>
+    <td><code th:text="${optionalValue}">-</code></td>
+  </tr>
+  <tr>
+    <th>required=true + defaultValue 適用後の page の値</th>
+    <td><code th:text="${pageResolvedReqDef}">-</code></td>
+  </tr>
+  </tbody>
+</table>
+
+<h3>▼value / name / defaultValue属性のテスト</h3>
+<table class="table">
+  <tbody>
+  <tr>
+    <th>qの値（value属性で受け取った値）</th>
+    <td><code th:text="${valueAttrValue}">-</code></td>
+  </tr>
+  <tr>
+    <th>qの値（name属性で受け取った値）</th>
+    <td><code th:text="${nameAttrValue}">-</code></td>
+  </tr>
+  <tr>
+    <th>searchの値（属性省略）</th>
+    <td><code th:text="${searchValue}">-</code></td>
+  </tr>
+  <tr>
+    <th>userの値</th>
+    <td><code th:text="${userResolved}">-</code></td>
+  </tr>
+  <tr>
+    <th>pageの値</th>
+    <td><code th:text="${pageResolved}">-</code></td>
+  </tr>
+  <tr>
+    <th>kw（Optional）の値が存在するか</th>
+    <td><code th:text="${kwPresent}">-</code></td>
+  </tr>
+  <tr>
+    <th>kw（Optional）の値</th>
+    <td><code th:text="${kwValue}">-</code></td>
+  </tr>
+  </tbody>
+</table>
+
+<p><a th:href="@{/rp-demo}">← フォームに戻る</a></p>
+</body>
+</html>
