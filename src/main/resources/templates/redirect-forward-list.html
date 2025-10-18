@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>一覧画面</title>
+</head>
+<body>
+<h2>一覧画面</h2>
+
+<p th:if="${message}" th:text="${message}" style="color:green;"></p>
+
+<p th:text="'登録件数：' + ${count} + ' 件'">登録件数</p>
+
+<ul>
+  <li th:each="n : ${names}" th:text="${n}">name</li>
+</ul>
+
+<form th:action="@{/redirect-forward/clear}" method="post" style="margin-top: 12px;">
+  <button type="submit">一覧をクリア</button>
+</form>
+
+<p style="margin-top:12px;">
+  <a th:href="@{/redirect-forward/form}">登録フォーム画面へ</a>
+</p>
+</body>
+</html>

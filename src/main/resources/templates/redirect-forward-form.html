@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>登録フォーム画面</title>
+</head>
+<body>
+<h2>登録フォーム画面</h2>
+
+<p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+<form th:action="@{/redirect-forward/register}" method="post">
+  <label>お名前：
+    <input type="text" name="name" th:value="${name}">
+  </label>
+  <button type="submit">登録する</button>
+</form>
+
+<p><a th:href="@{/redirect-forward/list}">一覧画面へ</a></p>
+</body>
+</html>

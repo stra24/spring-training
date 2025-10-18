@@ -1,6 +1,5 @@
 package com.example.springtraining.controller;
 
-
 import com.example.springtraining.domain.RegisterForm;
 import java.time.LocalDate;
 import java.util.List;
