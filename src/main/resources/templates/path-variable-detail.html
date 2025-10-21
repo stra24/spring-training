@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8">
+    <title>書籍詳細</title>
+  </head>
+  <body>
+    <h2>書籍詳細</h2>
+    <p>ID: <span th:text="${book.id}">1</span></p>
+    <p>タイトル: <span th:text="${book.title}">スッキリSpring</span></p>
+    <p>著者: <span th:text="${book.author}">Ito</span></p>
+    <p><a th:href="@{/books}">一覧へ戻る</a></p>
+  </body>
+</html>
