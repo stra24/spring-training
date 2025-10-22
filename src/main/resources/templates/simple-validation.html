@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>単純型の入力チェック（@Validated + 引数の制約）</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.6; }
+    h2 { margin-bottom: 8px; }
+    section { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    label { display: inline-block; min-width: 8em; }
+    input[type="text"], input[type="number"] { padding: 6px 8px; }
+    button { padding: 6px 12px; cursor: pointer; }
+    .result { margin-top: 8px; padding: 8px 10px; background: #f6f8fa; border-radius: 6px; }
+    .hint { color: #666; font-size: 0.95em; }
+    code { background: #f6f8fa; padding: 2px 4px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+<h2>単純型の入力チェック（@Validated + 引数の制約）</h2>
+<p class="hint">
+  このページでは <code>@RequestParam</code> と <code>@PathVariable</code> の単純型引数に付けた制約
+  （<code>@NotBlank</code> / <code>@Min</code> / <code>@Max</code> / <code>@Positive</code>）の挙動を確認できます。<br>
+  値が制約に違反した場合、ハンドラは実行される前にエラー応答になります（本レクチャーではデフォルトのエラーページのまま）。
+</p>
+
+<section>
+  <h3>① 文字列の必須チェック（@NotBlank）</h3>
+  <form th:action="@{/check/name}" method="get">
+    <label>value：</label>
+    <input type="text" name="value" placeholder="例: Alice" />
+    <button type="submit">送信</button>
+  </form>
+  <div class="result" th:if="${name}" th:text="'Hello, ' + ${name} + ' !'">結果がここに表示されます</div>
+  <p class="hint">リクエスト例：<code>GET /check/name?value=Alice</code></p>
+</section>
+
+<section>
+  <h3>② 数値の範囲チェック（@Min / @Max）</h3>
+  <form th:action="@{/check/age}" method="get">
+    <label>value（0〜150）：</label>
+    <input type="number" name="value" placeholder="例: 20" />
+    <button type="submit">送信</button>
+  </form>
+  <div class="result" th:if="${age != null}" th:text="'age = ' + ${age}">結果がここに表示されます</div>
+  <p class="hint">リクエスト例：<code>GET /check/age?value=20</code></p>
+</section>
+
+<section>
+  <h3>③ PathVariable の正数チェック（@Positive）</h3>
+
+  <!-- JSで /check/items/{id} に遷移させるだけの簡易フォーム -->
+  <form onsubmit="event.preventDefault(); const v=document.getElementById('pv-id').value; if(v){ location.href = '/check/items/' + v; }">
+    <label>id（正の整数）：</label>
+    <input id="pv-id" type="number" placeholder="例: 42" />
+    <button type="submit">アクセス</button>
+  </form>
+
+  <div class="result" th:if="${id != null}" th:text="'id = ' + ${id}">結果がここに表示されます</div>
+  <p class="hint">リクエスト例：<code>GET /check/items/42</code></p>
+</section>
+</body>
+</html>
