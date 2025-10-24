@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>複雑型の入力チェック（@Valid × UserForm）</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.7; }
+    h2 { margin-bottom: 8px; }
+    section { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    label { display: inline-block; min-width: 7em; }
+    input[type="text"], input[type="email"], input[type="number"] { padding: 6px 8px; width: 22em; max-width: 100%; }
+    button { padding: 6px 12px; cursor: pointer; }
+    .hint { color:#666; font-size:.95em; }
+    code { background:#f6f8fa; padding:2px 4px; border-radius:4px; }
+  </style>
+</head>
+<body>
+<h2>複雑型（DTO）の入力チェック（@Valid）</h2>
+<p class="hint">
+  このページでは、<code>@Valid</code> をメソッド引数（<code>UserForm</code>）に付けたときの検証の挙動を体験します。
+</p>
+
+<section>
+  <form th:action="@{/complicated}" method="post" th:object="${form}">
+    <p>
+      <label>名前：</label>
+      <input type="text" th:field="*{name}" placeholder="例: 山田太郎" />
+    </p>
+    <p>
+      <label>メール：</label>
+      <input type="email" th:field="*{email}" placeholder="例: taro@example.com" />
+    </p>
+    <p>
+      <label>年齢：</label>
+      <input type="number" th:field="*{age}" placeholder="0以上の整数" />
+    </p>
+    <p><button type="submit">送信</button></p>
+  </form>
+</section>
+
+<p class="hint">
+  表示：<code>GET /complicated</code><br>
+  送信：<code>POST /complicated</code><br>
+  検証ルールは <code>UserForm</code> のフィールドに付与した制約（例：<code>@NotBlank</code>, <code>@Email</code>, <code>@Min</code>）が適用されます。
+</p>
+</body>
+</html>

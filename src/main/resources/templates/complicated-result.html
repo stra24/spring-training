@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>登録結果</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.7; }
+    .card { border:1px solid #ddd; border-radius:8px; padding:16px; }
+    .actions { margin-top: 16px; }
+    a.button { display:inline-block; padding:6px 12px; border:1px solid #ccc; border-radius:6px; text-decoration:none; }
+    a.button:hover { background:#f6f8fa; }
+  </style>
+</head>
+<body>
+<h2>登録完了</h2>
+
+<div class="card">
+  <p><strong>name:</strong> <span th:text="${saved.name}">name</span></p>
+  <p><strong>email:</strong> <span th:text="${saved.email}">email</span></p>
+  <p><strong>age:</strong> <span th:text="${saved.age}">age</span></p>
+</div>
+
+<div class="actions">
+  <a class="button" th:href="@{/complicated}">戻る</a>
+</div>
+</body>
+</html>
