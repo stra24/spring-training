@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>送信完了</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.7; }
+    .card { border:1px solid #ddd; border-radius:8px; padding:16px; }
+    .grid { display:grid; grid-template-columns: 9em 1fr; gap:8px 12px; }
+    a.button { display:inline-block; margin-top:12px; padding:6px 12px; border:1px solid #ccc; border-radius:6px; text-decoration:none; }
+    a.button:hover { background:#f6f8fa; }
+  </style>
+</head>
+<body>
+<h2>送信が完了しました</h2>
+
+<div class="card">
+  <div class="grid">
+    <div>お名前:</div><div><span th:text="${saved.name}">name</span></div>
+    <div>メール:</div><div><span th:text="${saved.email}">email</span></div>
+    <div>都道府県:</div><div><span th:text="${saved.address.prefecture}">pref</span></div>
+    <div>市区町村:</div><div><span th:text="${saved.address.city}">city</span></div>
+    <div>郵便番号:</div><div><span th:text="${saved.address.postalCode}">zip</span></div>
+    <div>年齢:</div><div><span th:text="${saved.age}">age</span></div>
+  </div>
+</div>
+
+<p><a href="javascript:history.back()" class="button">戻る</a></p>
+</body>
+</html>

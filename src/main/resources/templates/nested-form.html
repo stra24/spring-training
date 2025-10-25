@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>クラス型のフィールドの検証</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.7; }
+    fieldset { border:1px solid #ddd; border-radius:8px; padding:16px; margin:16px 0; }
+    label { display:inline-block; min-width:9em; vertical-align:top; }
+    input { padding:6px 8px; width:22em; max-width:100%; }
+    .hint { color:#666; font-size:.95em; }
+    button { padding:8px 14px; cursor:pointer; }
+  </style>
+</head>
+<body>
+<h2>クラス型のフィールドの検証</h2>
+<p class="hint">
+  クラス型フィールド <code>address</code> に <code>@Valid</code> を付けているため、<br>
+  <code>Address</code> 内の各制約（<code>@NotBlank</code>/<code>@Pattern</code>）も自動で検証されます。
+</p>
+
+<form th:action="@{/nested}" method="post">
+  <fieldset>
+    <legend>基本情報</legend>
+    <p><label>お名前：</label><input type="text" name="name" placeholder="例: 山田太郎" /></p>
+    <p><label>メール：</label><input type="email" name="email" placeholder="例: taro@example.com" /></p>
+    <p><label>年齢：</label><input type="number" name="age" placeholder="0以上の整数（任意）" /></p>
+  </fieldset>
+
+  <fieldset>
+    <legend>住所（子DTO：Address）</legend>
+    <p><label>都道府県：</label><input type="text" name="address.prefecture" placeholder="例: 東京都" /></p>
+    <p><label>市区町村：</label><input type="text" name="address.city" placeholder="例: 渋谷区" /></p>
+    <p><label>郵便番号：</label><input type="text" name="address.postalCode" placeholder="例: 123-4567 または 1234567" /></p>
+  </fieldset>
+
+  <p><button type="submit">送信</button></p>
+</form>
+
+<p class="hint">
+  送信先：<code>POST /nested</code>
+</p>
+</body>
+</html>
