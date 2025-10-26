@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Validator#validate 手動検証デモ</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; line-height: 1.7; }
+    fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    legend { font-weight: 600; }
+    label { display: inline-block; min-width: 11em; }
+    input { padding: 6px 8px; }
+    .result { padding: 10px; background: #f6f8fa; border-radius: 6px; margin: 8px 0 16px; }
+    .error { padding: 10px; background: #fff3f3; border: 1px solid #f0b6b6; border-radius: 6px; margin: 8px 0 16px; }
+    .row { margin: 8px 0; }
+  </style>
+</head>
+<body>
+<h2>Validator#validate を使った手動検証</h2>
+
+<div th:if="${result != null}" class="result" th:text="${result}">OKメッセージ</div>
+
+<div th:if="${errors != null}" class="error">
+  <ul>
+    <li th:each="msg : ${errors}" th:text="${msg}">違反メッセージ</li>
+  </ul>
+</div>
+
+<fieldset>
+  <legend>全体を検証</legend>
+  <form th:action="@{/validator/check}" method="post">
+    <p class="row"><label>名前（必須）：</label><input type="text" name="name"></p>
+    <p class="row"><label>メール（必須・形式）：</label><input type="text" name="email"></p>
+    <p class="row"><label>年齢（0以上）：</label><input type="number" name="age" value="20"></p>
+    <button type="submit">検証する</button>
+  </form>
+</fieldset>
+
+<fieldset>
+  <legend>部分検証（name だけ）</legend>
+  <form th:action="@{/validator/check-name-only}" method="post">
+    <p class="row"><label>名前（必須）：</label><input type="text" name="name"></p>
+    <button type="submit">name だけ検証</button>
+  </form>
+</fieldset>
+</body>
+</html>
