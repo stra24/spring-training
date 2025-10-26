@@ -1,0 +1,78 @@
+<!-- src/main/resources/templates/binding-result.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>BindingResult デモ</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin: 40px; }
+    .container { max-width: 880px; margin: 0 auto; }
+    h1 { font-size: 24px; margin: 0 0 6px; }
+    .sub { color: #6b7280; margin: 0 0 16px; }
+
+    .ok  { margin:12px 0 24px; border:1px solid #d1fae5; background:#ecfdf5; color:#065f46; border-radius:12px; padding:12px 14px; }
+    .alert { margin:12px 0 24px; border:1px solid #fee2e2; background:#fef2f2; color:#991b1b; border-radius:12px; padding:12px 14px; }
+
+    .ok h3, .alert h3 { margin: 0 0 8px; }
+
+    .list { margin: 0; padding-left:18px; }
+    .card { border:1px solid #e5e7eb; border-radius:16px; padding:20px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.06); }
+    .row { margin:10px 0; display: grid; grid-template-columns: 120px 1fr; gap:10px; align-items:center; }
+    .row label { font-weight: 600; color:#374151; }
+    .row input { padding:8px 10px; border:1px solid #e5e7eb; border-radius:8px; }
+    .field-error { color:#b91c1c; font-size:12px; grid-column:2 / span 1; }
+    .btn { margin-top: 14px; padding: 10px 16px; border: none; border-radius: 10px; cursor: pointer; background:#4f46e5; color:#fff; }
+  </style>
+</head>
+<body>
+
+<!-- ★ ルートの要素で th:object を指定する（#fields.* でth:objectで指定したオブジェクトのフィールドが参照されるため、オブジェクトがnullだとエラーになる） -->
+<div class="container" th:object="${userForm}">
+  <h1>BindingResult デモ</h1>
+  <p class="sub" th:text="${subtitle}"></p>
+
+  <div class="ok" th:if="${lines}">
+    <h3>成功メッセージ</h3>
+    <ul class="list">
+      <li th:each="line : ${lines}" th:text="${line}"></li>
+    </ul>
+  </div>
+
+  <!-- ★ #fields.hasErrors('*') ・・・*（＝全フィールド）の中で1つ以上エラーがあるか？のboolean値を返す。 -->
+  <div class="alert" th:if="${#fields.hasErrors('*')}">
+    <h3>入力エラーがあります</h3>
+    <ul class="list">
+      <!-- ★ #fields.errors('*')・・・*（＝全フィールド）のメッセージ一覧（List<String>）を返す。 -->
+      <li th:each="err : ${#fields.errors('*')}" th:text="${err}">エラー</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <form action="/binding-result" method="post" th:object="${userForm}">
+      <div class="row">
+        <label>名前 *</label>
+        <!-- ★ th:errorclass="is-invalid"・・・指定のフィールドにエラーがある時だけCSSクラスis-invalidを付与する。 -->
+        <input type="text" th:field="*{name}" th:errorclass="is-invalid" placeholder="例) Taro Suzuki">
+        <!-- ★ #fields.hasErrors('name')・・・name フィールドで１つ以上エラーがあるか？のboolean値を返す。-->
+        <!-- ★ th:errors="*{name}"・・・name のエラーメッセージの内容で要素のコンテンツを差し替える。-->
+        <div class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error</div>
+      </div>
+
+      <div class="row">
+        <label>メール *</label>
+        <input type="text" th:field="*{email}" th:errorclass="is-invalid" placeholder="example@example.com">
+        <div class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email error</div>
+      </div>
+
+      <div class="row">
+        <label>年齢</label>
+        <input type="number" th:field="*{age}" placeholder="0以上の整数">
+        <div class="field-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error</div>
+      </div>
+
+      <button class="btn" type="submit">送信</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>
