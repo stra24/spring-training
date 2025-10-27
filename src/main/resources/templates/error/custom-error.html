@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>エラー</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin: 40px; }
+    .wrap { max-width: 720px; margin: 0 auto; }
+    .card { border:1px solid #fee2e2; border-radius:12px; padding:20px; background:#fef2f2; color:#991b1b; }
+    h1 { margin:0 0 10px; font-size: 20px; }
+    .meta { margin-top:12px; padding:12px; border-radius:10px; background:#fff; color:#111; border:1px solid #e5e7eb;}
+    .meta table { width:100%; border-collapse: collapse; font-size:14px; }
+    .meta th, .meta td { padding:8px 10px; border-bottom:1px solid #f1f5f9; text-align:left; }
+    .badge { display:inline-block; padding:2px 8px; border-radius:9999px; background:#111827; color:#fff; font-size:12px; }
+    .actions { margin-top:12px; }
+    a { text-decoration: none; color:#2563eb; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <h1>エラーが発生しました</h1>
+
+    <div class="meta">
+      <table>
+        <tr>
+          <th>Handled By</th>
+          <td><span class="badge" th:text="${handledBy}">Controller @ExceptionHandler</span></td>
+        </tr>
+        <tr>
+          <th>View</th>
+          <td th:text="${errorViewId}">templates/error/custom-error.html</td>
+        </tr>
+        <tr>
+          <th>Exception</th>
+          <td th:text="${exception}">IllegalArgumentException</td>
+        </tr>
+        <tr>
+          <th>Path</th>
+          <td th:text="${path}">/error-demo/iae</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="actions"><a href="/error-demo">デモ画面に戻る</a></div>
+  </div>
+</div>
+</body>
+</html>
