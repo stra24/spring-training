@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>記事一覧</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; margin: 24px; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; }
+    th, td { border: 1px solid #ddd; padding: 8px 10px; }
+    th { background: #f7f7f7; text-align: left; }
+    caption { text-align: left; font-weight: 700; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+<h2>記事一覧</h2>
+
+<table>
+  <caption>登録されている記事</caption>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>タイトル</th>
+    <th>更新日時</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- List<Article> をそのまま回します -->
+  <tr th:each="a : ${articles}">
+    <td th:text="${a.id}">1</td>
+    <td th:text="${a.title}">サンプルタイトル</td>
+    <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 12:00</td>
+  </tr>
+  </tbody>
+</table>
+
+<!-- 0件メッセージ -->
+<p th:if="${#lists.isEmpty(articles)}">記事がありません。</p>
+</body>
+</html>
+

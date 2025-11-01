@@ -1,3 +1,10 @@
 spring:
-  application:
-    name: spring-training
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spring_training_db  # ← DBのURL。作成したDB名を指定する。
+    username: postgres  # ← DBのログインユーザー
+    password: password  # ← DBのログインパスワード
+    driver-class-name: org.postgresql.Driver  # JDBCドライバのクラス名
+
+  sql:
+    init:
+      mode: always  # ← これを設定すると、起動時に毎回 schema.sql → data.sql が自動的に実行される。
