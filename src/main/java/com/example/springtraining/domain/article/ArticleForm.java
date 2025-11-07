@@ -16,7 +16,7 @@ public class ArticleForm {
     article.setContent(this.content);
     article.setVersion(0L);
 
-    // 新規登録なので作成・更新日時は現在時刻で揃える。
+    // 新規登録なので作成・更新日時は現在日時で揃える。
     LocalDateTime now = LocalDateTime.now();
     article.setCreatedAt(now);
     article.setUpdatedAt(now);
