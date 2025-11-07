@@ -23,4 +23,18 @@ public class ArticleForm {
 
     return article;
   }
+
+  // 更新用のArticleを作成して返す。
+  public Article toUpdatedArticle(Article currentArticle) {
+    Article article = new Article();
+    article.setId(currentArticle.getId());
+    article.setTitle(this.title);
+    article.setContent(this.content);
+    article.setVersion(currentArticle.getVersion());
+
+    // 更新なので createdAt はそのままにして、updatedAt だけ現在日時（更新時の日時）にする。
+    article.setCreatedAt(currentArticle.getCreatedAt());
+    article.setUpdatedAt(LocalDateTime.now());
+    return article;
+  }
 }

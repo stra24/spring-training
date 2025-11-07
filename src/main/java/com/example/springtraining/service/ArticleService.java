@@ -37,4 +37,17 @@ public class ArticleService {
     Article article = form.toNewArticle();
     repository.save(article);
   }
+
+  // 更新する。
+  @Transactional
+  public void update(Long id, ArticleForm form) {
+    // 1. 既存の記事を取得
+    Article article = repository.findById(id);
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. 保存（idが入っているのでUPDATEになる）
+    repository.save(articleForUpdate);
+  }
 }

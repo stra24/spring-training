@@ -1,5 +1,6 @@
 package com.example.springtraining.controller;
 
+import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.service.ArticleService;
 import lombok.AllArgsConstructor;
@@ -42,5 +43,30 @@ public class ArticleController {
   public String create(@ModelAttribute("articleForm") ArticleForm form) {
     service.create(form);
     return "redirect:/articles";
+  }
+
+  // 編集画面の表示
+  @GetMapping("/articles/{id}/edit")
+  public String edit(@PathVariable Long id, Model model) {
+    Article article = service.get(id);
+
+    // 既存記事の値をフォーム用オブジェクトに詰め替える
+    ArticleForm form = new ArticleForm();
+    form.setTitle(article.getTitle());
+    form.setContent(article.getContent());
+
+    model.addAttribute("articleForm", form);
+    model.addAttribute("articleId", id); // actionで使う。
+    return "article-edit";
+  }
+
+  // 更新
+  @PostMapping("/articles/{id}")
+  public String update(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form
+  ) {
+    service.update(id, form);
+    return "redirect:/articles/" + id;
   }
 }
