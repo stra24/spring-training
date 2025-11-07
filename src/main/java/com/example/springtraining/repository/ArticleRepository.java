@@ -30,7 +30,7 @@ public class ArticleRepository {
         .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
   }
 
-  // 新規作成
+  // 新規作成する。
   public void save(Article article) {
     dao.save(article);
   }
