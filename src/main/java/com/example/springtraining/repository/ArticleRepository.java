@@ -29,4 +29,9 @@ public class ArticleRepository {
     return dao.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
   }
+
+  // 新規作成
+  public void save(Article article) {
+    dao.save(article);
+  }
 }

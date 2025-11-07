@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>記事作成</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; margin: 24px; }
+    form { max-width: 600px; }
+    label { display: block; margin-top: 12px; font-weight: bold; }
+    input[type="text"], textarea {
+      width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
+    }
+    textarea { height: 160px; resize: vertical; }
+    button { margin-top: 16px; padding: 8px 16px; }
+  </style>
+</head>
+<body>
+<h2>記事作成</h2>
+
+<form th:action="@{/articles}" method="post" th:object="${articleForm}">
+  <label for="title">タイトル</label>
+  <input type="text" id="title" th:field="*{title}" placeholder="タイトルを入力">
+
+  <label for="content">本文</label>
+  <textarea id="content" th:field="*{content}" placeholder="本文を入力"></textarea>
+
+  <button type="submit">登録する</button>
+</form>
+
+<p><a th:href="@{/articles}">← 一覧に戻る</a></p>
+</body>
+</html>

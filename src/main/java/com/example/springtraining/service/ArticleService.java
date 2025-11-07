@@ -1,6 +1,7 @@
 package com.example.springtraining.service;
 
 import com.example.springtraining.domain.article.Article;
+import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -28,5 +29,12 @@ public class ArticleService {
   @Transactional(readOnly = true)
   public Article get(Long id) {
     return repository.findById(id);
+  }
+
+  // 新規作成する。
+  @Transactional
+  public void create(ArticleForm form) {
+    Article article = form.toNewArticle();
+    repository.save(article);
   }
 }
