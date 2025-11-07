@@ -34,4 +34,9 @@ public class ArticleRepository {
   public void save(Article article) {
     dao.save(article);
   }
+
+  // IDを指定して1件削除する。
+  public void deleteById(Long id) {
+    dao.deleteById(id);
+  }
 }

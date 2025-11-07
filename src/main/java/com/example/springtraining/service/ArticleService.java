@@ -50,4 +50,10 @@ public class ArticleService {
     // 3. 保存（idが入っているのでUPDATEになる）
     repository.save(articleForUpdate);
   }
+
+  // 削除する。
+  @Transactional
+  public void delete(Long id) {
+    repository.deleteById(id);
+  }
 }
