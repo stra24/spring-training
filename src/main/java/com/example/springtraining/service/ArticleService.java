@@ -17,4 +17,16 @@ public class ArticleService {
   public List<Article> listAll() {
     return repository.findAll();
   }
+
+  // 更新日時の降順で一覧を取得する。
+  @Transactional(readOnly = true)
+  public List<Article> listOrderedByUpdatedAtDesc() {
+    return repository.findAllOrderedByUpdatedAtDesc();
+  }
+
+  // IDで1件取得する。
+  @Transactional(readOnly = true)
+  public Article get(Long id) {
+    return repository.findById(id);
+  }
 }

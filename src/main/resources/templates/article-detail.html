@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${article.title}">記事詳細</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; margin: 24px; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; }
+    th, td { border: 1px solid #ddd; padding: 8px 10px; vertical-align: top; }
+    th { background: #f7f7f7; text-align: left; width: 160px; }
+    h2 { margin-bottom: 16px; }
+    .back-link { margin-top: 16px; display: inline-block; }
+    pre { white-space: pre-wrap; margin: 0; font-family: inherit; }
+  </style>
+</head>
+<body>
+<h2>記事詳細</h2>
+
+<table>
+  <tbody>
+  <tr>
+    <th>ID</th>
+    <td th:text="${article.id}">1</td>
+  </tr>
+  <tr>
+    <th>タイトル</th>
+    <td th:text="${article.title}"></td>
+  </tr>
+  <tr>
+    <th>更新日時</th>
+    <td th:text="${#temporals.format(article.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+  </tr>
+  <tr>
+    <th>本文</th>
+    <td>
+      <pre th:text="${article.content}"></pre>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<a class="back-link" th:href="@{/articles}">← 一覧に戻る</a>
+</body>
+</html>
