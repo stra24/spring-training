@@ -48,7 +48,7 @@ public class ArticleRepository {
     return dao.findByTitleContainingOrderByUpdatedAtDesc(keyword);
   }
 
-  // ページングして取得するメソッド
+  // 記事一覧をページ情報付きで取得する。
   public Page<Article> findPageOrderedByUpdatedAtDesc(int page, int size) {
     int offset = page * size; // page は0始まりで受け取る想定（先頭のページの場合、pageは0）
     List<Article> content = dao.findPageOrderByUpdatedAtDesc(size, offset);
