@@ -56,4 +56,10 @@ public class ArticleService {
   public void delete(Long id) {
     repository.deleteById(id);
   }
+
+  // タイトルで検索する。
+  @Transactional(readOnly = true)
+  public List<Article> searchByTitleKeyword(String keyword) {
+    return repository.searchByTitleKeyword(keyword);
+  }
 }

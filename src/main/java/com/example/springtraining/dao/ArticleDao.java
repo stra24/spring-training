@@ -10,4 +10,7 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
   // 更新日時の降順で並び替えて取得する。
   @Query("SELECT * FROM articles ORDER BY updated_at DESC")
   List<Article> findAllOrderByUpdatedAtDesc();
+
+  // タイトルに指定のキーワードを含む記事を、更新日時の降順で取得する。
+  List<Article> findByTitleContainingOrderByUpdatedAtDesc(String keyword);
 }

@@ -39,4 +39,9 @@ public class ArticleRepository {
   public void deleteById(Long id) {
     dao.deleteById(id);
   }
+
+  // タイトルに指定のキーワードを含む記事を検索する。
+  public List<Article> searchByTitleKeyword(String keyword) {
+    return dao.findByTitleContainingOrderByUpdatedAtDesc(keyword);
+  }
 }

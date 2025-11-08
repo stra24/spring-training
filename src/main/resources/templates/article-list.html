@@ -16,6 +16,11 @@
 
 <p><a th:href="@{/articles/new}">＋ 新規作成</a></p>
 
+<form th:action="@{/articles/search}" method="get" style="margin-bottom: 16px;">
+  <input type="text" name="keyword" th:value="${keyword}" placeholder="タイトルで検索">
+  <button type="submit">検索</button>
+</form>
+
 <table>
   <caption>登録されている記事</caption>
   <thead>
