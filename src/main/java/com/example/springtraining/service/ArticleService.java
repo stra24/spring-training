@@ -5,6 +5,7 @@ import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,5 +62,11 @@ public class ArticleService {
   @Transactional(readOnly = true)
   public List<Article> searchByTitleKeyword(String keyword) {
     return repository.searchByTitleKeyword(keyword);
+  }
+
+  // 該当ページの全ての記事を取得する。
+  @Transactional(readOnly = true)
+  public Page<Article> getPage(int page, int size) {
+    return repository.findPageOrderedByUpdatedAtDesc(page, size);
   }
 }

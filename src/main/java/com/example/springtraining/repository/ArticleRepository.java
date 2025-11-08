@@ -5,6 +5,9 @@ import com.example.springtraining.domain.article.Article;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -43,5 +46,17 @@ public class ArticleRepository {
   // タイトルに指定のキーワードを含む記事を検索する。
   public List<Article> searchByTitleKeyword(String keyword) {
     return dao.findByTitleContainingOrderByUpdatedAtDesc(keyword);
+  }
+
+  // ページングして取得するメソッド
+  public Page<Article> findPageOrderedByUpdatedAtDesc(int page, int size) {
+    int offset = page * size; // page は0始まりで受け取る想定（先頭のページの場合、pageは0）
+    List<Article> content = dao.findPageOrderByUpdatedAtDesc(size, offset);
+    long total = dao.countAll();
+    return new PageImpl<>(
+        content,
+        PageRequest.of(page, size),
+        total
+    );
   }
 }

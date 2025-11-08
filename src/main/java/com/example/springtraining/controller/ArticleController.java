@@ -4,6 +4,7 @@ import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.service.ArticleService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,5 +85,22 @@ public class ArticleController {
     model.addAttribute("articles", service.searchByTitleKeyword(keyword));
     model.addAttribute("keyword", keyword);
     return "article-list";
+  }
+
+  // ページ付き一覧取得
+  @GetMapping("/articles/page")
+  public String pagedList(
+      @RequestParam(name = "page", defaultValue = "0") int page,
+      @RequestParam(name = "size", defaultValue = "5") int size,
+      Model model
+  ) {
+    Page<Article> articlePage = service.getPage(page, size);
+
+    model.addAttribute("articlePage", articlePage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("pageSize", size);
+    model.addAttribute("totalPages", articlePage.getTotalPages());
+
+    return "article-page";
   }
 }

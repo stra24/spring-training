@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>記事一覧（ページ付き）</title>
+  <style>
+    body { font-family: system-ui, sans-serif; line-height: 1.6; margin: 24px; }
+    table { border-collapse: collapse; width: 100%; max-width: 900px; }
+    th, td { border: 1px solid #ddd; padding: 8px 10px; }
+    th { background: #f7f7f7; text-align: left; }
+    caption { text-align: left; font-weight: 700; margin-bottom: 8px; }
+
+    .summary {
+      margin-bottom: 12px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    /* ページネーション */
+    .pagination {
+      margin-top: 16px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .page-item {
+      display: inline-block;
+    }
+    .page-link,
+    .page-current,
+    .page-disabled {
+      padding: 4px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-block;
+      background: #fff;
+      color: #333;
+    }
+    .page-current {
+      background: #333;
+      color: #fff;
+      border-color: #333;
+      cursor: default;
+    }
+    .page-disabled {
+      color: #aaa;
+      border-color: #eee;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+<h2>記事一覧（ページ付き）</h2>
+
+<!-- 件数表示を実務っぽく -->
+<div class="summary">
+  全<strong th:text="${articlePage.totalElements}"></strong>件中
+  <strong th:text="${articlePage.totalElements == 0 ? 0 : articlePage.number * articlePage.size + 1}"></strong>件〜
+  <strong th:text="${articlePage.number * articlePage.size + articlePage.numberOfElements}"></strong>件を表示
+  （<span th:text="${currentPage + 1}"></span>/<span th:text="${totalPages}"></span> ページ）
+</div>
+
+<table>
+  <caption>登録されている記事</caption>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>タイトル</th>
+    <th>更新日時</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="a : ${articlePage.content}">
+    <td th:text="${a.id}">1</td>
+    <td>
+      <a th:href="@{/articles/{id}(id=${a.id})}" th:text="${a.title}">タイトル</a>
+    </td>
+    <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 12:00</td>
+  </tr>
+  </tbody>
+</table>
+
+<p th:if="${articlePage.totalElements == 0}">記事がありません。</p>
+
+<!-- ページネーション -->
+<div class="pagination" th:if="${totalPages > 1}">
+  <!-- 前へ -->
+  <span class="page-item" th:if="${currentPage > 0}">
+    <a class="page-link"
+       th:href="@{/articles/page(page=${currentPage - 1}, size=${pageSize})}">« 前へ</a>
+  </span>
+  <span class="page-item" th:if="${currentPage == 0}">
+    <span class="page-disabled">« 前へ</span>
+  </span>
+
+  <!-- ページ番号 -->
+  <span class="page-item"
+        th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+    <!-- 今のページ以外はリンク -->
+    <a class="page-link"
+       th:if="${i} != ${currentPage}"
+       th:href="@{/articles/page(page=${i}, size=${pageSize})}"
+       th:text="${i + 1}">1</a>
+    <!-- 今のページは色付き -->
+    <span class="page-current"
+          th:if="${i} == ${currentPage}"
+          th:text="${i + 1}">1</span>
+  </span>
+
+  <!-- 次へ -->
+  <span class="page-item" th:if="${currentPage + 1 < totalPages}">
+    <a class="page-link"
+       th:href="@{/articles/page(page=${currentPage + 1}, size=${pageSize})}">次へ »</a>
+  </span>
+  <span class="page-item" th:if="${currentPage + 1 >= totalPages}">
+    <span class="page-disabled">次へ »</span>
+  </span>
+</div>
+
+<p style="margin-top: 16px;">
+  <a th:href="@{/articles}">← ページなし一覧に戻る</a>
+</p>
+</body>
+</html>
