@@ -1,4 +1,4 @@
--- データを一度すべて削除する。（アプリ再起動時に同じデータが増えるのを避けるため）
+-- レコードを一度すべて削除する。（アプリ再起動時に同じレコードが増えるのを避けるため）
 TRUNCATE TABLE comments, articles RESTART IDENTITY CASCADE;
 
 INSERT INTO articles (title, content, created_at, updated_at, version) VALUES
