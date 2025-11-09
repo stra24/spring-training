@@ -1,4 +1,5 @@
-truncate table articles; -- データを一度すべて削除する。（アプリ再起動時に同じデータが増えるのを避けるため）
+-- データを一度すべて削除する。（アプリ再起動時に同じデータが増えるのを避けるため）
+TRUNCATE TABLE comments, articles RESTART IDENTITY CASCADE;
 
 INSERT INTO articles (title, content, created_at, updated_at, version) VALUES
   ('はじめてのSpring Data JDBC', '最小の一覧表示を作って動作を確認します。', now(), now(), 0),

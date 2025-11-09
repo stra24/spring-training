@@ -8,3 +8,10 @@ spring:
   sql:
     init:
       mode: always  # ← これを設定すると、起動時に毎回 schema.sql → data.sql が自動的に実行される。
+
+logging:
+  level:
+    # 実際に実行されるSQLが確認できる
+    org.springframework.jdbc.core.JdbcTemplate: DEBUG
+    # プレースホルダにバインドしてる値を確認できる
+    org.springframework.jdbc.core.StatementCreatorUtils: TRACE

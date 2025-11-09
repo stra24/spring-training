@@ -2,6 +2,8 @@ package com.example.springtraining.service;
 
 import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
+import com.example.springtraining.domain.article.Comment;
+import com.example.springtraining.domain.article.CommentForm;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -68,5 +70,21 @@ public class ArticleService {
   @Transactional(readOnly = true)
   public Page<Article> getPage(int page, int size) {
     return repository.findPageOrderedByUpdatedAtDesc(page, size);
+  }
+
+  // 既存の記事にコメントを追加する。
+  @Transactional
+  public void addCommentByArticle(Long articleId, CommentForm form) {
+    // 1. 親（記事）を取得
+    Article article = repository.findById(articleId);
+
+    // 2. コメント（子）を生成
+    Comment comment = Comment.newComment(articleId, form.getContent());
+
+    // 3. 親（記事）に子（コメント）を追加
+    article.addComment(comment);
+
+    // 4. 親ごと保存（→子の既存データが一括DELETEされてから、今回の子のデータが一括INSERTされる）
+    repository.save(article);
   }
 }

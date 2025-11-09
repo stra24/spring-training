@@ -2,6 +2,7 @@ package com.example.springtraining.controller;
 
 import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
+import com.example.springtraining.domain.article.CommentForm;
 import com.example.springtraining.service.ArticleService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,10 +27,12 @@ public class ArticleController {
     return "article-list";
   }
 
-  // 詳細表示
+  // 詳細画面（コメント一覧＋コメントフォーム含む）の表示
   @GetMapping("/articles/{id}")
   public String detail(@PathVariable Long id, Model model) {
-    model.addAttribute("article", service.get(id));
+    Article article = service.get(id);
+    model.addAttribute("article", article);
+    model.addAttribute("commentForm", new CommentForm());
     return "article-detail";
   }
 
@@ -102,5 +105,15 @@ public class ArticleController {
     model.addAttribute("totalPages", articlePage.getTotalPages());
 
     return "article-page";
+  }
+
+  // コメントを追加して、記事詳細画面にリダイレクト
+  @PostMapping("/articles/{id}/comments")
+  public String addComment(
+      @PathVariable Long id,
+      @ModelAttribute("commentForm") CommentForm form
+  ) {
+    service.addCommentByArticle(id, form);
+    return "redirect:/articles/" + id;
   }
 }
