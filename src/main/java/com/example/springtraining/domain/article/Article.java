@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -17,6 +18,7 @@ public class Article {
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  @Version
   private Long version;
 
   // この記事に紐づくコメントリスト

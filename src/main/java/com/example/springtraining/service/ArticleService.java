@@ -7,6 +7,7 @@ import com.example.springtraining.domain.article.CommentForm;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -107,5 +108,39 @@ public class ArticleService {
     // ここまでエラーなく終われば記事はコミットされる。
     // commentService.addCommentAndThrowExceptionでの処理内容はロールバックされるため、
     // 追加されるコメントはarticleRepository.saveで保存した1件のみ。
+  }
+
+  // すぐ終わる通常の更新。
+  @Transactional
+  public void updateTitleFast(Long id, String newTitle) {
+    Article article = repository.findById(id);
+    article.setTitle(newTitle);
+    try {
+      repository.save(article);
+    } catch (OptimisticLockingFailureException e) {
+      throw new RuntimeException("（速い更新）他のユーザーによってすでに更新されています。最新の状態を表示してからやり直してください。", e);
+    }
+  }
+
+  // わざと時間がかかる更新。
+  // これを先に実行しておいて、あとから速い更新のほうを実行すると楽観ロックを再現できる。
+  @Transactional
+  public void updateTitleSlow(Long id, String newTitle) {
+    Article article = repository.findById(id);
+    article.setTitle(newTitle);
+
+    // あえて5秒待つ（この間に他タブで更新してもらう）
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 学習用なので何もしない
+    }
+
+    try {
+      repository.save(article);
+    } catch (OptimisticLockingFailureException e) {
+      // ここで楽観ロックが起きる想定
+      throw new RuntimeException("（遅い更新）他のユーザーによってすでに更新されています。最新の状態を表示してからやり直してください。", e);
+    }
   }
 }

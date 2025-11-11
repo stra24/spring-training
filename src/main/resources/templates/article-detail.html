@@ -78,6 +78,28 @@
   <button type="submit" style="margin-top: 8px;">この記事を削除する</button>
 </form>
 
+<h3 style="margin-top: 24px;">▼タイトルを変更する（楽観ロック確認用）</h3>
+
+<!-- 遅いほう（5秒かかる） -->
+<form th:action="@{/articles/{id}/update/slow(id=${article.id})}" method="post" style="margin-bottom: 8px;">
+  <input type="text" name="title" th:value="${article.title}" style="width: 360px;">
+  <button type="submit">★ゆっくり保存する（5秒かかる）</button>
+</form>
+
+<!-- 速いほう（すぐ終わる） -->
+<form th:action="@{/articles/{id}/update/fast(id=${article.id})}" method="post">
+  <input type="text" name="title" th:value="${article.title}" style="width: 360px;">
+  <button type="submit">すぐ保存する</button>
+</form>
+
+<!-- メッセージ表示 -->
+<div th:if="${message}" style="color: green; margin-top: 8px;">
+  <p th:text="${message}"></p>
+</div>
+<div th:if="${error}" style="color: red; margin-top: 8px;">
+  <p th:text="${error}"></p>
+</div>
+
 <a class="back-link" th:href="@{/articles}">← 一覧に戻る</a>
 </body>
 </html>
