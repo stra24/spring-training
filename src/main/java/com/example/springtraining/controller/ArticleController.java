@@ -116,4 +116,14 @@ public class ArticleController {
     service.addCommentByArticle(id, form);
     return "redirect:/articles/" + id;
   }
+
+  // コメントを追加して、記事詳細画面にリダイレクト（内部でロールバックされる）
+  @PostMapping("/articles/{id}/comments/rollback")
+  public String addCommentAndRollback(
+      @PathVariable Long id,
+      @ModelAttribute("commentForm") CommentForm form
+  ) {
+    service.addCommentAndThrowException(id, form);
+    return "redirect:/articles/" + id;
+  }
 }

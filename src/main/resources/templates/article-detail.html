@@ -65,6 +65,13 @@
   </div>
 </form>
 
+<form th:action="@{/articles/{id}/comments/rollback(id=${article.id})}" method="post" th:object="${commentForm}">
+  <textarea th:field="*{content}" rows="3"></textarea>
+  <div style="margin-top: 8px;">
+    <button type="submit">コメントを投稿する（ロールバックテスト用）</button>
+  </div>
+</form>
+
 <form th:action="@{/articles/{id}/delete(id=${article.id})}"
       method="post"
       onsubmit="return confirm('本当に削除しますか？');">

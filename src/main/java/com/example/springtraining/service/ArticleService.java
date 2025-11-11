@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ArticleService {
 
   private final ArticleRepository repository;
+  private final CommentService commentService;
 
   @Transactional(readOnly = true)
   public List<Article> listAll() {
@@ -86,5 +87,25 @@ public class ArticleService {
 
     // 4. 親ごと保存（→子の既存データが一括DELETEされてから、今回の子のデータが一括INSERTされる）
     repository.save(article);
+  }
+
+  // 同じコメントを2件登録しようとするが、2件目で例外を発生させる。
+  @Transactional
+  public void addCommentAndThrowException(Long articleId, CommentForm form) {
+    var article = repository.findById(articleId);
+    article.addComment(Comment.newComment(articleId, form.getContent()));
+    // 1件目の登録は成功する。
+    repository.save(article);
+
+    try {
+      // 2件目の登録は例外発生により失敗する。
+      commentService.addCommentAndThrowException(articleId, form.getContent());
+    } catch (Exception e) {
+      System.out.println("コメント保存でエラー発生: " + e.getMessage());
+    }
+
+    // ここまでエラーなく終われば記事はコミットされる。
+    // commentService.addCommentAndThrowExceptionでの処理内容はロールバックされるため、
+    // 追加されるコメントはarticleRepository.saveで保存した1件のみ。
   }
 }
