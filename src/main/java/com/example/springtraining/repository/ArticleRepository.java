@@ -59,4 +59,16 @@ public class ArticleRepository {
         total
     );
   }
+
+  // @Lockでの悲観ロック付きでIDを条件に1件を取得する。（存在しなければ例外をスロー）
+  public Article findByIdForUpdate(Long id) {
+    return dao.findOneById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
+  }
+
+  // @Queryでの悲観ロック付きでIDを条件に1件を取得する。（存在しなければ例外をスロー）
+  public Article findByIdForUpdateWithSql(Long id) {
+    return dao.findByIdForUpdateWithSql(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
+  }
 }

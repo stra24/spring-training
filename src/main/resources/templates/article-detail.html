@@ -92,6 +92,20 @@
   <button type="submit">すぐ保存する</button>
 </form>
 
+<h3 style="margin-top: 24px;">▼タイトルを変更する（悲観ロック確認用：@Lock / FOR UPDATE）</h3>
+
+<!-- 悲観ロック：遅いほう（5秒かかる） -->
+<form th:action="@{/articles/{id}/update/lock/slow(id=${article.id})}" method="post" style="margin-bottom: 8px;">
+  <input type="text" name="title" th:value="${article.title}" style="width: 360px;">
+  <button type="submit">★ゆっくり保存する（5秒かかる/悲観ロック）</button>
+</form>
+
+<!-- 悲観ロック：速いほう（すぐ終わる） -->
+<form th:action="@{/articles/{id}/update/lock/fast(id=${article.id})}" method="post">
+  <input type="text" name="title" th:value="${article.title}" style="width: 360px;">
+  <button type="submit">すぐ保存する（悲観ロック）</button>
+</form>
+
 <!-- メッセージ表示 -->
 <div th:if="${message}" style="color: green; margin-top: 8px;">
   <p th:text="${message}"></p>

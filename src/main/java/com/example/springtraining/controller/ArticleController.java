@@ -159,4 +159,28 @@ public class ArticleController {
     }
     return "redirect:/articles/" + id;
   }
+
+  // 速い更新（悲観ロック確認用）
+  @PostMapping("/articles/{id}/update/lock/fast")
+  public String updateWithLockFast(
+      @PathVariable Long id,
+      @RequestParam("title") String title,
+      RedirectAttributes redirectAttributes
+  ) {
+    service.updateTitleFastWithPessimisticLock(id, title);
+    redirectAttributes.addFlashAttribute("message", "✅ 悲観ロックでタイトルを更新しました。（速い方）");
+    return "redirect:/articles/" + id;
+  }
+
+  // わざと遅い更新（悲観ロック確認用）
+  @PostMapping("/articles/{id}/update/lock/slow")
+  public String updateWithLockSlow(
+      @PathVariable Long id,
+      @RequestParam("title") String title,
+      RedirectAttributes redirectAttributes
+  ) {
+    service.updateTitleSlowWithPessimisticLock(id, title);
+    redirectAttributes.addFlashAttribute("message", "✅ 悲観ロックでタイトルを更新しました。（遅い方）");
+    return "redirect:/articles/" + id;
+  }
 }

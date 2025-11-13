@@ -143,4 +143,87 @@ public class ArticleService {
       throw new RuntimeException("（遅い更新）他のユーザーによってすでに更新されています。最新の状態を表示してからやり直してください。", e);
     }
   }
+
+  // @Lockの悲観ロック付きで、わざと時間がかかる更新。
+  @Transactional
+  public void updateTitleSlowWithPessimisticLock(Long id, String newTitle) {
+    System.out.println("遅いほうのメソッドでこれから悲観ロックをします。");
+
+    // 1. @Lock(PESSIMISTIC_WRITE) が付いているメソッドで取得 → 行ロック獲得
+    Article article = repository.findByIdForUpdate(id);
+
+    System.out.println("遅いほうのメソッドで悲観ロックをしました。");
+
+    // 2. タイトル変更
+    article.setTitle(newTitle);
+
+    // 3. あえて5秒待つ（この間、同じ行を触ろうとすると待たされる）
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 学習用なので何もしない
+    }
+
+    // 4. 保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    repository.save(article);
+    System.out.println("遅いほうのメソッドでロックを解除します。");
+  }
+
+  // @Lockの悲観ロック付きで、すぐ終わる更新。
+  @Transactional
+  public void updateTitleFastWithPessimisticLock(Long id, String newTitle) {
+    System.out.println("速いほうのメソッドでこれから悲観ロックをします。");
+
+    // 1. @Lock 付きメソッドでロックを取りに行く
+    Article article = repository.findByIdForUpdate(id);
+
+    System.out.println("速いほうのメソッドで悲観ロックをしました。");
+
+    // 2. すぐに更新して保存
+    article.setTitle(newTitle);
+    repository.save(article);
+
+    System.out.println("速いほうのメソッドでロックを解除します。");
+  }
+
+  // @Query + FOR UPDATEの悲観ロック付きで、わざと時間がかかる更新。
+  @Transactional
+  public void updateTitleSlowWithPessimisticLockBySql(Long id, String newTitle) {
+    System.out.println("遅いほうのメソッドでこれから悲観ロックをします。");
+
+    // 1. Query("... FOR UPDATE") が付いているメソッドで取得 → 行ロック獲得
+    Article article = repository.findByIdForUpdateWithSql(id);
+
+    System.out.println("遅いほうのメソッドで悲観ロックをしました。");
+
+    // 2. タイトル変更
+    article.setTitle(newTitle);
+
+    // 3. あえて5秒待つ（この間、同じ行を触ろうとすると待たされる）
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 学習用なので何もしない
+    }
+
+    // 4. 保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    repository.save(article);
+    System.out.println("遅いほうのメソッドでロックを解除します。");
+  }
+
+  // @Query + FOR UPDATEの悲観ロック付きで、すぐ終わる更新。
+  @Transactional
+  public void updateTitleFastWithPessimisticLockBySql(Long id, String newTitle) {
+    System.out.println("速いほうのメソッドでこれから悲観ロックをします。");
+
+    // 1. @Query("... FOR UPDATE") 付きメソッドでロックを取りに行く
+    Article article = repository.findByIdForUpdateWithSql(id);
+
+    System.out.println("速いほうのメソッドで悲観ロックをしました。");
+
+    // 2. すぐに更新して保存
+    article.setTitle(newTitle);
+    repository.save(article);
+    System.out.println("速いほうのメソッドでロックを解除します。");
+  }
 }
