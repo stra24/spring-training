@@ -39,5 +39,5 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
 
   // ▼パターンB：@Query + FOR UPDATE を使った悲観ロック（生SQL）
   @Query("SELECT * FROM articles WHERE id = :id FOR UPDATE")
-  Optional<Article> findByIdForUpdateWithSql(@Param("id") Long id);
+  Optional<Article> findByIdForUpdate(@Param("id") Long id);
 }
