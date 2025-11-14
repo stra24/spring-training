@@ -4,8 +4,6 @@ import com.example.springtraining.domain.article.Comment;
 import com.example.springtraining.domain.article.CommentForm;
 import com.example.springtraining.repository.ArticleRepository;
 import com.example.springtraining.repository.CommentRepository;
-import java.io.PrintStream;
-import java.nio.charset.StandardCharsets;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
