@@ -46,6 +46,15 @@
   </tbody>
 </table>
 
+<h3 style="margin-top: 16px;">タグ</h3>
+<p th:if="${#lists.isEmpty(tagsOfArticle)}">
+  タグはまだ設定されていません。
+</p>
+<ul th:if="${!#lists.isEmpty(tagsOfArticle)}" style="padding-left: 18px;">
+  <li th:each="tag : ${tagsOfArticle}"
+      th:text="${tag.name}">タグ名</li>
+</ul>
+
 <h3 style="margin-top: 32px;">コメント</h3>
 <div th:if="${article.comments != null and !article.comments.isEmpty()}">
   <div th:each="c : ${article.comments}" class="comment" style="display: flex; gap: 12px; align-items: baseline;">

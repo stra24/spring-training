@@ -4,6 +4,8 @@ import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.domain.article.CommentForm;
 import com.example.springtraining.service.ArticleService;
+import com.example.springtraining.service.TagService;
+import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ArticleController {
 
   private final ArticleService service;
+  private final TagService tagService;
 
   // 一覧表示
   @GetMapping("/articles")
@@ -34,6 +37,7 @@ public class ArticleController {
     Article article = service.get(id);
     model.addAttribute("article", article);
     model.addAttribute("commentForm", new CommentForm());
+    model.addAttribute("tagsOfArticle", service.getTagsOfArticle(id));
     return "article-detail";
   }
 
@@ -41,6 +45,7 @@ public class ArticleController {
   @GetMapping("/articles/new")
   public String newArticle(Model model) {
     model.addAttribute("articleForm", new ArticleForm());
+    model.addAttribute("allTags", tagService.listAll());
     return "article-new";
   }
 
@@ -60,9 +65,11 @@ public class ArticleController {
     ArticleForm form = new ArticleForm();
     form.setTitle(article.getTitle());
     form.setContent(article.getContent());
+    form.setTagIds(new ArrayList<>(article.getTagIds()));
 
     model.addAttribute("articleForm", form);
     model.addAttribute("articleId", id); // actionで使う。
+    model.addAttribute("allTags", tagService.listAll()); // 全タグ一覧
     return "article-edit";
   }
 

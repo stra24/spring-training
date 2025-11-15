@@ -12,6 +12,12 @@
     }
     textarea { height: 160px; resize: vertical; }
     button { margin-top: 16px; padding: 8px 16px; }
+    .tag-list label {
+      display: inline-block;
+      font-weight: normal;
+      margin-right: 8px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -23,6 +29,23 @@
 
   <label for="content">本文</label>
   <textarea id="content" th:field="*{content}" placeholder="本文を入力"></textarea>
+
+  <label>タグ</label>
+
+  <!-- タグが1件も登録されていない場合の表示 -->
+  <p th:if="${#lists.isEmpty(allTags)}">
+    まだタグが登録されていません。
+  </p>
+
+  <!-- タグが存在する場合、チェックボックスを並べる -->
+  <div class="tag-list" th:if="${!#lists.isEmpty(allTags)}">
+    <label th:each="tag : ${allTags}">
+      <input type="checkbox"
+             th:field="*{tagIds}"
+             th:value="${tag.id}">
+      <span th:text="${tag.name}">タグ名</span>
+    </label>
+  </div>
 
   <button type="submit">登録する</button>
 </form>

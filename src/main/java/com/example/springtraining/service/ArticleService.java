@@ -4,7 +4,9 @@ import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.domain.article.ArticleForm;
 import com.example.springtraining.domain.article.Comment;
 import com.example.springtraining.domain.article.CommentForm;
+import com.example.springtraining.domain.article.Tag;
 import com.example.springtraining.repository.ArticleRepository;
+import com.example.springtraining.repository.TagRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -18,6 +20,7 @@ public class ArticleService {
 
   private final ArticleRepository repository;
   private final CommentService commentService;
+  private final TagRepository tagRepository;
 
   @Transactional(readOnly = true)
   public List<Article> listAll() {
@@ -225,5 +228,18 @@ public class ArticleService {
     article.setTitle(newTitle);
     repository.save(article);
     System.out.println("速いほうのメソッドでロックを解除します。");
+  }
+
+  // 記事IDに紐づくタグリストを取得する。
+  @Transactional(readOnly = true)
+  public List<Tag> getTagsOfArticle(Long articleId) {
+    Article article = repository.findById(articleId);
+    var tagIds = article.getTagIds();
+    if (tagIds.isEmpty()) {
+      return List.of();
+    }
+    return tagRepository.findAll().stream()
+        .filter(tag -> tagIds.contains(tag.getId()))
+        .toList();
   }
 }

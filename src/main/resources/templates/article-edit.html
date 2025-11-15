@@ -12,6 +12,15 @@
     }
     textarea { height: 160px; resize: vertical; }
     button { margin-top: 16px; padding: 8px 16px; }
+    .tag-group label {
+      display: inline-flex;
+      align-items: center;
+      margin-right: 12px;
+      font-weight: normal;
+    }
+    .tag-group input[type="checkbox"] {
+      margin-right: 4px;
+    }
   </style>
 </head>
 <body>
@@ -24,10 +33,20 @@
   <label for="content">本文</label>
   <textarea id="content" th:field="*{content}"></textarea>
 
+  <label>タグ（複数選択可）</label>
+  <div class="tag-group">
+    <label th:each="tag : ${allTags}">
+      <!-- 選択されたタグが、ArticleForm.tagIds (Set<Long>) にバインドされる -->
+      <input type="checkbox"
+             th:field="*{tagIds}"
+             th:value="${tag.id}">
+      <span th:text="${tag.name}">Java</span>
+    </label>
+  </div>
+
   <button type="submit">更新する</button>
 </form>
 
 <p><a th:href="@{/articles/{id}(id=${articleId})}">← 詳細に戻る</a></p>
 </body>
 </html>
-
