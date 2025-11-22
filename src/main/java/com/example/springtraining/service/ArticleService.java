@@ -41,9 +41,9 @@ public class ArticleService {
 
   // 新規作成する。
   @Transactional
-  public void create(ArticleForm form) {
+  public Article create(ArticleForm form) {
     Article article = form.toNewArticle();
-    repository.save(article);
+    return repository.save(article);
   }
 
   // 更新する。

@@ -1,13 +1,18 @@
 package com.example.springtraining.controller;
 
+import com.example.springtraining.controller.dto.ArticleCreateRequest;
 import com.example.springtraining.controller.dto.ArticleResponse;
 import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.service.ArticleService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -36,6 +41,23 @@ public class ArticleApiController {
   public ArticleResponse detail(@PathVariable Long id) {
     Article article = articleService.get(id);
     return ArticleResponse.from(article); // Article → ArticleResponse への変換
+  }
+
+  /**
+   * 記事を新規登録するAPI。
+   */
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public ArticleResponse create(@RequestBody ArticleCreateRequest request) {
+
+    // 1. リクエストDTO → ArticleForm に変換
+    var form = request.toForm();
+
+    // 2. Service経由で記事を作成（作成されたArticleを受け取る）
+    Article created = articleService.create(form);
+
+    // 3. Article → ArticleResponse に変換して返す
+    return ArticleResponse.from(created);
   }
 }
 

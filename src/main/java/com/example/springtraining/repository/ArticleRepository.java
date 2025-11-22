@@ -35,8 +35,8 @@ public class ArticleRepository {
   }
 
   // 保存する。
-  public void save(Article article) {
-    dao.save(article);
+  public Article save(Article article) {
+    return dao.save(article);
   }
 
   // IDを指定して1件削除する。
