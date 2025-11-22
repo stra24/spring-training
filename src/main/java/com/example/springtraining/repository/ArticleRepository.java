@@ -2,6 +2,7 @@ package com.example.springtraining.repository;
 
 import com.example.springtraining.dao.ArticleDao;
 import com.example.springtraining.domain.article.Article;
+import com.example.springtraining.exception.ArticleNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -30,7 +31,7 @@ public class ArticleRepository {
   // IDを条件に1件を取得する。（存在しなければ例外をスロー）
   public Article findById(Long id) {
     return dao.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
+        .orElseThrow(() -> new ArticleNotFoundException(id));
   }
 
   // 保存する。
