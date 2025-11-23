@@ -8,6 +8,7 @@ import com.example.springtraining.service.ArticleService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,6 +79,16 @@ public class ArticleApiController {
 
     // 3. Article → ArticleResponse に変換して返す
     return ArticleResponse.from(updated);
+  }
+
+  /**
+   * 記事を削除するAPI。
+   */
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable Long id) {
+    // 存在しない場合は ArticleNotFoundException がスローされ、404 Not Found が返る
+    articleService.delete(id);
   }
 }
 

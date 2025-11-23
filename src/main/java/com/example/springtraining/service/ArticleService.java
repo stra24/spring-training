@@ -62,6 +62,10 @@ public class ArticleService {
   // 削除する。
   @Transactional
   public void delete(Long id) {
+    // 1. まずは存在チェック（存在しなければ ArticleNotFoundException がスローされる）
+    repository.findById(id);
+
+    // 2. 存在が確認できたら削除
     repository.deleteById(id);
   }
 
