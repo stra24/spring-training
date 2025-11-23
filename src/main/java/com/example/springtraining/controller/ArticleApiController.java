@@ -2,6 +2,7 @@ package com.example.springtraining.controller;
 
 import com.example.springtraining.controller.dto.ArticleCreateRequest;
 import com.example.springtraining.controller.dto.ArticleResponse;
+import com.example.springtraining.controller.dto.ArticleUpdateRequest;
 import com.example.springtraining.domain.article.Article;
 import com.example.springtraining.service.ArticleService;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -58,6 +60,24 @@ public class ArticleApiController {
 
     // 3. Article → ArticleResponse に変換して返す
     return ArticleResponse.from(created);
+  }
+
+  /**
+   * 記事を更新するAPI。
+   */
+  @PutMapping("/{id}")
+  public ArticleResponse update(
+      @PathVariable Long id,
+      @RequestBody ArticleUpdateRequest request
+  ) {
+    // 1. リクエストDTO → ArticleForm に変換
+    var form = request.toForm();
+
+    // 2. Service経由で記事を更新（更新後のArticleを受け取る）
+    Article updated = articleService.update(id, form);
+
+    // 3. Article → ArticleResponse に変換して返す
+    return ArticleResponse.from(updated);
   }
 }
 
