@@ -8,6 +8,7 @@ import com.example.springtraining.service.ArticleService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,11 @@ public class ArticleApiController {
    * 記事一覧を取得するAPI。
    */
   @GetMapping
-  public List<ArticleResponse> list() {
-    List<Article> articles = articleService.listOrderedByUpdatedAtDesc();
-    return articles.stream()
+  public ResponseEntity<List<ArticleResponse>> list() {
+    List<ArticleResponse> articles = articleService.listOrderedByUpdatedAtDesc().stream()
         .map(ArticleResponse::from) // Article → ArticleResponse への変換
         .toList();
+    return ResponseEntity.ok(articles);
   }
 
   /**
@@ -85,10 +86,10 @@ public class ArticleApiController {
    * 記事を削除するAPI。
    */
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void delete(@PathVariable Long id) {
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
     // 存在しない場合は ArticleNotFoundException がスローされ、404 Not Found が返る
     articleService.delete(id);
+    return ResponseEntity.noContent().build();
   }
 
   @GetMapping("/error-demo")
