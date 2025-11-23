@@ -90,5 +90,10 @@ public class ArticleApiController {
     // 存在しない場合は ArticleNotFoundException がスローされ、404 Not Found が返る
     articleService.delete(id);
   }
+
+  @GetMapping("/error-demo")
+  public ArticleResponse errorDemo() {
+    throw new RuntimeException("テスト用の想定外エラーです");
+  }
 }
 
