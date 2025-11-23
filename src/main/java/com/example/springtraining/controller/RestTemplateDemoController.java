@@ -1,12 +1,15 @@
 package com.example.springtraining.controller;
 
 import com.example.springtraining.client.ArticleApiClient;
+import com.example.springtraining.controller.dto.ArticleCreateRequest;
 import com.example.springtraining.controller.dto.ArticleResponse;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -42,7 +45,39 @@ public class RestTemplateDemoController {
   public ArticleResponse getArticle(@PathVariable Long id) {
     ResponseEntity<ArticleResponse> response = articleApiClient.getArticleEntity(id);
 
-    // 学習用として、ステータスコードやヘッダを標準出力に出してみる
+    // 学習用として、ステータスコードやヘッダを標準出力に出してみる。
+    System.out.println("StatusCode = " + response.getStatusCode());
+    System.out.println("Headers    = " + response.getHeaders());
+
+    // 実際に呼び出し元に返すのは「レスポンスボディ（ArticleResponse）」だけ。
+    return response.getBody();
+  }
+
+  /**
+   * postForObject のデモ。
+   * RestTemplate で POST /api/articles を叩いて記事を登録する。
+   */
+  @PostMapping("/articles/postForObject")
+  public ArticleResponse createArticleWithPostForObject(
+      @RequestBody ArticleCreateRequest request
+  ) {
+    return articleApiClient.createArticleWithPostForObject(request);
+  }
+
+  /**
+   * postForEntity のデモ。
+   * RestTemplate で POST /api/articles を叩いて記事を登録する。
+   *
+   * ResponseEntity からステータスコードなどもログに出してみる。
+   */
+  @PostMapping("/articles/postForEntity")
+  public ArticleResponse createArticleWithPostForEntity(
+      @RequestBody ArticleCreateRequest request
+  ) {
+    ResponseEntity<ArticleResponse> response =
+        articleApiClient.createArticleWithPostForEntity(request);
+
+    // 学習用として、ステータスコードやヘッダを標準出力に出してみる。
     System.out.println("StatusCode = " + response.getStatusCode());
     System.out.println("Headers    = " + response.getHeaders());
 
