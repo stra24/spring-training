@@ -1,5 +1,6 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.handler;
 
+import com.example.springtraining.controller.ArticleApiController;
 import com.example.springtraining.controller.dto.ApiErrorResponse;
 import com.example.springtraining.exception.ArticleNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +19,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * 自作のエラーレスポンス(JSON)に変換して返す。
  */
 @RestControllerAdvice(assignableTypes = ArticleApiController.class)
-public class ApiExceptionHandler {
+public class RestExceptionHandler {
 
-  private static final Logger log = LoggerFactory.getLogger(ApiExceptionHandler.class);
+  private static final Logger log = LoggerFactory.getLogger(RestExceptionHandler.class);
 
   /**
    * 記事が見つからない場合（404）。
