@@ -1,5 +1,8 @@
 package com.example.springtraining.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,5 +28,23 @@ public class ThymeleafUtilityController {
     model.addAttribute("emptySet", Set.of());    // 空セット
 
     return "utility/null-demo";
+  }
+
+  @GetMapping("/utility")
+  public String utility(Model model) {
+    // ▼日付・時刻
+    model.addAttribute("ldt", LocalDateTime.of(2025, 8, 16, 22, 17, 33));
+    model.addAttribute("ld", LocalDate.of(2025, 8, 16));
+    model.addAttribute("lt", LocalTime.of(9, 5, 7, 123_000_000));
+
+    // ▼数値
+    model.addAttribute("num", 7);
+
+    // ▼文字列
+    model.addAttribute("upperSrc", "hello thymeleaf");
+    model.addAttribute("lowerSrc", "SAYONARA SPRING");
+    model.addAttribute("longText", "Thymeleaf utilities are handy for view-level formatting.");
+
+    return "utility/utility";
   }
 }
