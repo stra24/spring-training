@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>送信結果</title>
+</head>
+<body>
+<h2>送信結果</h2>
+
+<p>名前: <span th:text="${submittedDog.name}"></span></p>
+<p>年齢: <span th:text="${submittedDog.age}"></span></p>
+
+<p><a th:href="@{/binding}">戻る</a></p>
+
+</body>
+</html>
