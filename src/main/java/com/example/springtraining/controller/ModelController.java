@@ -3,6 +3,8 @@ package com.example.springtraining.controller;
 import com.example.springtraining.domain.FullName;
 import com.example.springtraining.domain.Profile;
 import com.example.springtraining.domain.Student;
+import com.example.springtraining.domain.Task;
+import com.example.springtraining.domain.TaskPriority;
 import com.example.springtraining.domain.User;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -54,5 +56,17 @@ public class ModelController {
     );
     model.addAttribute("clubSet", clubSet);
     return "model/set";
+  }
+
+  @GetMapping("/enum")
+  public String showEnum(Model model) {
+    List<Task> taskList = List.of(
+        new Task("TSK-01", "お風呂掃除", TaskPriority.LOW),
+        new Task("TSK-02", "買い物", TaskPriority.HIGH),
+        new Task("TSK-03", "夕飯作り", TaskPriority.MEDIUM)
+    );
+    model.addAttribute("taskList", taskList);
+    model.addAttribute("priorityValues", TaskPriority.values());
+    return "model/enum";
   }
 }
