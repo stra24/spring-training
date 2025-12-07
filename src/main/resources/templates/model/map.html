@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>フルーツ在庫</title>
+  <style>
+    /* === 共通ベーススタイル（学生一覧と同じ） === */
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 800px; /* フルーツ在庫は項目が少ないため少し幅を狭めました */
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      border-left: 5px solid #009879;
+      padding-left: 15px;
+    }
+
+    h3 {
+      font-size: 18px;
+      color: #009879;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    /* === リスト（在庫一覧）のデザイン === */
+    .inventory-list {
+      list-style: none; /* ・を消す */
+      padding: 0;
+      margin: 0;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      overflow: hidden; /* 角丸からはみ出さないように */
+    }
+
+    .inventory-list li {
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex; /* 横並びっぽく見せる調整（テキストのみの場合はblockでも可） */
+      justify-content: space-between; /* 必要に応じて調整 */
+    }
+
+    .inventory-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* ゼブラストライプ（学生一覧と統一） */
+    .inventory-list li:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .inventory-list li:hover {
+      background-color: #f1f1f1;
+      color: #009879;
+    }
+
+    /* === タグクラウド風（キーのみ・値のみ）のデザイン === */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px; /* アイテム間の隙間 */
+    }
+
+    .tag-item {
+      display: inline-block;
+      background-color: #eafaf1; /* 薄い緑背景 */
+      color: #2e7d32;
+      padding: 6px 14px;
+      border-radius: 20px; /* 丸みをつける */
+      margin: 0; /* デフォルトのpタグのマージンをリセット */
+      font-size: 0.9em;
+      border: 1px solid #c8e6c9;
+    }
+
+    .tag-item.number-tag {
+      background-color: #f3f4f6;
+      color: #374151;
+      border-color: #e5e7eb;
+    }
+
+    /* データなしメッセージ */
+    .no-data {
+      text-align: center;
+      color: #777;
+      padding: 20px;
+      background-color: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>フルーツ在庫</h1>
+
+  <ul class="inventory-list">
+    <!-- entrySet() なら entry（keyとvalueを持つ）を取得できる -->
+    <li th:each="entry : ${fruitNameAndStockMap.entrySet()}"
+        th:text="|${entry.key} : ${entry.value}|"></li>
+  </ul>
+
+  <h3>フルーツ名だけ</h3>
+  <div class="tag-cloud">
+    <!-- keySet() で key の一覧を取得できる -->
+    <p class="tag-item" th:each="key : ${fruitNameAndStockMap.keySet()}" th:text="${key}"></p>
+  </div>
+
+  <h3>在庫数だけ</h3>
+  <div class="tag-cloud">
+    <!-- values() で value の一覧を取得できる -->
+    <p class="tag-item number-tag" th:each="value : ${fruitNameAndStockMap.values()}" th:text="${value}"></p>
+  </div>
+
+  <!-- #maps.isEmpty(...) でmapが空であるかを判定できる -->
+  <p class="no-data" th:if="${#maps.isEmpty(fruitNameAndStockMap)}">データがありません</p>
+
+</div>
+
+</body>
+</html>

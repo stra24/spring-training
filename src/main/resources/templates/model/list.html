@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学生一覧</title>
+  <style>
+    /* ベーススタイル */
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      /* bodyのpaddingは減らし、レイアウトはcontainerに任せます */
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    /* ▼追加：レイアウト幅を制限して中央に寄せるためのコンテナ */
+    .container {
+      max-width: 1000px; /* ここで横幅の上限を決めます（好みで800px～1200px等に調整可） */
+      margin: 0 auto;    /* 左右の余白を自動にして中央寄せ */
+      background-color: #fff; /* コンテンツエリアの背景を白に */
+      padding: 30px;
+      border-radius: 8px; /* 角丸 */
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); /* 全体に影をつけて浮き上がらせる */
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      border-left: 5px solid #009879;
+      padding-left: 15px;
+    }
+
+    /* テーブルデザイン */
+    .styled-table {
+      width: 100%; /* コンテナの中で100%にする */
+      border-collapse: collapse;
+      margin: 0;
+      font-size: 0.95em;
+      /* テーブル自体の背景や影はコンテナに移したので削除しても良いですが、
+         念のため残しておいても問題ありません */
+    }
+
+    .styled-table thead tr {
+      background-color: #009879;
+      color: #ffffff;
+      text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+      padding: 12px 15px;
+    }
+
+    .styled-table tbody tr {
+      border-bottom: 1px solid #dddddd;
+    }
+
+    .styled-table tbody tr:nth-of-type(even) {
+      background-color: #f3f3f3;
+    }
+
+    /* ホバーエフェクト */
+    .styled-table tbody tr:hover {
+      background-color: #f1f1f1;
+      color: #009879;
+      cursor: default;
+    }
+
+    .styled-table ul {
+      margin-top: 5px !important;
+      margin-bottom: 5px !important;
+      color: #555;
+    }
+
+    .styled-table li {
+      margin-bottom: 2px;
+    }
+
+    .no-data {
+      text-align: center;
+      color: #777;
+      padding: 20px;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>学生一覧</h1>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th style="width: 50px;">#</th>
+        <th style="width: 80px;">ID</th>
+        <th>氏名</th>
+        <th style="width: 60px;">学年</th>
+        <th>選択科目</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- th:each="要素, ステータス : ${コレクション}" -->
+      <tr th:each="student, status : ${studentList}">
+        <!-- status.index は 0 始まり -->
+        <td th:text="${status.index + 1}"></td>
+        <td th:text="${student.id}"></td>
+        <td th:text="${student.name}" style="font-weight:bold;"></td>
+        <td th:text="${student.grade}"></td>
+        <td>
+          <!-- #lists.isEmpty(...) で、受験科目が空であるときは '-' を表示 -->
+          <span th:if="${#lists.isEmpty(student.subjectList)}" style="color:#aaa;">-</span>
+          <!-- !#lists.isEmpty(...) で、受験科目が空ではないときは 受験科目 を表示 -->
+          <ul th:if="${!#lists.isEmpty(student.subjectList)}" style="margin:0;padding-left:16px">
+            <!-- listはコレクションなので、th:each="要素 : ${コレクション}" が使える。要素の数だけ表示 -->
+            <li th:each="subject : ${student.subjectList}" th:text="${subject}"></li>
+          </ul>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- #lists.isEmpty(...) でlistが空であるかを判定できる -->
+  <p th:if="${#lists.isEmpty(studentList)}" class="no-data">データがありません</p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>部活動</title>
+  <style>
+    /* === 共通ベーススタイル === */
+    body {
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      background-color: #f4f7f6;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    /* レイアウトコンテナ */
+    .container {
+      max-width: 800px; /* リスト表示に適した幅 */
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+      margin-bottom: 20px;
+      color: #2c3e50;
+      border-left: 5px solid #009879;
+      padding-left: 15px;
+    }
+
+    /* === リストのデザイン === */
+    .styled-list {
+      list-style: none; /* デフォルトの黒丸を消す */
+      padding: 0;
+      margin: 0;
+      border: 1px solid #ddd; /* 外枠 */
+      border-radius: 6px; /* 角丸 */
+      overflow: hidden;
+    }
+
+    .styled-list li {
+      padding: 12px 20px;
+      border-bottom: 1px solid #eee; /* 行ごとの区切り線 */
+      transition: background-color 0.2s; /* ホバー時の変化を滑らかに */
+    }
+
+    /* 最後の行だけ下線を消す */
+    .styled-list li:last-child {
+      border-bottom: none;
+    }
+
+    /* 偶数行に色をつけてシマシマ（ゼブラストライプ）にする */
+    .styled-list li:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    /* ホバー時のハイライト */
+    .styled-list li:hover {
+      background-color: #eafaf1; /* 薄い緑 */
+      color: #009879;
+      cursor: default;
+    }
+
+    /* === データなしメッセージ === */
+    .no-data {
+      text-align: center;
+      color: #777;
+      padding: 20px;
+      background-color: #fafafa;
+      border: 1px dashed #ccc;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <h1>部活動</h1>
+
+  <ul class="styled-list">
+    <!-- setはコレクションなので、th:each="要素 : ${コレクション}" が使える。要素の数だけ表示 -->
+    <li th:each="club : ${clubSet}" th:text="${club}"></li>
+  </ul>
+
+  <!-- #sets.isEmpty(...) でsetが空であるかを判定できる -->
+  <p class="no-data" th:if="${#sets.isEmpty(clubSet)}">データがありません</p>
+
+</div>
+
+</body>
+</html>
