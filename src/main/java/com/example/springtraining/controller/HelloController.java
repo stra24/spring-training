@@ -1,5 +1,8 @@
 package com.example.springtraining.controller;
 
+import com.example.springtraining.domain.FullName;
+import com.example.springtraining.domain.Profile;
+import com.example.springtraining.domain.User;
 import com.example.springtraining.service.HelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,5 +30,14 @@ public class HelloController {
     String greetMessage = helloService.greet("太郎");
     model.addAttribute("greetMessage", greetMessage);
     return "hello";
+  }
+
+  @GetMapping("/user")
+  public String showUser(Model model) {
+    FullName fullName = new FullName("Hanako", "Yamada");
+    Profile profile = new Profile(fullName, 25);
+    User user = new User("1", profile);
+    model.addAttribute("user", user);
+    return "user";
   }
 }
