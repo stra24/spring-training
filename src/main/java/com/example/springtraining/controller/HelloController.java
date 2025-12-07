@@ -31,13 +31,4 @@ public class HelloController {
     model.addAttribute("greetMessage", greetMessage);
     return "hello";
   }
-
-  @GetMapping("/user")
-  public String showUser(Model model) {
-    FullName fullName = new FullName("Hanako", "Yamada");
-    Profile profile = new Profile(fullName, 25);
-    User user = new User("1", profile);
-    model.addAttribute("user", user);
-    return "user";
-  }
 }
