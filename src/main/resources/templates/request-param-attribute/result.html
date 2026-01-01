@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>@RequestParam 動作確認（属性）結果画面</title>
+  <style>
+    .table{
+      width: auto;
+      max-width: 860px;
+      table-layout: fixed;
+      border-collapse: separate;
+      border-spacing: 0;
+      display: block;
+      overflow-x: auto;
+      margin: 8px 0 18px 0;
+    }
+    .table th, .table td{
+      text-align: left !important;
+      padding: 6px 10px;
+      border: 1px solid #e6e6e6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+      font-size: .95em;
+      border-color:#94a3b8;
+    }
+    .table th{
+      width: 360px;
+      background:#c7d2fe;
+      color:#0f172a;
+      font-weight: 700;
+    }
+    .table td{
+      max-width: 460px;
+      background:#fff;
+      color:#0b1324;
+    }
+    .table tbody tr:nth-child(even) td{ background:#f1f5f9; }
+    .table tbody tr:first-child th{ border-top-left-radius: 10px; }
+    .table tbody tr:first-child td{ border-top-right-radius: 10px; }
+    .table tbody tr:last-child  th{ border-bottom-left-radius: 10px; }
+    .table tbody tr:last-child  td{ border-bottom-right-radius: 10px; }
+
+    .table code{
+      background:#bfdbfe;
+      color:#0f172a;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    h3{ margin: 16px 0 8px; }
+  </style>
+</head>
+<body>
+<h2 th:text="${title}">@RequestParam 動作確認（属性）結果画面</h2>
+
+<h3>▼required属性のテスト</h3>
+<table class="table">
+  <tbody>
+  <tr>
+    <th>xの型</th>
+    <td><code th:text="${type} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>xの値（表示用）</th>
+    <td><code th:text="${xText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>optionalの値が存在するか</th>
+    <td><code th:text="${optionalPresent} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>optionalの値（表示用）</th>
+    <td><code th:text="${optionalValueText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>required=true + defaultValue 適用後の page の値</th>
+    <td><code th:text="${pageResolvedReqDef} ?: '-'">-</code></td>
+  </tr>
+  </tbody>
+</table>
+
+<h3>▼value / name / defaultValue属性のテスト</h3>
+<table class="table">
+  <tbody>
+  <tr>
+    <th>qの値（value属性で受け取った値・表示用）</th>
+    <td><code th:text="${valueAttrValueText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>qの値（name属性で受け取った値・表示用）</th>
+    <td><code th:text="${nameAttrValueText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>searchの値（属性省略・表示用）</th>
+    <td><code th:text="${searchValueText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>userの値（表示用）</th>
+    <td><code th:text="${userResolvedText} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>pageの値</th>
+    <td><code th:text="${pageResolved} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>kw（Optional）の値が存在するか</th>
+    <td><code th:text="${kwPresent} ?: '-'">-</code></td>
+  </tr>
+  <tr>
+    <th>kw（Optional）の値（表示用）</th>
+    <td><code th:text="${kwValueText} ?: '-'">-</code></td>
+  </tr>
+  </tbody>
+</table>
+
+<p><a th:href="@{/request-param-attribute}">← フォームに戻る</a></p>
+</body>
+</html>
