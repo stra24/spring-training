@@ -64,7 +64,7 @@ public class ModelAttributeMethodController {
      */
     @GetMapping
     public String index() {
-        return "model-attribute/form";
+        return "model-attribute-method/form";
     }
 
     /**
@@ -72,6 +72,6 @@ public class ModelAttributeMethodController {
      */
     @PostMapping
     public String submit(@ModelAttribute RegisterForm form) {
-        return "model-attribute/result";
+        return "model-attribute-method/result";
     }
 }
