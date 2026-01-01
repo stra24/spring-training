@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ModelAttribute デモ（フォーム）</title>
+    <style>
+        :root {
+            --green: #0f766e;      /* ティール系（キャプチャ寄せ） */
+            --green-dark: #0b5f58;
+            --border: #e5e7eb;
+            --bg: #f6f7f9;
+            --text: #111827;
+            --muted: #6b7280;
+        }
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP",
+            "Hiragino Kaku Gothic ProN", Meiryo, Arial, sans-serif;
+        }
+        .container {
+            max-width: 980px;
+            margin: 32px auto;
+            padding: 0 16px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .card-body { padding: 22px 22px 26px; }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 18px;
+        }
+        .title::before {
+            content: "";
+            width: 6px;
+            height: 28px;
+            background: var(--green);
+            border-radius: 4px;
+        }
+
+        .section-title {
+            margin: 22px 0 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+        .hint {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        thead th {
+            background: var(--green);
+            color: #fff;
+            text-align: left;
+            padding: 12px 14px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        tbody td {
+            padding: 12px 14px;
+            border-top: 1px solid var(--border);
+            font-size: 14px;
+            vertical-align: top;
+            background: #fff;
+        }
+        tbody tr:nth-child(even) td { background: #fafafa; }
+
+        .key-badge {
+            display: inline-block;
+            font-size: 12px;
+            color: #fff;
+            background: var(--green-dark);
+            padding: 2px 8px;
+            border-radius: 999px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+
+        .form-grid {
+            display: grid;
+            gap: 10px;
+        }
+        .input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+        .input:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(15,118,110,0.15);
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--green);
+            background: var(--green);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover { filter: brightness(0.97); }
+
+        .roles-list {
+            margin: 8px 0 0;
+            padding-left: 18px;
+            color: var(--text);
+        }
+        .footer-link {
+            margin-top: 14px;
+            display: inline-block;
+            color: var(--green);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .footer-link:hover { text-decoration: underline; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h1 class="title">@ModelAttribute デモ（フォーム）</h1>
+
+            <p class="hint">
+                この画面では、Controllerの <span class="mono">@ModelAttribute</span> により Model に登録された値を表示しています。
+                どの「キー名」で取り出しているかが分かるように、行にキー名を明示しています。
+            </p>
+
+            <div class="section-title">Model に登録されている値（キー名 → 値）</div>
+            <table>
+                <thead>
+                <tr>
+                    <th style="width: 38%;">項目</th>
+                    <th>値</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        appName <span class="key-badge">キー</span>
+                    </td>
+                    <td th:text="${appName}">App</td>
+                </tr>
+                <tr>
+                    <td>
+                        today <span class="key-badge">キー</span>
+                    </td>
+                    <td>
+                        <span th:text="${#temporals.format(today, 'yyyy/MM/dd')}">-</span>
+                        <span class="hint" style="display:block;margin-top:4px;">
+              （表示は <span class="mono">today</span> キーの値）
+            </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        roles <span class="key-badge">キー</span>
+                    </td>
+                    <td>
+                        <ul class="roles-list">
+                            <li th:each="r : ${roles}" th:text="${r}">role</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title">ユーザー登録フォーム</div>
+            <p class="hint">
+                フォームは <span class="mono">th:object="${registerForm}"</span> を使っており、Model のキーは
+                <span class="mono">registerForm</span>（戻り値型 <span class="mono">RegisterForm</span> のローワーキャメル）です。
+            </p>
+
+            <form th:action="@{/model-attribute-method}" th:object="${registerForm}" method="post" class="form-grid">
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 38%;">項目</th>
+                        <th>値</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>氏名 <span class="hint" style="margin-left:8px;">（registerForm.name）</span></td>
+                        <td><input class="input" type="text" th:field="*{name}" placeholder="例：田中" /></td>
+                    </tr>
+                    <tr>
+                        <td>年齢 <span class="hint" style="margin-left:8px;">（registerForm.age）</span></td>
+                        <td><input class="input" type="number" min="0" th:field="*{age}" placeholder="例：20" /></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <button type="submit" class="btn">送信</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
