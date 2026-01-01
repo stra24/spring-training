@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirect / Forward デモ（一覧）</title>
+  <style>
+    :root{
+      --green:#0f766e;
+      --green-dark:#0b5f58;
+      --border:#e5e7eb;
+      --bg:#f6f7f9;
+      --text:#111827;
+      --muted:#6b7280;
+      --shadow: 0 8px 22px rgba(17,24,39,.08);
+      --success:#065f46;
+      --success-bg:#ecfdf5;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif;
+    }
+
+    .wrap{ max-width: 980px; margin: 28px auto; padding: 0 16px; }
+    .card{
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+
+    .card-head{
+      display:flex;
+      gap:14px;
+      padding: 18px 22px 10px 22px;
+      align-items:flex-start;
+    }
+    .bar{
+      width:6px;
+      height: 28px;
+      background: var(--green);
+      border-radius: 3px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+
+    .title-row{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    h1{ margin:0; font-size: 22px; font-weight: 800; letter-spacing: .02em; }
+    .sub{ margin: 6px 0 0 0; color: var(--muted); font-size: 13px; line-height: 1.6; }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(15,118,110,.25);
+      background: rgba(15,118,110,.06);
+      color: var(--green);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .content{ padding: 10px 22px 20px 22px; }
+
+    .toast{
+      border:1px solid #a7f3d0;
+      background: var(--success-bg);
+      color: var(--success);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 10px 0 14px 0;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 10px;
+      overflow:hidden;
+      border-radius: 14px;
+      border:1px solid var(--border);
+    }
+    thead th{
+      background: var(--green);
+      color:#fff;
+      text-align:left;
+      padding: 12px 14px;
+      font-size: 13px;
+      letter-spacing: .02em;
+    }
+    tbody td{
+      padding: 12px 14px;
+      border-top:1px solid var(--border);
+      font-size: 14px;
+      vertical-align: top;
+    }
+    tbody tr:hover td{
+      background: rgba(15,118,110,.04);
+    }
+
+    .muted{ color: var(--muted); }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items:center;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      height: 42px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      font-size: 14px;
+      text-decoration:none;
+      cursor:pointer;
+      user-select:none;
+      white-space: nowrap;
+    }
+    .btn.primary{ background: var(--green); color:#fff; }
+    .btn.primary:hover{ background: var(--green-dark); }
+    .btn.ghost{
+      background:#fff;
+      border-color: rgba(15,118,110,.35);
+      color: var(--green);
+    }
+    .btn.ghost:hover{
+      border-color: rgba(15,118,110,.6);
+      background: rgba(15,118,110,.06);
+    }
+    .btn.danger{
+      background:#fff;
+      border-color: rgba(220,38,38,.35);
+      color: #dc2626;
+    }
+    .btn.danger:hover{
+      border-color: rgba(220,38,38,.6);
+      background: rgba(220,38,38,.06);
+    }
+
+    @media (max-width: 640px){
+      .btn{ width:100%; }
+      .actions{ width:100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="card-head">
+      <div class="bar"></div>
+      <div>
+        <div class="title-row">
+          <h1>Redirect / Forward デモ（一覧）</h1>
+          <span class="badge" th:text="'登録済み：' + ${count} + ' 件'">登録済み：0 件</span>
+        </div>
+        <p class="sub">
+          登録後は redirect でこの画面に遷移します（PRG）。Flash Attribute のメッセージも確認できます。
+        </p>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="toast" th:if="${message}" th:text="${message}">
+        「山田 太郎」さんを登録しました。
+      </div>
+
+      <table>
+        <thead>
+        <tr>
+          <th style="width: 90px;">No.</th>
+          <th>名前</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${#lists.isEmpty(names)}">
+          <td colspan="2" class="muted">まだ登録がありません</td>
+        </tr>
+
+        <tr th:each="n, stat : ${names}">
+          <td th:text="${stat.index + 1}">1</td>
+          <td th:text="${n}">name</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="actions">
+        <a class="btn ghost" th:href="@{/redirect-forward/form}">フォームへ戻る</a>
+
+        <form th:action="@{/redirect-forward/clear}" method="post" style="margin:0;">
+          <button class="btn danger" type="submit">一覧をクリア</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
