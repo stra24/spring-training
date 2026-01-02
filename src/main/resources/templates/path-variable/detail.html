@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>書籍詳細</title>
+  <style>
+    :root{
+      --green:#0f766e;
+      --green-dark:#0b5f58;
+      --border:#e5e7eb;
+      --bg:#f6f7f9;
+      --text:#111827;
+      --muted:#6b7280;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif;
+    }
+    .container{
+      max-width:900px;
+      margin:40px auto;
+      padding:0 24px;
+    }
+    .card{
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      padding:28px 32px;
+    }
+    .page-title{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      font-size:28px;
+      font-weight:800;
+      margin:0 0 18px 0;
+      letter-spacing:.02em;
+    }
+    .page-title::before{
+      content:"";
+      display:block;
+      width:6px;
+      height:32px;
+      background:var(--green);
+      border-radius:4px;
+    }
+
+    .kv{
+      display:grid;
+      grid-template-columns:140px 1fr;
+      gap:12px 18px;
+      padding:18px 0;
+      border-top:1px solid var(--border);
+      border-bottom:1px solid var(--border);
+    }
+    .k{
+      color:var(--muted);
+      font-weight:800;
+    }
+    .v{
+      font-weight:700;
+    }
+
+    .actions{
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+    }
+    .btn{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:10px;
+      background:var(--green);
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      line-height:1;
+      white-space:nowrap;
+    }
+    .btn:hover{ background:var(--green-dark); }
+
+    .btn-secondary{
+      background:#fff;
+      color:var(--text);
+      border:1px solid var(--border);
+    }
+    .btn-secondary:hover{
+      background:#f9fafb;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h2 class="page-title">書籍詳細</h2>
+
+    <div class="kv">
+      <div class="k">ID</div>
+      <div class="v" th:text="${book.id}">1</div>
+
+      <div class="k">タイトル</div>
+      <div class="v" th:text="${book.title}">スッキリSpring</div>
+
+      <div class="k">著者</div>
+      <div class="v" th:text="${book.author}">Ito</div>
+    </div>
+
+    <div class="actions">
+      <a class="btn btn-secondary" th:href="@{/path-variable/books}">一覧へ戻る</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

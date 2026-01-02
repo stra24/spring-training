@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>書籍一覧</title>
+  <style>
+    :root{
+      --green:#0f766e;
+      --green-dark:#0b5f58;
+      --border:#e5e7eb;
+      --bg:#f6f7f9;
+      --text:#111827;
+      --muted:#6b7280;
+      --row:#f3f4f6;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif;
+    }
+    .container{
+      max-width:1120px;
+      margin:40px auto;
+      padding:0 24px;
+    }
+    .card{
+      background:#fff;
+      border-radius:14px;
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      padding:28px 32px;
+    }
+    .page-title{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      font-size:28px;
+      font-weight:800;
+      margin:0 0 18px 0;
+      letter-spacing:.02em;
+    }
+    .page-title::before{
+      content:"";
+      display:block;
+      width:6px;
+      height:32px;
+      background:var(--green);
+      border-radius:4px;
+    }
+
+    .table-wrap{
+      margin-top:14px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      overflow:hidden;
+      background:#fff;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+    }
+    thead th{
+      background:var(--green);
+      color:#fff;
+      padding:16px 18px;
+      text-align:left;
+      font-size:15px;
+    }
+    tbody td{
+      padding:18px;
+      border-top:1px solid var(--border);
+      vertical-align:top;
+      font-size:15px;
+    }
+    tbody tr:nth-child(even) td{
+      background:var(--row);
+    }
+
+    .title-link{
+      color:inherit;
+      text-decoration:none;
+    }
+    .book-title{
+      display:inline-block;
+      margin-right:8px;
+    }
+    .muted{
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    .btn{
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:10px;
+      background:var(--green);
+      color:#fff;
+      text-decoration:none;
+      font-weight:700;
+      line-height:1;
+      white-space:nowrap;
+    }
+    .btn:hover{ background:var(--green-dark); }
+
+    .col-num{ width:70px; }
+    .col-id{ width:160px; }
+    .col-action{ width:120px; text-align:right; }
+    .right{ text-align:right; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h2 class="page-title">書籍一覧</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+        <tr>
+          <th class="col-num">#</th>
+          <th class="col-id">ID</th>
+          <th>タイトル</th>
+          <th>著者</th>
+          <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="b, stat : ${books}">
+          <td th:text="${stat.count}">1</td>
+
+          <td th:text="${b.id}">1</td>
+
+          <td>
+            <a class="title-link"
+               th:href="@{/path-variable/books/{id}(id=${b.id})}">
+              <span class="book-title" th:text="${b.title}">スッキリSpring</span>
+            </a>
+          </td>
+
+          <td>
+            <span class="muted" th:text="${b.author}">Ito</span>
+          </td>
+
+          <td class="right">
+            <a class="btn"
+               th:href="@{/path-variable/books/{id}(id=${b.id})}">
+              詳細
+            </a>
+          </td>
+        </tr>
+
+        <!-- books が空のとき -->
+        <tr th:if="${#lists.isEmpty(books)}">
+          <td colspan="5" class="muted">書籍がありません。</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
