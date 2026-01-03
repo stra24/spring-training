@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>単純型の入力チェック（@Validated + 引数の制約）</title>
+
+  <style>
+    :root{
+      --g:#0f766e; --g2:#0b5f58;
+      --bg:#f6f7f9; --card:#fff;
+      --text:#0f172a; --muted:#64748b;
+      --bd:#e5e7eb;
+      --tint:rgba(15,118,110,.08);
+      --shadow:0 10px 24px rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.05);
+      --ring:0 0 0 4px rgba(15,118,110,.16);
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif}
+    .wrap{max-width:1080px;margin:28px auto;padding:0 18px}
+    .card{background:var(--card);border:1px solid rgba(229,231,235,.9);border-radius:14px;box-shadow:var(--shadow);padding:22px 22px 14px}
+
+    .title{display:flex;gap:14px;align-items:flex-start;margin:2px 0 14px}
+    .title::before{content:"";width:6px;height:34px;border-radius:999px;background:var(--g);margin-top:6px}
+    h1{margin:0;font-size:28px;font-weight:900;line-height:1.25}
+    .desc{margin:6px 0 0;color:var(--muted);font-size:14px}
+    .pill{display:inline-block;padding:2px 10px;border-radius:999px;
+      background:rgba(15,118,110,.10);border:1px solid rgba(15,118,110,.18);
+      color:var(--g2);font-weight:900;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+
+    .panel{border-top:1px solid var(--bd);padding:16px 0 18px}
+    .panel:first-of-type{border-top:none;padding-top:8px}
+    .head{display:flex;align-items:center;gap:10px;margin:0 0 10px}
+    .badge{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+      background:var(--tint);border:1px solid rgba(15,118,110,.18);color:var(--g2);font-weight:900}
+    .head h2{margin:0;font-size:18px;font-weight:900}
+
+    .row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end;max-width:760px}
+    label{display:block;margin:0 0 6px;font-size:13px;font-weight:800;color:#334155}
+    .input{width:100%;height:42px;padding:10px 12px;border-radius:10px;border:1px solid var(--bd);outline:0;font-size:14px}
+    .input:focus{border-color:rgba(15,118,110,.55);box-shadow:var(--ring)}
+    .btn{height:42px;padding:0 16px;border-radius:999px;border:1px solid rgba(15,118,110,.55);
+      background:var(--g);color:#fff;font-weight:900;cursor:pointer;white-space:nowrap}
+    .btn:hover{filter:brightness(.97)}
+    .btn:active{transform:translateY(1px)}
+
+    .box{max-width:760px;margin-top:10px;padding:10px 12px;border-radius:12px;
+      border:1px solid rgba(15,118,110,.18);background:var(--tint)}
+    .box strong{color:var(--g2)}
+    .hint{max-width:760px;margin-top:8px;color:var(--muted);font-size:13px}
+    code{background:#f3f4f6;border:1px solid #e5e7eb;padding:2px 6px;border-radius:8px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;font-size:12.5px}
+    .note{margin-top:12px;padding-top:12px;border-top:1px solid var(--bd);color:var(--muted);font-size:13px}
+
+    @media (max-width:640px){
+      .row{grid-template-columns:1fr}
+      .btn{width:100%}
+      h1{font-size:22px}
+    }
+  </style>
+</head>
+
+<body>
+<main class="wrap">
+  <div class="card">
+
+    <div class="title">
+      <div>
+        <h1>単純型の入力チェック</h1>
+        <p class="desc">
+          <span class="pill">@RequestParam</span> / <span class="pill">@PathVariable</span>
+          の引数に制約（例：<span class="pill">@NotBlank</span> <span class="pill">@Min</span> <span class="pill">@Max</span> <span class="pill">@Positive</span>）を付けたときの挙動を確認します。
+        </p>
+      </div>
+    </div>
+
+    <!-- ① -->
+    <section class="panel">
+      <div class="head">
+        <div class="badge">①</div>
+        <h2>文字列の必須チェック（@NotBlank）</h2>
+      </div>
+
+      <form th:action="@{/validation/simple/name}" method="get" class="row">
+        <div>
+          <label for="nameValue">value</label>
+          <input id="nameValue" class="input" type="text" name="value" placeholder="例: Alice" />
+        </div>
+        <button class="btn" type="submit">送信</button>
+      </form>
+
+      <div class="box" th:if="${name}">
+        <strong>結果：</strong>
+        <span th:text="'Hello, ' + ${name} + ' !'">Hello, Alice !</span>
+      </div>
+
+      <div class="hint">例：<code>GET /validation/simple/name?value=Alice</code></div>
+    </section>
+
+    <!-- ② -->
+    <section class="panel">
+      <div class="head">
+        <div class="badge">②</div>
+        <h2>数値の範囲チェック（@Min / @Max）</h2>
+      </div>
+
+      <form th:action="@{/validation/simple/age}" method="get" class="row">
+        <div>
+          <label for="ageValue">value（0〜150）</label>
+          <input id="ageValue" class="input" type="number" name="value" placeholder="例: 20" />
+        </div>
+        <button class="btn" type="submit">送信</button>
+      </form>
+
+      <div class="box" th:if="${age != null}">
+        <strong>結果：</strong>
+        <span th:text="'age = ' + ${age}">age = 20</span>
+      </div>
+
+      <div class="hint">例：<code>GET /validation/simple/age?value=20</code></div>
+    </section>
+
+    <!-- ③ -->
+    <section class="panel">
+      <div class="head">
+        <div class="badge">③</div>
+        <h2>PathVariable の正数チェック（@Positive）</h2>
+      </div>
+
+      <!-- data-base に遷移先ベースURLを設定（Thymeleafでコンテキストパス対応） -->
+      <form id="pvForm" class="row" data-base="/validation/simple/items" th:attr="data-base=@{/validation/simple/items}">
+        <div>
+          <label for="pvId">id（正の整数）</label>
+          <input id="pvId" class="input" type="number" placeholder="例: 42" />
+        </div>
+        <button class="btn" type="submit">送信　</button>
+      </form>
+
+      <div class="box" th:if="${id != null}">
+        <strong>結果：</strong>
+        <span th:text="'id = ' + ${id}">id = 42</span>
+      </div>
+
+      <div class="hint">例：<code>GET /validation/simple/items/42</code></div>
+    </section>
+
+    <div class="note">
+      制約違反時は、ハンドラ実行前にエラーになります（このデモはデフォルトのエラーページのまま）。
+    </div>
+
+  </div>
+</main>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("pvForm");
+    const input = document.getElementById("pvId");
+    if (!form || !input) return;
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const v = String(input.value ?? "").trim();
+      if (!v) return;
+
+      const base = (form.dataset.base || "/validation/simple/items").replace(/\/$/, "");
+      location.href = base + "/" + encodeURIComponent(v);
+    });
+  });
+</script>
+</body>
+</html>
