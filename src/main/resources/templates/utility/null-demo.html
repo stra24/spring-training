@@ -1,259 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Nullや空の安全な扱い</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
-    /* ベーススタイル（他ページと同テイスト） */
-    body {
-      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
-      margin: 0;
-      padding: 20px;
-      line-height: 1.6;
-      font-size: 14px;
-    }
-
-    .container {
-      max-width: 1280px; /* ← 少しだけ広げた */
-      margin: 0 auto;
-      background-color: #fff;
-      padding: 24px 28px;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    }
-
-    h1 {
-      font-size: 22px;
-      margin-top: 0;
-      margin-bottom: 16px;
-      color: #2c3e50;
-      border-left: 5px solid #009879;
-      padding-left: 15px;
-    }
-
-    h2 {
-      font-size: 16px;
-      margin-top: 0;
-      margin-bottom: 8px;
-      color: #1f2933;
-      border-left: 3px solid #009879;
-      padding-left: 8px;
-    }
-
-    .lead {
-      margin: 4px 0 18px;
-      color: #4b5563;
-      font-size: 13px;
-    }
-
-    code {
-      background: #f5f5f5;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.9em;
-    }
-
-    /* 3カラムグリッドレイアウト */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(260px, 1fr));
-      gap: 14px;
-    }
-
-    @media (max-width: 1024px) {
-      .grid-3 {
-        grid-template-columns: repeat(2, minmax(260px, 1fr));
-      }
-    }
-
-    @media (max-width: 720px) {
-      .grid-3 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      border-radius: 8px;
-      padding: 12px 14px;
-      background-color: #fafafa;
-      border: 1px solid #e5e7eb;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-    }
-
-    .card p {
-      margin: 4px 0 6px;
-    }
-
-    .card-title-sub {
-      font-size: 12px;
-      color: #6b7280;
-      margin-bottom: 6px;
-    }
-
-    .point-list {
-      list-style: none;
-      padding-left: 0;
-      margin: 4px 0 2px;
-      font-size: 12px;
-      color: #4b5563;
-    }
-
-    .point-list li::before {
-      content: "●";
-      font-size: 7px;
-      margin-right: 6px;
-      color: #009879;
-    }
-
-    .example-row {
-      display: flex;
-      align-items: baseline;
-      gap: 4px;
-      font-size: 13px;
-      flex-wrap: wrap;
-    }
-
-    .label {
-      display: inline-block;
-      min-width: 140px;
-      color: #6b7280;
-    }
-
-    .muted {
-      color: #888;
-      font-size: 12px;
-    }
+    body { margin:0; padding:16px; background:#f6f7f9; color:#111; }
+    main { max-width:900px; margin:0 auto; background:#fff; padding:16px; border:1px solid #e5e7eb; border-radius:10px; }
+    section { margin:12px 0; padding:12px; border:1px solid #e5e7eb; border-radius:10px; }
+    .small { color:#6b7280; font-size:12px; margin:6px 0 0; }
+    .row { display:flex; gap:10px; flex-wrap:wrap; align-items:baseline; margin:6px 0; }
+    .k { min-width:12em; color:#6b7280; }
+    .v { font-weight:700; }
   </style>
 </head>
 <body>
-
-<div class="container">
-
+<main>
   <h1>Nullや空の安全な扱い</h1>
-  <p class="lead">
-    Spring + Thymeleaf でよく使う「null や空のときの安全な書き方」を、短いサンプルでまとめています。
-    画面側で不用意に <code>null</code> 例外を起こさないための“お作法”として押さえておきましょう。
-  </p>
+  <p class="small">画面側で null や空が来ても、エラーにせず表示できるようにします。</p>
 
-  <div class="grid-3">
+  <section>
+    <h2>表示のデフォルト（?:）</h2>
+    <div class="row">
+      <div class="k">ニックネーム（null）</div>
+      <div class="v" th:text="${nicknameNull ?: '（未設定）'}"></div>
+    </div>
+    <div class="row">
+      <div class="k">ニックネーム（空文字）</div>
+      <div class="v" th:text="${nicknameEmpty ?: '（未設定）'}"></div>
+    </div>
+  </section>
 
-    <!-- 1列目（上段）：Elvis演算子 -->
-    <div class="card">
-      <h2>■ Elvis演算子 (<code>?:</code>)</h2>
-      <p class="card-title-sub">左側が <code>null</code> または空文字のとき、右側のデフォルト値を採用します。
-      </p>
+  <section>
+    <h2>nullでもエラーにしない（?.）</h2>
+    <div class="row">
+      <div class="k">greetingNull の長さ</div>
+      <div class="v" th:text="${greetingNull?.length()}"></div>
+    </div>
+  </section>
 
-      <ul class="point-list">
-        <li><code>value ?: 'デフォルト'</code> の形で「なければこれ」を簡潔に書ける。</li>
-        <li>画面に「null」や空文字がそのまま出てしまうのを防げる。</li>
-      </ul>
+  <section>
+    <h2>リスト・マップ・セットの空判定</h2>
 
-      <div class="example-row">
-        <span class="label">ニックネーム（値がnull）:</span>
-        <strong th:text="${nickname ?: '（未設定）'}"></strong>
-      </div>
-      <div class="example-row">
-        <span class="label">ニックネーム（値が空文字）:</span>
-        <strong th:text="${nicknameEmpty ?: '（未設定）'}"></strong>
-      </div>
+    <div class="row">
+      <div class="k">List</div>
+      <div class="v" th:text="${#lists.isEmpty(emptyList) ? 'ありません' : 'あります'}"></div>
     </div>
 
-    <!-- 2列目（上段）：安全呼び出し -->
-    <div class="card">
-      <h2>■ 安全呼び出し (<code>?.</code>)</h2>
-      <p class="card-title-sub">
-        左側が <code>null</code> の場合は、その先のメソッド呼び出しをスキップして <code>null</code>
-        を返します。
-      </p>
-
-      <ul class="point-list">
-        <li><code>obj?.method()</code> と書くことで、<code>NullPointerException</code> を避けられる。
-        </li>
-        <li>さらに Elvis演算子と組み合わせて「なければ 0」なども簡潔に表現できる。</li>
-      </ul>
-
-      <p class="example-row">
-        <span class="label">greeting の長さ:</span>
-        <strong th:text="${greeting?.length() ?: 0}"></strong>
-      </p>
-      <p class="muted">
-        ※ Controller 側で <code>greeting</code> に文字列をセットして再読み込みすると、
-        長さの値が 0 → 文字数 に変化するのを確認できます。
-      </p>
+    <div class="row">
+      <div class="k">Map</div>
+      <div class="v" th:text="${#maps.isEmpty(emptyMap) ? 'ありません' : 'あります'}"></div>
     </div>
 
-    <!-- 3列目（上段）：フォールバックテキスト -->
-    <div class="card">
-      <h2>■ プレーンHTMLのフォールバックテキスト</h2>
-      <p class="card-title-sub">
-        <code>th:text</code> と要素内のテキストは、どちらが優先されるかを理解しておくとデバッグが楽になります。
-      </p>
-
-      <ul class="point-list">
-        <li>通常は <code>th:text</code> が優先され、要素内のテキストは上書きされる。</li>
-        <li>テンプレートを直接ブラウザで開いたときだけ、要素内のテキストが表示される。</li>
-      </ul>
-
-      <p class="muted">
-        下の例では、Thymeleaf が動作していれば <code>th:text</code> の結果だけが表示され、
-        「（ここはフォールバック文言）」は画面には出ません。
-      </p>
-      <p>
-        例：
-        <span th:text="${nickname ?: '（未設定）'}">（ここはフォールバック文言）</span>
-      </p>
+    <div class="row">
+      <div class="k">Set</div>
+      <div class="v" th:text="${#sets.isEmpty(emptySet) ? 'ありません' : 'あります'}"></div>
     </div>
-
-    <!-- 下段 1列目：List -->
-    <div class="card">
-      <h2>■ List の空判定 (<code>#lists.isEmpty</code>)</h2>
-      <p class="card-title-sub">null か要素数 0
-        のどちらでも「空」とみなしてくれるユーティリティです。</p>
-
-      <ul class="point-list">
-        <li><code>#lists.isEmpty(list)</code> は <code>null</code> も安全に判定可能。</li>
-        <li>「データなしメッセージ」と「一覧表示」の出し分けに使うのが典型パターン。</li>
-      </ul>
-
-      <p th:if="${#lists.isEmpty(emptyList)}">リストがありません。</p>
-      <p th:unless="${#lists.isEmpty(emptyList)}">リストがあります。</p>
-    </div>
-
-    <!-- 下段 2列目：Map -->
-    <div class="card">
-      <h2>■ Map の空判定 (<code>#maps.isEmpty</code>)</h2>
-      <p class="card-title-sub">Key-Value 形式のデータにも、同じような感覚で使えます。</p>
-
-      <ul class="point-list">
-        <li><code>#maps.isEmpty(map)</code> も <code>null</code> 対応済み。</li>
-        <li>設定値・マスタ情報・在庫情報など、Map で渡すケースの有無チェックに便利。</li>
-      </ul>
-
-      <p th:if="${#maps.isEmpty(emptyMap)}">マップがありません。</p>
-      <p th:unless="${#maps.isEmpty(emptyMap)}">マップがあります。</p>
-    </div>
-
-    <!-- 下段 3列目：Set -->
-    <div class="card">
-      <h2>■ Set の空判定 (<code>#sets.isEmpty</code>)</h2>
-      <p class="card-title-sub">重複なしコレクションでも、同じパターンで扱えます。</p>
-
-      <ul class="point-list">
-        <li><code>#sets.isEmpty(set)</code> で <code>null</code>／空の両方を一括判定。</li>
-        <li>「選択済みタグ」「所属グループ」など、0件かどうかの分岐に使いやすい。</li>
-      </ul>
-
-      <div th:if="${#sets.isEmpty(emptySet)}">セットがありません。</div>
-      <p th:unless="${#sets.isEmpty(emptySet)}">セットがあります。</p>
-    </div>
-
-  </div>
-
-</div>
-
+  </section>
+</main>
 </body>
 </html>

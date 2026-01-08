@@ -10,10 +10,10 @@
 <!-- dogオブジェクトとフォームを結びつける -->
 <form th:action="@{/binding}" th:object="${dog}" method="post">
   <p>
-    名前: <input type="text" th:field="*{name}" />
+    名前: <input type="text" th:field="*{name}"/>
   </p>
   <p>
-    年齢: <input type="number" th:field="*{age}" />
+    年齢: <input type="number" th:field="*{age}"/>
   </p>
   <button type="submit">送信</button>
 </form>
