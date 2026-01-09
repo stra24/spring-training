@@ -1,63 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>@RequestParam 動作確認（属性）結果画面</title>
-  <style>
-    .table{
-      width: auto;
-      max-width: 860px;
-      table-layout: fixed;
-      border-collapse: separate;
-      border-spacing: 0;
-      display: block;
-      overflow-x: auto;
-      margin: 8px 0 18px 0;
-    }
-    .table th, .table td{
-      text-align: left !important;
-      padding: 6px 10px;
-      border: 1px solid #e6e6e6;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      vertical-align: middle;
-      font-size: .95em;
-      border-color:#94a3b8;
-    }
-    .table th{
-      width: 360px;
-      background:#c7d2fe;
-      color:#0f172a;
-      font-weight: 700;
-    }
-    .table td{
-      max-width: 460px;
-      background:#fff;
-      color:#0b1324;
-    }
-    .table tbody tr:nth-child(even) td{ background:#f1f5f9; }
-    .table tbody tr:first-child th{ border-top-left-radius: 10px; }
-    .table tbody tr:first-child td{ border-top-right-radius: 10px; }
-    .table tbody tr:last-child  th{ border-bottom-left-radius: 10px; }
-    .table tbody tr:last-child  td{ border-bottom-right-radius: 10px; }
 
-    .table code{
-      background:#bfdbfe;
-      color:#0f172a;
+  <style>
+    body {
+      margin: 16px;
+      line-height: 1.6;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 8px 0 18px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 6px 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f4f6;
+      white-space: nowrap;
+    }
+
+    code {
+      background: #f3f4f6;
       padding: 1px 6px;
       border-radius: 4px;
-      white-space: nowrap;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     }
-    h3{ margin: 16px 0 8px; }
+
+    h3 {
+      margin: 16px 0 8px;
+    }
   </style>
 </head>
+
 <body>
 <h2 th:text="${title}">@RequestParam 動作確認（属性）結果画面</h2>
 
-<h3>▼required属性のテスト</h3>
-<table class="table">
+<h3>required属性のテスト</h3>
+<table>
   <tbody>
   <tr>
     <th>xの型</th>
@@ -82,15 +69,15 @@
   </tbody>
 </table>
 
-<h3>▼value / name / defaultValue属性のテスト</h3>
-<table class="table">
+<h3>value / name / defaultValue属性のテスト</h3>
+<table>
   <tbody>
   <tr>
-    <th>qの値（value属性で受け取った値・表示用）</th>
+    <th>qの値（value属性・表示用）</th>
     <td><code th:text="${valueAttrValueText} ?: '-'">-</code></td>
   </tr>
   <tr>
-    <th>qの値（name属性で受け取った値・表示用）</th>
+    <th>qの値（name属性・表示用）</th>
     <td><code th:text="${nameAttrValueText} ?: '-'">-</code></td>
   </tr>
   <tr>
