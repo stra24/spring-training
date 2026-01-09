@@ -1,8 +1,5 @@
 package com.example.springtraining.controller;
 
-import com.example.springtraining.domain.FullName;
-import com.example.springtraining.domain.Profile;
-import com.example.springtraining.domain.User;
 import com.example.springtraining.service.HelloService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
