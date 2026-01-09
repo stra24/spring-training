@@ -1,46 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@RequestParam デモ（結果）</title>
-    <style>
-        :root { --primary:#0b8f7a; --bg:#f4f6f7; --line:#e5e7eb; --text:#1f2937; --muted:#6b7280; }
-        * { box-sizing:border-box; }
-        body { margin:0; background:var(--bg); color:var(--text);
-            font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; }
-        .wrap { max-width:980px; margin:32px auto; padding:0 18px; }
-        .card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
-        .title { margin:0 0 16px; font-size:26px; font-weight:800; padding-left:14px; border-left:6px solid var(--primary); }
-        table { width:100%; border-collapse:collapse; border-radius:12px; overflow:hidden; }
-        thead th { background:var(--primary); color:#fff; text-align:left; padding:12px 14px; font-size:14px; }
-        tbody td { padding:12px 14px; border-bottom:1px solid var(--line); font-size:14px; }
-        tbody tr:nth-child(even) { background:#f7f7f7; }
-        .muted { color:var(--muted); font-size:13px; margin:12px 0 0; }
-        a { color:var(--primary); font-weight:800; text-decoration:none; }
-        a:hover { text-decoration:underline; }
-        code { background:#f3f4f6; padding:2px 6px; border-radius:8px; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>@RequestParam デモ（結果）</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f6f7f9;
+      color: #111;
+    }
+
+    .card {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-weight: 600;
+      background: #f3f4f6;
+    }
+
+    p {
+      margin: 16px 0 0;
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap">
-    <div class="card">
-        <h1 class="title">@RequestParam デモ（結果）</h1>
+<div class="card">
+  <h1>@RequestParam デモ（結果）</h1>
 
-        <table>
-            <thead>
-            <tr><th style="width:180px;">項目</th><th>値</th></tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>キーワード</td>
-                <td><code th:text="${keyword} ?: '-'">-</code></td>
-            </tr>
-            </tbody>
-        </table>
+  <table>
+    <thead>
+    <tr>
+      <th style="width: 180px;">項目</th>
+      <th>値</th>
+    </tr>
+    </thead>
 
-        <p class="muted"><a th:href="@{/request-param-form}">フォームへ戻る</a></p>
-    </div>
+    <tbody>
+    <tr>
+      <td>キーワード</td>
+      <td>
+        <code th:text="${keyword} ?: '-'">-</code>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <a th:href="@{/request-param-form}">フォームへ戻る</a>
+  </p>
 </div>
 </body>
 </html>
