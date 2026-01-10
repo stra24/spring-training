@@ -1,437 +1,331 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>@RequestParam 動作確認（属性）フォーム画面</title>
+
   <style>
-    :root{
-      --bg:#fafafa;
-      --card:#ffffff;
-      --text:#222;
-      --muted:#666;
-      --border:#e6e6e6;
-      --shadow:0 4px 16px rgba(0,0,0,.06);
-      --primary:#2563eb;     /* 青 */
-      --green:#059669;       /* 成功 */
-      --amber:#d97706;       /* 注意 */
-      --rose:#e11d48;        /* エラー */
-      --violet:#7c3aed;      /* 紫 */
+    body {
+      margin: 16px;
+      line-height: 1.6;
     }
-    html,body{
-      background:var(--bg); color:var(--text);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN",Meiryo,"Noto Sans JP",sans-serif;
-      line-height:1.65; margin:0;
+
+    .box {
+      border: 1px solid #ddd;
+      padding: 12px;
+      margin: 12px 0;
     }
-    h2{margin:20px 0 8px}
-    .note{color:var(--muted); font-size:.95em; margin:6px 0 18px}
-    .container{max-width:980px; margin:0 auto; padding:20px 16px}
-    .card{
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:14px;
-      box-shadow:var(--shadow);
-      padding:0; margin:18px 0; overflow:hidden;
+
+    .links a {
+      margin-right: 8px;
     }
-    .card-header{
-      display:flex; align-items:center; gap:10px;
-      padding:12px 16px;
-      background:linear-gradient(180deg,#f9fafb,#f3f4f6);
-      border-bottom:1px solid var(--border);
+
+    input {
+      margin-left: 6px;
     }
-    .chip{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-width:28px; height:28px; padding:0 8px;
-      font-weight:700; font-size:.9em; color:#fff; border-radius:999px;
-      background:var(--primary);
+
+    button {
+      margin-left: 8px;
     }
-    .card-title{margin:0; font-size:1.05rem}
-    .card-body{padding:14px 16px}
-    .card-body p{margin:0 0 10px}
-    .details{margin-top:10px}
-    details{margin-top:10px}
-    summary{cursor:pointer; font-weight:600}
-    code{background:#f5f5f5; padding:1px 6px; border-radius:4px}
-    .links{
-      display:flex; flex-wrap:wrap; gap:8px;
-      margin-top:10px; /* 送信ボタン直下に余白 */
-    }
-    .links a{
-      display:inline-block; text-decoration:none; border:1px solid var(--border);
-      padding:6px 10px; border-radius:999px; background:#fff;
-    }
-    .links a:hover{border-color:#cfcfcf; background:#f9fafb}
-    /* 章ごとの色替え（バッジ色） */
-    .card[data-step="1"] .chip{background:var(--primary)}
-    .card[data-step="2"] .chip{background:var(--green)}
-    .card[data-step="3"] .chip{background:var(--amber)}
-    .card[data-step="4"] .chip{background:var(--rose)}
-    .card[data-step="5"] .chip{background:var(--violet)}
-    .card[data-step="6"] .chip{background:#0ea5e9}
-    .card[data-step="7"] .chip{background:#14b8a6}
   </style>
 </head>
+
 <body>
-<div class="container">
-  <h1>@RequestParam 動作確認（属性）フォーム画面</h1>
-  <p class="note">
-    ✅…成功（200系）／❌…失敗（例外名とHTTPコード）<br>
-    <strong>未指定</strong>を試すには、そのフォームの <code>&lt;input name="x"&gt;</code> を一旦 HTML から消した上で送信するか、下のワンクリック検証リンク（未指定）をご利用ください。<br>
-    入力ボックスを空のまま送信すると <code>?x=</code>（空文字）になります。
-  </p>
+<h1>@RequestParam 動作確認（属性）フォーム画面</h1>
 
-  <h2>▼required属性のテスト</h2>
+<p>
+  ✅…成功（200系）／❌…失敗（例外名とHTTPコード）<br>
+  <strong>未指定</strong>は、入力欄をHTMLから消すか、下の「未指定」リンクを利用。<br>
+  入力を空で送信すると <code>?x=</code>（空文字）。
+</p>
 
-  <!-- 1) required=true × String -->
-  <section class="card" data-step="1">
-    <div class="card-header">
-      <span class="chip">1</span>
-      <h3 class="card-title">required=true × String</h3>
+<h2>required属性のテスト</h2>
+
+<section class="box">
+  <h3>1) required=true × String</h3>
+
+  <form th:action="@{/request-param-attribute/req-true-string}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-true-string}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-true-string(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-true-string(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-true-string(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：❌ MissingServletRequestParameterException（400）</li>
+      <li>空文字：✅ ""</li>
+      <li>数値：✅ "1"</li>
+      <li>文字：✅ "abc"</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>2) required=false × String</h3>
+
+  <form th:action="@{/request-param-attribute/req-false-string}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-false-string}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-false-string(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-false-string(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-false-string(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：✅ null</li>
+      <li>空文字：✅ ""</li>
+      <li>数値：✅ "1"</li>
+      <li>文字：✅ "abc"</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>3) required=true × int</h3>
+
+  <form th:action="@{/request-param-attribute/req-true-int}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-true-int}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-true-int(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-true-int(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-true-int(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：❌ MissingServletRequestParameterException（400）</li>
+      <li>空文字：❌ MethodArgumentTypeMismatchException（400）</li>
+      <li>数値：✅ 1</li>
+      <li>文字：❌ MethodArgumentTypeMismatchException（400）</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>4) required=false × int（危険）</h3>
+
+  <form th:action="@{/request-param-attribute/req-false-int}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-false-int}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-false-int(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-false-int(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-false-int(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：❌ IllegalStateException（500）</li>
+      <li>空文字：❌ MethodArgumentTypeMismatchException（400）</li>
+      <li>数値：✅ 1</li>
+      <li>文字：❌ MethodArgumentTypeMismatchException（400）</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>5) required=true × Integer</h3>
+
+  <form th:action="@{/request-param-attribute/req-true-integer}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-true-integer}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-true-integer(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-true-integer(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-true-integer(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：❌ MissingServletRequestParameterException（400）</li>
+      <li>空文字：❌ MissingServletRequestParameterException（400）</li>
+      <li>数値：✅ 1</li>
+      <li>文字：❌ MethodArgumentTypeMismatchException（400）</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>6) required=false × Integer（安全）</h3>
+
+  <form th:action="@{/request-param-attribute/req-false-integer}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/req-false-integer}">未指定</a>
+    <a th:href="@{/request-param-attribute/req-false-integer(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/req-false-integer(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/req-false-integer(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：✅ null</li>
+      <li>空文字：✅ null</li>
+      <li>数値：✅ 1</li>
+      <li>文字：❌ MethodArgumentTypeMismatchException（400）</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>7) Optional&lt;String&gt;</h3>
+
+  <form th:action="@{/request-param-attribute/optional-string}" method="get">
+    <label>x: <input name="x"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/optional-string}">未指定</a>
+    <a th:href="@{/request-param-attribute/optional-string(x='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/optional-string(x=1)}">数値</a>
+    <a th:href="@{/request-param-attribute/optional-string(x='abc')}">文字</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定：✅ Optional.empty()</li>
+      <li>空文字：✅ Optional.of("")</li>
+      <li>数値：✅ Optional.of("1")</li>
+      <li>文字：✅ Optional.of("abc")</li>
+    </ul>
+  </details>
+</section>
+
+<hr>
+
+<h2>value / name / defaultValue属性のテスト</h2>
+
+<section class="box">
+  <h3>8) パラメータ名を明示指定（value / name）</h3>
+
+  <form th:action="@{/request-param-attribute/param-name-explicit}" method="get">
+    <label>q: <input name="q" placeholder="例: Hello"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/param-name-explicit(q='Hello')}">q=Hello</a>
+    <a th:href="@{/request-param-attribute/param-name-explicit(q='')}">q=（空文字）</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>@RequestParam("q") と @RequestParam(name="q") は同じ</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>9) 省略時は引数名がパラメータ名になる</h3>
+
+  <form th:action="@{/request-param-attribute/param-name-default}" method="get">
+    <label>search: <input name="search" placeholder="例: Java"></label>
+    <button>送信</button>
+  </form>
+
+  <div class="links">
+    <a th:href="@{/request-param-attribute/param-name-default(search='Java')}">search=Java</a>
+    <a th:href="@{/request-param-attribute/param-name-default(search='')}">search=（空文字）</a>
+  </div>
+
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>value/name を省略すると引数名が使われます（この例は search）</li>
+    </ul>
+  </details>
+</section>
+
+<section class="box">
+  <h3>10) defaultValue（String / Integer / Optional）</h3>
+
+  <form th:action="@{/request-param-attribute/default-matrix}" method="get">
+    <div>
+      <label>user: <input name="user" placeholder="未指定/空文字で guest"></label>
     </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-true-string}" method="get">
-        <p>x（必須, String）: <input name="x"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-true-string}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-true-string(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-true-string(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-true-string(x='abc')}">文字</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：❌ MissingServletRequestParameterException（400）— 必須なのにパラメータ <code>x</code> 自体が未指定</li>
-          <li>空文字（<code>?x=</code>）：✅ <code>""</code>（空文字を文字列として受理）</li>
-          <li>数値（<code>?x=1</code>）：✅ <code>"1"</code>（数値でも文字列として受理）</li>
-          <li>文字（<code>?x=abc</code>）：✅ <code>"abc"</code></li>
-        </ul>
-      </details>
+    <div>
+      <label>page: <input name="page" placeholder="未指定/空文字で 1"></label>
     </div>
-  </section>
-
-  <!-- 2) required=false × String -->
-  <section class="card" data-step="2">
-    <div class="card-header">
-      <span class="chip">2</span>
-      <h3 class="card-title">required=false × String</h3>
+    <div>
+      <label>kw: <input name="kw" placeholder="未指定/空文字で &quot;&quot;"></label>
     </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-false-string}" method="get">
-        <p>x（任意, String）: <input name="x"></p>
-        <button>送信</button>
-      </form>
+    <button>送信</button>
+  </form>
 
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-false-string}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-false-string(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-false-string(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-false-string(x='abc')}">文字</a>
-      </div>
+  <div class="links">
+    <a th:href="@{/request-param-attribute/default-matrix}">未指定</a>
+    <a th:href="@{/request-param-attribute/default-matrix(user='',page='',kw='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/default-matrix(user=' ',kw=' ')}">スペース1文字</a>
+    <a th:href="@{/request-param-attribute/default-matrix(page='abc')}">page=abc</a>
+  </div>
 
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：✅ <code>null</code>（任意なので未指定可）</li>
-          <li>空文字：✅ <code>""</code></li>
-          <li>数値：✅ <code>"1"</code></li>
-          <li>文字：✅ <code>"abc"</code></li>
-        </ul>
-      </details>
-    </div>
-  </section>
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定/空文字：defaultValue が適用</li>
+      <li>スペース1文字：空文字ではないので defaultValue は使われない</li>
+      <li>page=abc：❌ 400（Integer 変換不可）</li>
+    </ul>
+  </details>
+</section>
 
-  <!-- 3) required=true × int -->
-  <section class="card" data-step="3">
-    <div class="card-header">
-      <span class="chip">3</span>
-      <h3 class="card-title">required=true × int</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-true-int}" method="get">
-        <p>x（必須, int）: <input name="x"></p>
-        <button>送信</button>
-      </form>
+<section class="box">
+  <h3>11) required=true + defaultValue + int</h3>
 
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-true-int}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-true-int(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-true-int(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-true-int(x='abc')}">文字</a>
-      </div>
+  <form th:action="@{/request-param-attribute/required-and-default}" method="get">
+    <label>page: <input name="page" placeholder="未指定でも 10"></label>
+    <button>送信</button>
+  </form>
 
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：❌ MissingServletRequestParameterException（400）— 必須なのにパラメータ <code>x</code> 自体が未指定</li>
-          <li>空文字：❌ MethodArgumentTypeMismatchException（400）— 空文字を <code>int</code> に変換できない</li>
-          <li>数値：✅ <code>1</code></li>
-          <li>文字：❌ MethodArgumentTypeMismatchException（400）— 文字列 <code>"abc"</code> を <code>int</code> に変換できない</li>
-        </ul>
-      </details>
-    </div>
-  </section>
+  <div class="links">
+    <a th:href="@{/request-param-attribute/required-and-default}">未指定</a>
+    <a th:href="@{/request-param-attribute/required-and-default(page='')}">空文字</a>
+    <a th:href="@{/request-param-attribute/required-and-default(page=5)}">page=5</a>
+    <a th:href="@{/request-param-attribute/required-and-default(page='abc')}">page=abc</a>
+  </div>
 
-  <!-- 4) required=false × int（危険） -->
-  <section class="card" data-step="4">
-    <div class="card-header">
-      <span class="chip">4</span>
-      <h3 class="card-title">required=false × int（危険）</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-false-int}" method="get">
-        <p>x（任意, int）: <input name="x"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-false-int}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-false-int(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-false-int(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-false-int(x='abc')}">文字</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：❌ IllegalStateException（500）— <code>required=false</code>で任意なので、未指定（つまり<code>null</code>）を <code>int</code> に代入しようとして失敗</li>
-          <li>空文字：❌ MethodArgumentTypeMismatchException（400）— 空文字を <code>int</code> に変換できない</li>
-          <li>数値：✅ <code>1</code></li>
-          <li>文字：❌ MethodArgumentTypeMismatchException（400）— <code>"abc"</code> を <code>int</code> に変換できない</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 5) required=true × Integer -->
-  <section class="card" data-step="5">
-    <div class="card-header">
-      <span class="chip">5</span>
-      <h3 class="card-title">required=true × Integer</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-true-integer}" method="get">
-        <p>x（必須, Integer）: <input name="x"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-true-integer}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-true-integer(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-true-integer(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-true-integer(x='abc')}">文字</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：❌ MissingServletRequestParameterException（400）— 必須なのにパラメータ <code>x</code> 自体が未指定</li>
-          <li>空文字：❌ MissingServletRequestParameterException（400）— 空文字は変換後に <code>null</code> になり、必須扱いでエラー</li>
-          <li>数値：✅ <code>1</code></li>
-          <li>文字：❌ MethodArgumentTypeMismatchException（400）— <code>"abc"</code> を <code>Integer</code> に変換できない</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 6) required=false × Integer（安全） -->
-  <section class="card" data-step="6">
-    <div class="card-header">
-      <span class="chip">6</span>
-      <h3 class="card-title">required=false × Integer（安全：未指定/空文字→null になりうる）</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/req-false-integer}" method="get">
-        <p>x（任意, Integer）: <input name="x"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/req-false-integer}">未指定</a>
-        <a th:href="@{/request-param-attribute/req-false-integer(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/req-false-integer(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/req-false-integer(x='abc')}">文字</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：✅ <code>null</code>（任意なので未指定可）</li>
-          <li>空文字：✅ <code>null</code>（空文字は変換後に <code>null</code> になりうる）</li>
-          <li>数値：✅ <code>1</code></li>
-          <li>文字：❌ MethodArgumentTypeMismatchException（400）— <code>"abc"</code> を <code>Integer</code> に変換できない</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 7) Optional<String> -->
-  <section class="card" data-step="7">
-    <div class="card-header">
-      <span class="chip">7</span>
-      <h3 class="card-title">Optional&lt;String&gt;</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/optional-string}" method="get">
-        <p>x（Optional&lt;String&gt;）: <input name="x"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/optional-string}">未指定</a>
-        <a th:href="@{/request-param-attribute/optional-string(x='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/optional-string(x=1)}">数値</a>
-        <a th:href="@{/request-param-attribute/optional-string(x='abc')}">文字</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：✅ <code>Optional.empty()</code></li>
-          <li>空文字：✅ <code>Optional.of("")</code></li>
-          <li>数値：✅ <code>Optional.of("1")</code></li>
-          <li>文字：✅ <code>Optional.of("abc")</code></li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <hr/>
-
-  <h2>▼value / name / defaultValue属性のテスト</h2>
-
-  <!-- 8) パラメータ名を明示指定（value/name） -->
-  <section class="card" data-step="8">
-    <div class="card-header">
-      <span class="chip">8</span>
-      <h3 class="card-title">パラメータ名を明示指定（value / name）</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/param-name-explicit}" method="get">
-        <p>q（value でも name でも同じ値を読む）: <input name="q" placeholder="例: Hello"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/param-name-explicit(q='Hello')}">q=Hello</a>
-        <a th:href="@{/request-param-attribute/param-name-explicit(q='')}">q=（空文字）</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li><code>@RequestParam("q")</code> と <code>@RequestParam(name="q")</code> は同じ値を受け取ります。</li>
-          <li>どちらも同じ HTTP パラメータ名 <code>q</code> を参照します。</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 9) 省略時は引数名がパラメータ名になる -->
-  <section class="card" data-step="9">
-    <div class="card-header">
-      <span class="chip">9</span>
-      <h3 class="card-title">省略時は引数名がパラメータ名になる</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/param-name-default}" method="get">
-        <p>search（@RequestParam の属性を省略）: <input name="search" placeholder="例: Java"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/param-name-default(search='Java')}">search=Java</a>
-        <a th:href="@{/request-param-attribute/param-name-default(search='')}">search=（空文字）</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li><code>@RequestParam</code> の <code>value/name</code> を省略すると、引数名がそのままパラメータ名になります。</li>
-          <li>この例では引数名 <code>search</code> → HTTP パラメータ名 <code>search</code>。</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 10) defaultValue の網羅（String / Integer / Optional） -->
-  <section class="card" data-step="10">
-    <div class="card-header">
-      <span class="chip">10</span>
-      <h3 class="card-title">defaultValue（String / Integer / Optional の網羅）</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/default-matrix}" method="get">
-        <p>user（String, 既定=guest）: <input name="user" placeholder="未指定/空文字で guest"></p>
-        <p>page（Integer, 既定=1）: <input name="page" placeholder="未指定/空文字で 1"></p>
-        <p>kw（Optional, 既定=&quot;&quot;）: <input name="kw" placeholder="未指定/空文字で &quot;&quot;"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/default-matrix}">未指定</a>
-        <a th:href="@{/request-param-attribute/default-matrix(user='',page='',kw='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/default-matrix(user=' ',kw=' ')}">スペース1文字</a>
-        <a th:href="@{/request-param-attribute/default-matrix(page='abc')}">page=abc</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：<code>user=&quot;guest&quot;</code> / <code>page=1</code> / <code>kw=&quot;&quot;</code>（present=true）</li>
-          <li>空文字（<code>?user=&amp;page=&amp;kw=</code>）：同上（空文字でも既定が入る）</li>
-          <li>スペース1文字（<code>%20</code>）：空文字ではないため既定は使われません</li>
-          <li>型不一致（<code>?page=abc</code>）：❌ 400（Integer 変換不可）</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-  <!-- 11) required=true + defaultValue + intの場合の挙動 -->
-  <section class="card" data-step="11">
-    <div class="card-header">
-      <span class="chip">11</span>
-      <h3 class="card-title">required=true + defaultValue + intの場合の挙動</h3>
-    </div>
-    <div class="card-body">
-      <form th:action="@{/request-param-attribute/required-and-default}" method="get">
-        <p>page（int, required=true, 既定=10）: <input name="page" placeholder="未指定でも 10。abc は 400"></p>
-        <button>送信</button>
-      </form>
-
-      <!-- 常に表示：送信ボタン直下 -->
-      <div class="links">
-        <a th:href="@{/request-param-attribute/required-and-default}">未指定</a>
-        <a th:href="@{/request-param-attribute/required-and-default(page='')}">空文字</a>
-        <a th:href="@{/request-param-attribute/required-and-default(page=5)}">page=5</a>
-        <a th:href="@{/request-param-attribute/required-and-default(page='abc')}">page=abc</a>
-      </div>
-
-      <details class="details">
-        <summary>このハンドラの挙動を詳しく見る</summary>
-        <ul class="note">
-          <li>未指定：✅ <code>10</code>（defaultValue が入る）</li>
-          <li>空文字：✅ <code>10</code>（defaultValue が入る）</li>
-          <li>明示値（<code>?page=5</code>）：✅ <code>5</code></li>
-          <li>文字（<code>?page=abc</code>）：❌ 400（型不一致）</li>
-          <li>※ <code>defaultValue</code> を付けると <code>required</code> は実質無視されます（未指定でもデフォルトが適用）。</li>
-        </ul>
-      </details>
-    </div>
-  </section>
-
-</div>
+  <details>
+    <summary>挙動</summary>
+    <ul>
+      <li>未指定/空文字：✅ 10（defaultValue）</li>
+      <li>page=abc：❌ 400（型不一致）</li>
+      <li>defaultValue を付けると required は実質無視されます</li>
+    </ul>
+  </details>
+</section>
 </body>
 </html>

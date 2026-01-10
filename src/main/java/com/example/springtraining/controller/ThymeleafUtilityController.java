@@ -16,11 +16,11 @@ public class ThymeleafUtilityController {
   @GetMapping("/null-demo")
   public String nullDemo(Model model) {
     // ▼文字列まわり
-    model.addAttribute("nickname", null);       // null
+    model.addAttribute("nicknameNull", null);   // null
     model.addAttribute("nicknameEmpty", "");    // 空文字
 
     // ▼メソッド呼び出しに対する安全呼び出し ?. の確認用
-    model.addAttribute("greeting", null); // null に対して length() を安全に呼びたい
+    model.addAttribute("greetingNull", null); // null に対して length() を安全に呼びたい
 
     // ▼空のコレクションフレームワーク
     model.addAttribute("emptyList", List.of());  // 空リスト

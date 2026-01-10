@@ -1,164 +1,117 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@ModelAttribute デモ（結果）</title>
-    <style>
-        :root {
-            --green: #0f766e;
-            --green-dark: #0b5f58;
-            --border: #e5e7eb;
-            --bg: #f6f7f9;
-            --text: #111827;
-            --muted: #6b7280;
-        }
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP",
-            "Hiragino Kaku Gothic ProN", Meiragyo, Arial, sans-serif;
-        }
-        .container { max-width: 980px; margin: 32px auto; padding: 0 16px; }
-        .card {
-            background: #fff;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            overflow: hidden;
-        }
-        .card-body { padding: 22px 22px 26px; }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>@ModelAttribute デモ（結果）</title>
 
-        .title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0 0 18px;
-        }
-        .title::before {
-            content: "";
-            width: 6px;
-            height: 28px;
-            background: var(--green);
-            border-radius: 4px;
-        }
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f6f7f9;
+      color: #111;
+    }
 
-        .section-title { margin: 22px 0 10px; font-size: 15px; font-weight: 700; }
-        .hint { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+    .card {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-        thead th {
-            background: var(--green);
-            color: #fff;
-            text-align: left;
-            padding: 12px 14px;
-            font-weight: 700;
-            font-size: 13px;
-        }
-        tbody td {
-            padding: 12px 14px;
-            border-top: 1px solid var(--border);
-            font-size: 14px;
-            vertical-align: top;
-            background: #fff;
-        }
-        tbody tr:nth-child(even) td { background: #fafafa; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
 
-        .key-badge {
-            display: inline-block;
-            font-size: 12px;
-            color: #fff;
-            background: var(--green-dark);
-            padding: 2px 8px;
-            border-radius: 999px;
-            margin-left: 8px;
-            vertical-align: middle;
-        }
+    th,
+    td {
+      padding: 10px 12px;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      vertical-align: top;
+    }
 
-        .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    .hint {
+      margin: 8px 0 0;
+      color: #555;
+      font-size: 14px;
+    }
 
-        .footer-link {
-            margin-top: 14px;
-            display: inline-block;
-            color: var(--green);
-            text-decoration: none;
-            font-weight: 700;
-        }
-        .footer-link:hover { text-decoration: underline; }
-    </style>
+    .label-col {
+      width: 38%;
+    }
+
+    .actions {
+      margin-top: 12px;
+    }
+  </style>
 </head>
 
 <body>
-<div class="container">
-    <div class="card">
-        <div class="card-body">
-            <h1 class="title">@ModelAttribute デモ（結果）</h1>
+<div class="card">
+  <h1>@ModelAttribute デモ（結果）</h1>
 
-            <div class="section-title">フォーム送信結果（registerForm）</div>
-            <p class="hint">
-                ここでは <span class="mono">registerForm</span> キーの値（フォーム入力内容）を表示しています。
-            </p>
+  <p class="hint">
+    送信された <code>registerForm</code> の内容と、Controller の <code>@ModelAttribute</code> により
+    Model に登録された値を表示します。
+  </p>
 
-            <table>
-                <thead>
-                <tr>
-                    <th style="width: 38%;">項目</th>
-                    <th>値</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>氏名 <span class="hint" style="margin-left:8px;">（registerForm.name）</span></td>
-                    <td th:text="${registerForm.name}"></td>
-                </tr>
-                <tr>
-                    <td>年齢 <span class="hint" style="margin-left:8px;">（registerForm.age）</span></td>
-                    <td th:text="${registerForm.age}"></td>
-                </tr>
-                </tbody>
-            </table>
+  <h2 class="hint">Model に登録されている値（キー名 → 値）</h2>
+  <table>
+    <thead>
+    <tr>
+      <th class="label-col">項目</th>
+      <th>値</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>appName（キー）</td>
+      <td th:text="${appName}">-</td>
+    </tr>
+    <tr>
+      <td>today（キー）</td>
+      <td th:text="${#temporals.format(today, 'yyyy/MM/dd')}">-</td>
+    </tr>
+    <tr>
+      <td>roles（キー）</td>
+      <td>
+        <ul>
+          <li th:each="r : ${roles}" th:text="${r}">-</li>
+        </ul>
+      </td>
+    </tr>
+    </tbody>
+  </table>
 
-            <div class="section-title">Model に登録されている値（キー名 → 値）</div>
-            <p class="hint">
-                ハンドラ実行前に呼ばれる <span class="mono">@ModelAttribute</span> メソッドで Model に入った値を、キー名つきで表示しています。
-            </p>
+  <h2 class="hint">フォーム送信結果（registerForm）</h2>
+  <table>
+    <thead>
+    <tr>
+      <th class="label-col">項目</th>
+      <th>値</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td>氏名（registerForm.name）</td>
+      <td th:text="${registerForm.name}">-</td>
+    </tr>
+    <tr>
+      <td>年齢（registerForm.age）</td>
+      <td th:text="${registerForm.age}">-</td>
+    </tr>
+    </tbody>
+  </table>
 
-            <table>
-                <thead>
-                <tr>
-                    <th style="width: 38%;">項目</th>
-                    <th>値</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>appName <span class="key-badge">キー</span></td>
-                    <td th:text="${appName}"></td>
-                </tr>
-                <tr>
-                    <td>today <span class="key-badge">キー</span></td>
-                    <td th:text="${#temporals.format(today, 'yyyy/MM/dd')}"></td>
-                </tr>
-                <tr>
-                    <td>roles <span class="key-badge">キー</span></td>
-                    <td th:text="${#strings.listJoin(roles, ' / ')}"></td>
-                </tr>
-                </tbody>
-            </table>
-
-            <a class="footer-link" th:href="@{/model-attribute-method}">フォームへ戻る</a>
-        </div>
-    </div>
+  <p class="actions">
+    <a th:href="@{/model-attribute-method}">フォームへ戻る</a>
+  </p>
 </div>
 </body>
 </html>

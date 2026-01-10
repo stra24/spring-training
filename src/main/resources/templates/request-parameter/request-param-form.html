@@ -1,51 +1,59 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>@RequestParam デモ（フォーム）</title>
-    <style>
-        :root { --primary:#0b8f7a; --bg:#f4f6f7; --line:#e5e7eb; --text:#1f2937; --muted:#6b7280; }
-        * { box-sizing:border-box; }
-        body { margin:0; background:var(--bg); color:var(--text);
-            font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN","Meiryo",sans-serif; }
-        .wrap { max-width:980px; margin:32px auto; padding:0 18px; }
-        .card { background:#fff; border-radius:14px; padding:24px; box-shadow:0 10px 30px rgba(0,0,0,.08); }
-        .title { margin:0 0 16px; font-size:26px; font-weight:800; padding-left:14px; border-left:6px solid var(--primary); }
-        .muted { color:var(--muted); font-size:14px; margin:0 0 14px; }
-        .row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
-        label { font-size:13px; color:var(--muted); display:block; margin:0 0 6px; }
-        input { width:320px; max-width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px; font-size:15px; }
-        .btn { border:0; border-radius:999px; padding:10px 14px; font-weight:800; cursor:pointer; background:var(--primary); color:#fff; }
-        .btn.outline { background:#fff; color:var(--primary); border:2px solid rgba(11,143,122,.25); }
-        .divider { height:1px; background:var(--line); margin:18px 0; }
-        a { color:var(--primary); font-weight:800; text-decoration:none; }
-        a:hover { text-decoration:underline; }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>@RequestParam デモ（フォーム）</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #f6f7f9;
+    }
+
+    .card {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+    }
+
+    .actions {
+      margin-top: 12px;
+    }
+
+    .actions button {
+      margin-right: 8px;
+    }
+  </style>
 </head>
+
 <body>
-<div class="wrap">
-    <div class="card">
-        <h1 class="title">@RequestParam デモ（フォーム）</h1>
-        <p class="muted">同じ入力を、<code>@RequestParamあり</code> と <code>省略</code> の2通りで結果画面へ送信して確認します。</p>
+<div class="card">
+  <h1>@RequestParam デモ（フォーム）</h1>
+  <p>同じ入力を、<code>@RequestParamあり</code> と <code>省略</code> の2通りで結果画面へ送信して確認します。
+  </p>
 
-        <form method="get" th:action="@{/request-param-result}">
-            <div class="row">
-                <div>
-                    <label for="keyword">キーワード</label>
-                    <input id="keyword" name="keyword" type="text" placeholder="例：Spring" />
-                </div>
-
-                <button class="btn" type="submit">@RequestParamありへ送信</button>
-                <button class="btn outline" type="submit" th:formaction="@{/request-param-omit-result}">
-                    @RequestParam省略へ送信
-                </button>
-            </div>
-        </form>
-
-        <div class="divider"></div>
-        <a th:href="@{/model-attribute-form}">@ModelAttribute デモへ</a>
+  <form method="get" th:action="@{/request-param-result}">
+    <div>
+      <label for="keyword">キーワード</label>
+      <input id="keyword" name="keyword" type="text" placeholder="例：Spring"/>
     </div>
+
+    <div class="actions">
+      <button type="submit">@RequestParamありへ送信</button>
+      <button type="submit" th:formaction="@{/request-param-omit-result}">
+        @RequestParam省略へ送信
+      </button>
+    </div>
+  </form>
+
+  <hr/>
+
+  <a th:href="@{/model-attribute-form}">@ModelAttribute デモへ</a>
 </div>
 </body>
 </html>
