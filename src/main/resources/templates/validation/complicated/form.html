@@ -6,287 +6,131 @@
   <title>複雑型の入力チェック（@Valid × UserForm）</title>
 
   <style>
-    :root{
-      --g:#0f766e; --g2:#0b5f58;
-      --bg:#f6f7f9; --card:#fff;
-      --text:#0f172a; --muted:#64748b;
-      --bd:#e5e7eb;
-      --tint:rgba(15,118,110,.08);
-      --shadow:0 10px 24px rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.05);
-      --ring:0 0 0 4px rgba(15,118,110,.16);
-      --danger:#dc2626;
-      --dangerTint:rgba(220,38,38,.10);
-      --dangerBd:rgba(220,38,38,.28);
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif;
-      line-height:1.7;
-    }
-    .container{
-      max-width: 980px;
-      margin: 28px auto;
-      padding: 0 18px 40px;
-    }
-
-    /* Header */
-    .page-head{
-      display:flex;
-      gap:14px;
-      align-items:flex-start;
-      margin: 6px 0 18px;
-    }
-    .page-head .bar{
-      width: 6px;
-      border-radius: 999px;
-      background: var(--g);
-      margin-top: 8px;
-      flex: 0 0 auto;
-    }
-    h1{
-      font-size: 28px;
+    body {
       margin: 0;
-      letter-spacing: .02em;
-    }
-    .lead{
-      margin: 6px 0 0;
-      color: var(--muted);
-      font-size: 14px;
     }
 
-    /* Card */
-    .card{
-      background: var(--card);
-      border: 1px solid var(--bd);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      padding: 18px;
+    main {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
     }
 
-    /* Alert */
-    .alert{
-      border: 1px solid var(--bd);
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin: 0 0 14px;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .alert-danger{
-      background: var(--dangerTint);
-      border-color: var(--dangerBd);
-      color: #7f1d1d;
+    .alert {
+      margin: 0 0 12px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
     }
 
-    /* Form */
-    form{ margin: 0; }
-    .form-grid{
-      display: grid;
-      border-radius: 14px;
-      overflow: hidden;
-      border: 1px solid var(--bd);
-    }
-    .row{
-      display:grid;
-      grid-template-columns: 180px 1fr;
-      gap: 12px;
-      padding: 14px 14px;
-      background: #fff;
-      border-top: 1px solid var(--bd);
-      align-items: start;
-    }
-    .row:first-child{ border-top: none; }
-    .row:nth-child(even){ background: #fafafa; }
-
-    label{
-      font-weight: 700;
-      color: var(--text);
-      padding-top: 8px;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="number"]{
+    table {
       width: 100%;
-      padding: 11px 12px;
-      border: 1px solid var(--bd);
-      border-radius: 12px;
-      font-size: 16px;
-      background: #fff;
-      outline: none;
-    }
-    input:focus{
-      border-color: var(--g);
-      box-shadow: var(--ring);
-    }
-    .is-invalid{
-      border-color: var(--danger);
-      box-shadow: 0 0 0 4px rgba(220,38,38,.12);
+      border-collapse: collapse;
     }
 
-    .field-meta{
+    th,
+    td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      width: 180px;
+      background: #f3f4f6;
+    }
+
+    input {
+      padding: 6px 8px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .error {
       margin-top: 6px;
-      display:flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .hint{
-      color: var(--muted);
+      color: #c00;
       font-size: 13px;
     }
-    .error{
-      color: var(--danger);
+
+    .hint {
+      margin-top: 10px;
+      color: #666;
       font-size: 13px;
-      font-weight: 700;
     }
 
-    /* Buttons */
-    .actions{
-      margin-top: 14px;
-      display:flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid var(--bd);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 14px;
-      cursor: pointer;
-      user-select:none;
-      background: #fff;
-      color: var(--text);
-      transition: transform .04s ease, background .12s ease, border-color .12s ease;
-    }
-    .btn:active{ transform: translateY(1px); }
-    .btn-primary{
-      background: var(--g);
-      color: #fff;
-      border-color: var(--g2);
-    }
-    .btn-primary:hover{ background: var(--g2); }
-    .btn-outline{
-      color: var(--g2);
-      border-color: rgba(15,118,110,.35);
-      background: rgba(15,118,110,.06);
-    }
-    .btn-outline:hover{ background: rgba(15,118,110,.10); }
-
-    /* Footer hint block */
-    .note{
-      color: var(--muted);
-      font-size: 13px;
-      margin: 14px 2px 0;
-    }
-    code{
-      background:#f6f8fa;
-      padding:2px 6px;
-      border-radius: 6px;
-      border: 1px solid #eef2f7;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: .95em;
-    }
-
-    @media (max-width: 720px){
-      .row{ grid-template-columns: 1fr; }
-      label{ padding-top: 0; }
+    code {
+      background: #f3f3f3;
+      padding: 2px 4px;
+      border-radius: 4px;
     }
   </style>
 </head>
 
 <body>
-<div class="container">
-  <header class="page-head">
-    <div class="bar"></div>
-    <div>
-      <h1>複雑型（DTO）の入力チェック（@Valid）</h1>
-      <p class="lead">
-        <code>@Valid</code> をメソッド引数（<code>UserForm</code>）に付けたときの検証の挙動を体験します。
-      </p>
+<main>
+  <h1>複雑型（DTO）の入力チェック（@Valid）</h1>
+  <p>
+    <code>@Valid</code> をメソッド引数（<code>UserForm</code>）に付けたときの検証の挙動を体験します。
+  </p>
+
+  <form th:action="@{/validation/complicated}" method="post" th:object="${form}">
+    <div th:if="${#fields.hasAnyErrors()}" class="alert">
+      入力内容にエラーがあります。メッセージを確認してください。
     </div>
-  </header>
 
-  <div class="card">
-    <form th:action="@{/validation/complicated}" method="post" th:object="${form}">
-
-      <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
-        入力内容にエラーがあります。赤字のメッセージを確認してください。
-      </div>
-
-      <div class="form-grid">
-        <div class="row">
-          <label for="name">名前</label>
-          <div>
-            <input id="name" type="text"
-                   th:field="*{name}"
-                   placeholder="例: 山田太郎"
-                   autocomplete="name"
-                   th:classappend="${#fields.hasErrors('name')} ? ' is-invalid' : ''"/>
-            <div class="field-meta">
-              <div class="hint">例：未入力は禁止（@NotBlank）など</div>
-              <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name
-                error
-              </div>
-            </div>
+    <table>
+      <tbody>
+      <tr>
+        <th><label for="name">名前</label></th>
+        <td>
+          <input id="name" type="text"
+                 th:field="*{name}"
+                 placeholder="例: 山田太郎"
+                 autocomplete="name"/>
+          <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">name error
           </div>
-        </div>
+        </td>
+      </tr>
 
-        <div class="row">
-          <label for="email">メール</label>
-          <div>
-            <input id="email" type="email"
-                   th:field="*{email}"
-                   placeholder="例: taro@example.com"
-                   autocomplete="email"
-                   th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"/>
-            <div class="field-meta">
-              <div class="hint">例：メール形式（@Email）など</div>
-              <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email
-                error
-              </div>
-            </div>
+      <tr>
+        <th><label for="email">メール</label></th>
+        <td>
+          <input id="email" type="email"
+                 th:field="*{email}"
+                 placeholder="例: taro@example.com"
+                 autocomplete="email"/>
+          <div class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">email
+            error
           </div>
-        </div>
+        </td>
+      </tr>
 
-        <div class="row">
-          <label for="age">年齢</label>
-          <div>
-            <input id="age" type="number"
-                   th:field="*{age}"
-                   placeholder="0以上の整数"
-                   inputmode="numeric"
-                   th:classappend="${#fields.hasErrors('age')} ? ' is-invalid' : ''"/>
-            <div class="field-meta">
-              <div class="hint">例：0以上（@Min(0)）など</div>
-              <div class="error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <tr>
+        <th><label for="age">年齢</label></th>
+        <td>
+          <input id="age" type="number"
+                 th:field="*{age}"
+                 placeholder="0以上の整数"
+                 inputmode="numeric"/>
+          <div class="error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">age error</div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
 
-      <div class="actions">
-        <button type="submit" class="btn btn-primary">送信</button>
-        <a class="btn btn-outline" th:href="@{/validation/complicated}">リセット</a>
-      </div>
+    <p>
+      <button type="submit">送信</button>
+      <a th:href="@{/validation/complicated}">リセット</a>
+    </p>
 
-      <p class="note">
-        表示：<code>GET /validation/complicated</code><br>
-        送信：<code>POST /validation/complicated</code><br>
-        検証ルールは <code>UserForm</code> のフィールドに付与した制約（例：<code>@NotBlank</code>,
-        <code>@Email</code>, <code>@Min</code>）が適用されます。
-      </p>
-    </form>
-  </div>
-</div>
+    <p class="hint">
+      表示：<code>GET /validation/complicated</code><br>
+      送信：<code>POST /validation/complicated</code><br>
+      検証ルールは <code>UserForm</code> のフィールドに付与した制約（例：<code>@NotBlank</code>,
+      <code>@Email</code>, <code>@Min</code>）が適用されます。
+    </p>
+  </form>
+</main>
 </body>
 </html>

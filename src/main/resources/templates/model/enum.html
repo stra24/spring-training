@@ -1,164 +1,109 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>タスク一覧</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
-    /* ベーススタイル（list.html / map.html と同テイスト） */
     body {
-      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
       margin: 0;
-      padding: 20px;
-      line-height: 1.6;
+      padding: 24px;
+      background: #f6f7f9;
+      color: #111;
     }
 
-    .container {
-      max-width: 1000px;
+    .card {
+      max-width: 960px;
       margin: 0 auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      padding: 20px;
+
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
     }
 
     h1 {
-      font-size: 24px;
-      margin-top: 0;
-      margin-bottom: 20px;
-      color: #2c3e50;
-      border-left: 5px solid #009879;
-      padding-left: 15px;
+      margin: 0 0 16px;
+      font-size: 20px;
     }
 
     h2 {
-      font-size: 20px;
-      margin-top: 32px;
-      margin-bottom: 12px;
-      color: #2c3e50;
-      border-left: 4px solid #009879;
-      padding-left: 12px;
+      margin: 20px 0 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #374151;
     }
 
-    h3 {
-      font-size: 16px;
-      margin-top: 20px;
-      margin-bottom: 8px;
-      color: #009879;
-      padding-bottom: 4px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    /* テーブルデザイン（list.html に合わせたスタイル） */
-    .styled-table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0;
-      font-size: 0.95em;
     }
 
-    .styled-table thead tr {
-      background-color: #009879;
-      color: #ffffff;
+    th,
+    td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+
       text-align: left;
+      vertical-align: top;
     }
 
-    .styled-table th,
-    .styled-table td {
-      padding: 12px 15px;
-      border-bottom: 1px solid #dddddd;
+    th {
+      font-weight: 600;
+      background: #f3f4f6;
     }
 
-    .styled-table tbody tr:nth-of-type(even) {
-      background-color: #f3f3f3;
-    }
-
-    .styled-table tbody tr:hover {
-      background-color: #f1f1f1;
-      color: #009879;
-      cursor: default;
-    }
-
-    /* バッジ（優先度） */
     .badge {
       display: inline-block;
-      padding: 4px 10px;
+      padding: 2px 10px;
       border-radius: 999px;
       color: #fff;
       font-size: 12px;
       font-weight: 600;
     }
-    .low {
-      background: #10b981; /* 緑 */
-    }
-    .medium {
-      background: #f59e0b; /* オレンジ */
-    }
-    .high {
-      background: #ef4444; /* 赤 */
-    }
 
-    /* 件数表示 */
-    .summary {
-      margin-top: 12px;
-      color: #555;
-      font-size: 0.95em;
-    }
+    .low { background: #10b981; }
+    .medium { background: #f59e0b; }
+    .high { background: #ef4444; }
 
-    /* データなしメッセージ */
-    .no-data {
-      text-align: center;
-      color: #777;
-      padding: 16px 20px;
-      border: 1px dashed #ccc;
-      border-radius: 4px;
-      margin-top: 12px;
-      margin-bottom: 0;
-      background-color: #fafafa;
-    }
-
-    /* Enum一覧のバッジリスト */
-    .enum-badge-list {
+    .badge-list {
+      margin: 0;
+      padding: 0;
       list-style: none;
-      padding-left: 0;
-      margin: 4px 0 0;
+
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
     }
 
-    .enum-badge-list li {
-      margin: 0;
-      border: none;
-    }
-
     hr {
       border: none;
       border-top: 1px solid #e5e7eb;
-      margin: 32px 0 24px;
+      margin: 20px 0;
     }
   </style>
 </head>
+
 <body>
-
-<div class="container">
-
+<div class="card">
   <h1>タスク一覧（Enumの表示と分岐）</h1>
 
-  <p th:if="${#lists.isEmpty(taskList)}" class="no-data">データがありません</p>
+  <p th:if="${#lists.isEmpty(taskList)}">
+    データがありません
+  </p>
 
-  <table class="styled-table" th:if="${!#lists.isEmpty(taskList)}">
+  <table th:if="${!#lists.isEmpty(taskList)}">
     <thead>
     <tr>
-      <th style="width: 50px;">#</th>
-      <th style="width: 100px;">タスクID</th>
+      <th>#</th>
+      <th>タスクID</th>
       <th>件名</th>
-      <th style="width: 100px;">優先度</th>
+      <th>優先度</th>
       <th>メモ</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="row, status : ${taskList}">
       <td th:text="${status.count}"></td>
@@ -166,44 +111,53 @@
       <td th:text="${row.title}"></td>
 
       <td>
-        <span class="badge"
-              th:text="${row.priority.name()}"
-              th:classappend="${#strings.toLowerCase(row.priority.name())}">
-        </span>
+        <span
+            class="badge"
+            th:text="${row.priority.name()}"
+            th:classappend="${#strings.toLowerCase(row.priority.name())}"
+        ></span>
       </td>
 
       <td th:switch="${row.priority}">
-        <span th:case="${T(com.example.springtraining.domain.TaskPriority).HIGH}">至急対応する</span>
-        <span th:case="${T(com.example.springtraining.domain.TaskPriority).MEDIUM}">今日中に対応できれば良い</span>
-        <span th:case="${T(com.example.springtraining.domain.TaskPriority).LOW}">余裕があれば対応する</span>
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).HIGH}">
+          至急対応する
+        </span>
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).MEDIUM}">
+          今日中に対応できれば良い
+        </span>
+        <span th:case="${T(com.example.springtraining.domain.TaskPriority).LOW}">
+          余裕があれば対応する
+        </span>
       </td>
     </tr>
     </tbody>
   </table>
 
-  <p class="summary" th:text="|件数：${#lists.size(taskList)}件|"></p>
+  <p th:text="|件数：${#lists.size(taskList)}件|"></p>
 
-  <hr>
+  <hr/>
 
-  <h2>Enumの列挙子一覧（2通り）</h2>
+  <h2>Enumの列挙子一覧</h2>
 
-  <h3>方法1: Controllerから渡した候補（priorityValues）</h3>
-  <ul class="enum-badge-list">
-    <li class="badge"
+  <p>方法1: Controllerから渡した候補（priorityValues）</p>
+  <ul class="badge-list">
+    <li
+        class="badge"
         th:each="p : ${priorityValues}"
         th:text="${p.name()}"
-        th:classappend="${#strings.toLowerCase(p.name())}"></li>
+        th:classappend="${#strings.toLowerCase(p.name())}"
+    ></li>
   </ul>
 
-  <h3>方法2: テンプレートで直接取得：T(パッケージ.クラス).values()</h3>
-  <ul class="enum-badge-list">
-    <li class="badge"
+  <p>方法2: テンプレートで取得（T(...).values()）</p>
+  <ul class="badge-list">
+    <li
+        class="badge"
         th:each="p : ${T(com.example.springtraining.domain.TaskPriority).values()}"
         th:text="${p.name()}"
-        th:classappend="${#strings.toLowerCase(p.name())}"></li>
+        th:classappend="${#strings.toLowerCase(p.name())}"
+    ></li>
   </ul>
-
 </div>
-
 </body>
 </html>
