@@ -1,243 +1,115 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="ja">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>ユーティリティ関数</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* ベーススタイル（他ページと同テイスト） */
     body {
-      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      background-color: #f4f7f6;
-      color: #333;
       margin: 0;
-      padding: 20px;
-      line-height: 1.7;
-      font-size: 14px;
+      padding: 16px;
+      background: #f6f7f9;
+      color: #111;
     }
 
-    .container {
-      max-width: 1280px;
+    main {
+      max-width: 900px;
       margin: 0 auto;
-      background-color: #fff;
-      padding: 24px 28px;
-      border-radius: 8px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-    }
-
-    h1 {
-      font-size: 22px;
-      margin-top: 0;
-      margin-bottom: 12px;
-      color: #2c3e50;
-      border-left: 5px solid #009879;
-      padding-left: 15px;
-    }
-
-    .lead {
-      margin: 0 0 18px;
-      font-size: 13px;
-      color: #4b5563;
-    }
-
-    code {
-      background: #f6f8fa;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 0.9em;
-    }
-
-    /* 4カラムグリッドレイアウト */
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(210px, 1fr));
-      gap: 14px;
-    }
-
-    @media (max-width: 1200px) {
-      .grid-4 {
-        grid-template-columns: repeat(3, minmax(210px, 1fr));
-      }
-    }
-
-    @media (max-width: 900px) {
-      .grid-4 {
-        grid-template-columns: repeat(2, minmax(220px, 1fr));
-      }
-    }
-
-    @media (max-width: 640px) {
-      .grid-4 {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .card {
-      border-radius: 8px;
-      padding: 12px 14px;
-      background-color: #fafafa;
+      background: #fff;
+      padding: 16px;
       border: 1px solid #e5e7eb;
-      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      border-radius: 10px;
     }
 
-    .card-title {
-      font-size: 15px;
-      margin: 0 0 6px;
-      color: #1f2933;
-      border-left: 3px solid #009879;
-      padding-left: 8px;
+    section {
+      margin: 12px 0;
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
     }
 
-    .card-sub {
-      font-size: 12px;
+    .small {
       color: #6b7280;
-      margin: 0 0 8px;
+      font-size: 12px;
+      margin: 6px 0 0;
     }
 
     .row {
-      margin: 2px 0;
-      font-size: 13px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: baseline;
+      margin: 6px 0;
     }
 
-    .label {
-      display: inline-block;
-      min-width: 90px;
+    .k {
+      min-width: 12em;
       color: #6b7280;
     }
 
-    ul.list {
-      margin: .4rem 0 .2rem 1.1rem;
-      padding-left: .4rem;
-    }
-
-    ul.list li {
-      margin-bottom: 2px;
+    .v {
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
-
-<div class="container">
+<main>
   <h1>ユーティリティ関数</h1>
-  <p class="lead">
-    Thymeleaf が提供するユーティリティオブジェクト（<code>#temporals</code> / <code>#numbers</code> /
-    <code>#strings</code> など）を使うと、テンプレート側で日付フォーマットや文字列操作などの整形処理を行えます。
-  </p>
+  <p class="small">テンプレート側で整形したいときに使います。</p>
 
-  <div class="grid-4">
-    <!-- LocalDateTime -->
-    <section class="card">
-      <h2 class="card-title">LocalDateTime</h2>
-      <p class="card-sub">
-        日付と時刻をまとめて扱う型。<code>#temporals.format</code> で自由な形式に整形できます。
-      </p>
-      <div class="row">
-        <span class="label">生の値:</span>
-        <span th:text="${ldt}"></span>
-      </div>
-      <div class="row">
-        <span class="label">整形後の値:</span>
-        <span th:text="${#temporals.format(ldt, 'yyyy年MM月dd日 HH時mm分ss秒')}"></span>
-      </div>
-    </section>
+  <section>
+    <h2>日付・時刻の整形（#temporals）</h2>
 
-    <!-- LocalDate -->
-    <section class="card">
-      <h2 class="card-title">LocalDate</h2>
-      <p class="card-sub">
-        日付のみを表す型。画面表示用に <code>yyyy/MM/dd</code> 形式などへ整形できます。
-      </p>
-      <div class="row">
-        <span class="label">生の値:</span>
-        <span th:text="${ld}"></span>
-      </div>
-      <div class="row">
-        <span class="label">整形後の値:</span>
-        <span th:text="${#temporals.format(ld, 'yyyy/MM/dd')}"></span>
-      </div>
-    </section>
+    <div class="row">
+      <div class="k">LocalDateTime</div>
+      <div class="v" th:text="${#temporals.format(ldt, 'yyyy/MM/dd HH:mm:ss')}"></div>
+    </div>
 
-    <!-- LocalTime -->
-    <section class="card">
-      <h2 class="card-title">LocalTime</h2>
-      <p class="card-sub">
-        時刻のみを表す型。フォーマット指定で「HH:mm:ss」などの形に整えられます。
-      </p>
-      <div class="row">
-        <span class="label">生の値:</span>
-        <span th:text="${lt}"></span>
+    <div class="row">
+      <div class="k">LocalDate</div>
+      <div class="v" th:text="${#temporals.format(ld, 'yyyy/MM/dd')}"></div>
+    </div>
+
+    <div class="row">
+      <div class="k">LocalTime</div>
+      <div class="v" th:text="${#temporals.format(lt, 'HH:mm:ss')}"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>数値の整形（#numbers）</h2>
+
+    <div class="row">
+      <div class="k">3桁ゼロ埋め</div>
+      <div class="v" th:text="${#numbers.formatInteger(num, 3)}"></div>
+    </div>
+
+    <div class="row">
+      <div class="k">繰り返し（1〜5）</div>
+      <div class="v">
+        <span th:each="i : ${#numbers.sequence(1,5)}" th:text="${'No.' + i + ' ' }"></span>
       </div>
-      <div class="row">
-        <span class="label">整形後の値:</span>
-        <span th:text="${#temporals.format(lt, 'HH:mm:ss')}"></span>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- ゼロ埋め -->
-    <section class="card">
-      <h2 class="card-title">個数のゼロ埋め</h2>
-      <p class="card-sub">
-        <code>#numbers.formatInteger</code> を使うと、桁数を揃えた数字表示（001, 012, 120 など）が簡単に書けます。
-      </p>
-      <div class="row">
-        <span class="label">3桁ゼロ埋め:</span>
-        <span th:text="${#numbers.formatInteger(num, 3)}"></span>
-      </div>
-    </section>
+  <section>
+    <h2>文字列の整形（#strings）</h2>
 
-    <!-- 大文字化 -->
-    <section class="card">
-      <h2 class="card-title">大文字にして表示</h2>
-      <p class="card-sub">
-        文字列を大文字に変換したいときは <code>#strings.toUpperCase</code> を使います。
-      </p>
-      <div class="row">
-        <span class="label">大文字:</span>
-        <span th:text="${#strings.toUpperCase(upperSrc)}"></span>
-      </div>
-    </section>
+    <div class="row">
+      <div class="k">大文字</div>
+      <div class="v" th:text="${#strings.toUpperCase(upperSrc)}"></div>
+    </div>
 
-    <!-- 小文字化 -->
-    <section class="card">
-      <h2 class="card-title">小文字にして表示</h2>
-      <p class="card-sub">
-        逆に小文字にしたいときは <code>#strings.toLowerCase</code> を使います。
-      </p>
-      <div class="row">
-        <span class="label">小文字:</span>
-        <span th:text="${#strings.toLowerCase(lowerSrc)}"></span>
-      </div>
-    </section>
+    <div class="row">
+      <div class="k">小文字</div>
+      <div class="v" th:text="${#strings.toLowerCase(lowerSrc)}"></div>
+    </div>
 
-    <!-- 省略表示 -->
-    <section class="card">
-      <h2 class="card-title">省略表示</h2>
-      <p class="card-sub">
-        長い本文などを一部だけ表示したいときは <code>#strings.abbreviate</code> が便利です。
-      </p>
-      <div class="row">
-        <span class="label">20文字まで:</span>
-        <span th:text="${#strings.abbreviate(longText, 20)}"></span>
-      </div>
-    </section>
-
-    <!-- 繰り返し -->
-    <section class="card">
-      <h2 class="card-title">繰り返し</h2>
-      <p class="card-sub">
-        <code>#numbers.sequence(開始, 終了)</code> で、指定範囲の整数のリストを簡単に生成できます。
-        そのまま <code>th:each</code> で回すのが定番パターンです。
-      </p>
-      <ul class="list">
-        <li th:each="i : ${#numbers.sequence(1,5)}">
-          No.<span th:text="${i}"></span>
-        </li>
-      </ul>
-    </section>
-  </div>
-
-</div>
-
+    <div class="row">
+      <div class="k">省略（20文字）</div>
+      <div class="v" th:text="${#strings.abbreviate(longText, 20)}"></div>
+    </div>
+  </section>
+</main>
 </body>
 </html>
