@@ -1,275 +1,105 @@
 <!DOCTYPE html>
 <html lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>送信完了</title>
 
   <style>
-    :root{
-      --g:#0f766e; --g2:#0b5f58;
-      --bg:#f6f7f9; --card:#fff;
-      --text:#0f172a; --muted:#64748b;
-      --bd:#e5e7eb;
-      --tint:rgba(15,118,110,.08);
-      --tint2:rgba(15,118,110,.05);
-      --shadow:0 10px 24px rgba(15,23,42,.06),0 2px 6px rgba(15,23,42,.05);
-      --ring:0 0 0 4px rgba(15,118,110,.16);
+    body {
+      margin: 0;
     }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP","Hiragino Kaku Gothic ProN",Meiryo,Arial,sans-serif;
-      line-height:1.7;
+    main {
+      max-width: 960px;
+      margin: 24px auto;
+      padding: 0 16px;
     }
 
-    .wrap{max-width:980px;margin:28px auto;padding:0 18px;}
-    .card{
-      background:var(--card);
-      border:1px solid var(--bd);
-      border-radius:18px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
+    .alert {
+      margin: 0 0 12px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
     }
 
-    .header{
-      padding:22px 22px 14px;
-      border-bottom:1px solid var(--bd);
+    table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    .title{
-      display:flex;align-items:center;gap:12px;
-      margin:0 0 6px;
-      font-size:24px;font-weight:800;
-      letter-spacing:.2px;
-    }
-    .title:before{
-      content:"";
-      width:6px;height:28px;border-radius:999px;
-      background:var(--g);
-      display:inline-block;
+    th,
+    td {
+      padding: 8px 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      vertical-align: top;
     }
 
-    .sub{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
+    th {
+      width: 180px;
+      background: #f3f4f6;
     }
 
-    .content{padding:18px 22px 22px;}
-
-    .success{
-      border:1px solid rgba(15,118,110,.22);
-      background:rgba(15,118,110,.07);
-      border-radius:14px;
-      padding:12px 14px;
-      color:#0b4f49;
-      font-size:14px;
-      margin:0 0 14px;
-    }
-
-    /* ===== DTO 階層表現 ===== */
-    .dto{
-      border:1px solid var(--bd);
-      border-radius:16px;
-      overflow:hidden;
-      background:#fff;
-    }
-    .dto-hd{
-      padding:12px 14px;
-      background:rgba(15,118,110,.06);
-      border-bottom:1px solid var(--bd);
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-    }
-    .dto-title{
-      margin:0;
-      font-size:15px;
-      font-weight:900;
-      color:#0b4f49;
-      display:flex;align-items:center;gap:10px;
-    }
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      padding:4px 10px;
-      border-radius:999px;
-      border:1px solid rgba(15,118,110,.25);
-      background:#fff;
-      color:var(--g2);
-      font-size:12px;
-      font-weight:800;
-      white-space:nowrap;
-    }
-    .dto-bd{padding:14px;}
-
-    /* 子DTO（親の中に入ってることを強調） */
-    .nested{
-      margin-top:12px;
-      margin-left:18px;
-      padding-left:14px;
-      border-left:4px solid rgba(15,118,110,.55);
-      position:relative;
-    }
-    .nested:before{
-      content:"";
-      position:absolute;
-      left:-4px; top:22px;
-      width:14px; height:2px;
-      background:rgba(15,118,110,.55);
-    }
-    .nested .dto{
-      background:var(--tint2);
-    }
-    .nested .dto-hd{
-      background:rgba(15,118,110,.10);
-    }
-
-    /* ===== Key-Value 表示（テーブルよりカード内に馴染む） ===== */
-    .kv{
-      display:grid;
-      grid-template-columns: 180px 1fr;
-      gap:10px 14px;
-      align-items:center;
-    }
-    .k{
-      color:var(--muted);
-      font-weight:900;
-      font-size:13px;
-      white-space:nowrap;
-    }
-    .v{
-      font-size:14px;
-      font-weight:700;
-      color:var(--text);
-    }
-    .v code{
-      background:rgba(2,6,23,.06);
-      padding:2px 6px;
-      border-radius:8px;
-      font-weight:800;
-    }
-    .divider{
-      grid-column:1 / -1;
-      height:1px;
-      background:var(--bd);
-      margin:2px 0;
-    }
-
-    .actions{
-      display:flex;
-      gap:10px;
-      margin-top:14px;
-      flex-wrap:wrap;
-    }
-
-    .btn{
-      appearance:none;
-      border:1px solid var(--bd);
-      background:#fff;
-      color:var(--text);
-      padding:10px 14px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:14px;
-      cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      transition: background .15s ease, transform .05s ease, border-color .15s ease, color .15s ease;
-      text-decoration:none;
-    }
-    .btn:hover{background:rgba(2,6,23,.04)}
-    .btn:active{transform:translateY(1px)}
-
-    .btn-primary{
-      border-color:rgba(15,118,110,.55);
-      color:var(--g2);
-      background:#fff;
-    }
-    .btn-primary:hover{background:var(--tint)}
-
-    @media (max-width: 720px){
-      .title{font-size:20px}
-      .kv{grid-template-columns: 1fr; gap:6px}
-      .k{white-space:normal}
-      .nested{margin-left:10px}
-      .divider{margin:8px 0}
+    .hint {
+      margin-top: 10px;
+      color: #666;
+      font-size: 13px;
     }
   </style>
 </head>
 
 <body>
-<div class="wrap">
-  <div class="card">
-    <div class="header">
-      <h1 class="title">結果画面</h1>
-    </div>
+<main>
+  <h1>結果画面</h1>
 
-    <div class="content">
-      <div class="success">
-        送信処理が完了しました。
-      </div>
-
-      <!-- 親DTO -->
-      <section class="dto" aria-label="親DTO">
-        <div class="dto-hd">
-          <h2 class="dto-title">基本情報</h2>
-          <span class="pill">親DTO</span>
-        </div>
-
-        <div class="dto-bd">
-          <div class="kv" role="list">
-            <div class="k" role="listitem">お名前</div>
-            <div class="v"><span th:text="${saved.name}">name</span></div>
-
-            <div class="divider" aria-hidden="true"></div>
-
-            <div class="k" role="listitem">メール</div>
-            <div class="v"><span th:text="${saved.email}">email</span></div>
-
-            <div class="divider" aria-hidden="true"></div>
-
-            <div class="k" role="listitem">年齢</div>
-            <div class="v"><span th:text="${saved.age}">age</span></div>
-          </div>
-
-          <!-- 子DTO（address） -->
-          <div class="nested" aria-label="親DTO内の子DTO（address）">
-            <section class="dto">
-              <div class="dto-hd">
-                <h2 class="dto-title">住所</h2>
-                <span class="pill">子DTO：address</span>
-              </div>
-
-              <div class="dto-bd">
-                <div class="kv" role="list">
-                  <div class="k" role="listitem">都道府県</div>
-                  <div class="v"><span th:text="${saved.address.prefecture}">pref</span></div>
-
-                  <div class="divider" aria-hidden="true"></div>
-
-                  <div class="k" role="listitem">市区町村</div>
-                  <div class="v"><span th:text="${saved.address.city}">city</span></div>
-
-                  <div class="divider" aria-hidden="true"></div>
-
-                  <div class="k" role="listitem">郵便番号</div>
-                  <div class="v"><span th:text="${saved.address.postalCode}">zip</span></div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
-
-      <div class="actions">
-        <a href="javascript:history.back()" class="btn btn-primary">戻る</a>
-      </div>
-    </div>
+  <div class="alert">
+    送信処理が完了しました。
   </div>
-</div>
+
+  <h2>基本情報（親DTO）</h2>
+  <table>
+    <tbody>
+    <tr>
+      <th>お名前</th>
+      <td th:text="${saved.name}">name</td>
+    </tr>
+    <tr>
+      <th>メール</th>
+      <td th:text="${saved.email}">email</td>
+    </tr>
+    <tr>
+      <th>年齢</th>
+      <td th:text="${saved.age}">age</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>住所（子DTO：address）</h2>
+  <table>
+    <tbody>
+    <tr>
+      <th>都道府県</th>
+      <td th:text="${saved.address.prefecture}">pref</td>
+    </tr>
+    <tr>
+      <th>市区町村</th>
+      <td th:text="${saved.address.city}">city</td>
+    </tr>
+    <tr>
+      <th>郵便番号</th>
+      <td th:text="${saved.address.postalCode}">zip</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <p>
+    <a th:href="@{/validation/nested}">フォームへ戻る</a>
+  </p>
+
+  <p class="hint">
+    戻り先：<span>GET /validation/nested</span>
+  </p>
+</main>
 </body>
 </html>
