@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>@Validated メソッド検証デモ</title>
+  <style>
+    body {
+      margin: 24px;
+      line-height: 1.7;
+    }
+
+    .wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .result {
+      padding: 12px;
+      background: #f6f8fa;
+      border-radius: 8px;
+    }
+
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    legend {
+      font-weight: 600;
+    }
+
+    label {
+      display: inline-block;
+      min-width: 11em;
+    }
+
+    input {
+      padding: 6px 8px;
+    }
+
+    button {
+      padding: 6px 10px;
+    }
+
+    .hint {
+      color: #666;
+      font-size: .95em;
+    }
+
+    fieldset.active {
+      border-color: #2684ff;
+    }
+  </style>
+</head>
+<body>
+<h2>@Validated を使ったサービス層のメソッド検証</h2>
+<p class="hint">① 引数の検証と、② 戻り値の検証をまとめて試せます。</p>
+<p class="hint">不正値で送信するとエラー画面になります（検証が動いたサイン）。</p>
+<div class="wrap">
+  <!-- 結果表示 -->
+  <div class="result" th:if="${result != null}" th:text="${result}">
+    結果が表示されます
+  </div>
+
+  <fieldset th:classappend="${active}=='register' ? ' active'">
+    <legend>① 引数の検証</legend>
+    <form th:action="@{/validation/service/register}" method="post">
+      <p><label>name（必須）：</label><input type="text" name="name"></p>
+      <p><label>email（形式）：</label><input type="text" name="email"></p>
+      <p><label>age（18以上）：</label><input type="number" name="age"></p>
+      <button type="submit">送信</button>
+    </form>
+  </fieldset>
+
+  <fieldset th:classappend="${active}=='load' ? ' active'">
+    <legend>② 戻り値の検証</legend>
+    <form th:action="@{/validation/service/load}" method="post">
+      <p><label>id（必須）：</label><input type="text" name="id"></p>
+      <button type="submit">読込</button>
+    </form>
+  </fieldset>
+</div>
+
+</body>
+</html>
