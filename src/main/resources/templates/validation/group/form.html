@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${title}">グループ検証デモ</title>
+  <style>
+    body {
+      margin: 24px;
+      line-height: 1.7;
+    }
+
+    .wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .result {
+      padding: 12px;
+      background: #f6f8fa;
+      border-radius: 8px;
+    }
+
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    legend {
+      font-weight: 600;
+    }
+
+    label {
+      display: inline-block;
+      min-width: 15em;
+    }
+
+    input {
+      padding: 6px 8px;
+    }
+
+    button {
+      padding: 6px 10px;
+    }
+
+    .hint {
+      color: #666;
+      font-size: .95em;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+  </style>
+</head>
+<body>
+<h2 th:text="${title}">グループ検証デモ</h2>
+<p class="hint" th:text="${subtitle}">
+  同一画面で Create / Update の @Validated(グループ) を体験できます
+</p>
+
+<div class="wrap">
+  <!-- メッセージ表示 -->
+  <div class="result" th:if="${lines != null}">
+    <ul>
+      <li th:each="line : ${lines}" th:text="${line}">処理結果の行が入ります</li>
+    </ul>
+  </div>
+
+  <fieldset>
+    <legend>① 新規作成（Create）</legend>
+    <form th:action="@{/validation/group}" method="post">
+      <p>
+        <label>名前（必須：Create）</label>
+        <input type="text" name="name">
+      </p>
+      <p>
+        <label>メール（必須＋形式：Create/Update）</label>
+        <input type="text" name="email">
+      </p>
+      <p>
+        <label>電話番号（任意：Create）</label>
+        <input type="text" name="phone">
+      </p>
+      <button type="submit">新規作成を送信</button>
+    </form>
+  </fieldset>
+
+  <fieldset>
+    <legend>② 更新（Update）</legend>
+
+    <!-- action は送信直前に /validation/group/{id} に差し替え -->
+    <form id="updateForm" th:action="@{/validation/group/}" method="post">
+      <p>
+        <label>ID（必須：Update／パスに埋め込み）</label>
+        <input type="text" id="upd-id" name="id">
+      </p>
+      <p>
+        <label>名前（任意：Update）</label>
+        <input type="text" name="name">
+      </p>
+      <p>
+        <label>メール（必須＋形式：Create/Update）</label>
+        <input type="text" name="email">
+      </p>
+      <p>
+        <label>電話番号（必須：Update）</label>
+        <input type="text" name="phone">
+      </p>
+      <button type="submit">更新を送信</button>
+    </form>
+  </fieldset>
+</div>
+
+<script>
+  // 更新フォーム：送信直前に action を /validation/group/{id} に差し替える
+  (function () {
+    var form = document.getElementById('updateForm');
+    var idEl = document.getElementById('upd-id');
+
+    form.addEventListener('submit', function (e) {
+      var id = (idEl.value || '').trim();
+      if (!id) {
+        e.preventDefault();
+        alert('ID を入力してください');
+        return;
+      }
+      form.action = form.action + encodeURIComponent(id);
+    });
+  })();
+</script>
+</body>
+</html>
