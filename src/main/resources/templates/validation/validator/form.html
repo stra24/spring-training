@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Validator#validate 手動検証デモ</title>
+  <style>
+    body {
+      margin: 24px;
+      line-height: 1.7;
+    }
+
+    .wrap {
+      display: grid;
+      gap: 16px;
+    }
+
+    .result {
+      padding: 12px;
+      background: #f6f8fa;
+      border-radius: 8px;
+    }
+
+    .error {
+      padding: 12px;
+      background: #fff3f3;
+      border: 1px solid #f0b6b6;
+      border-radius: 8px;
+    }
+
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    legend {
+      font-weight: 600;
+    }
+
+    label {
+      display: inline-block;
+      min-width: 11em;
+    }
+
+    input {
+      padding: 6px 8px;
+    }
+
+    button {
+      padding: 6px 10px;
+    }
+
+    .hint {
+      color: #666;
+      font-size: .95em;
+    }
+  </style>
+</head>
+<body>
+<h2>Validator#validate を使った手動検証</h2>
+<p class="hint">フォーム全体をまとめて検証するケースと、項目を絞って検証するケースを試せます。</p>
+<p class="hint">不正値で送信するとエラーが表示されます（検証が動いたサイン）。</p>
+
+<div class="wrap">
+  <!-- 結果表示 -->
+  <div class="result" th:if="${result != null}" th:text="${result}">
+    OKメッセージ
+  </div>
+
+  <!-- エラー表示 -->
+  <div class="error" th:if="${errors != null}">
+    <ul>
+      <li th:each="msg : ${errors}" th:text="${msg}">違反メッセージ</li>
+    </ul>
+  </div>
+
+  <fieldset>
+    <legend>① 全体を検証</legend>
+    <form th:action="@{/validation/validator/check}" method="post">
+      <p><label>名前（必須）：</label><input type="text" name="name"></p>
+      <p><label>メール（必須・形式）：</label><input type="text" name="email"></p>
+      <p><label>年齢（0以上）：</label><input type="number" name="age"></p>
+      <button type="submit">検証する</button>
+    </form>
+  </fieldset>
+
+  <fieldset>
+    <legend>② 部分検証（name だけ）</legend>
+    <form th:action="@{/validation/validator/check-name-only}" method="post">
+      <p><label>名前（必須）：</label><input type="text" name="name"></p>
+      <button type="submit">name だけ検証</button>
+    </form>
+  </fieldset>
+</div>
+
+</body>
+</html>
