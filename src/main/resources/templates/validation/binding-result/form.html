@@ -1,0 +1,160 @@
+<!-- src/main/resources/templates/binding-result.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>BindingResult デモ</title>
+  <style>
+    body {
+      margin: 24px;
+      line-height: 1.7;
+    }
+
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+
+    .hint {
+      margin: 0;
+      color: #666;
+      font-size: .95em;
+    }
+
+    .wrap {
+      display: grid;
+      gap: 12px;
+      max-width: 880px;
+    }
+
+    .box {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+    }
+
+    .box.ok {
+      background: #f6f8fa;
+    }
+
+    .box.alert {
+      background: #fff3f3;
+      border-color: #f0b6b6;
+    }
+
+    .box h3,
+    .list {
+      margin: 0;
+    }
+
+    .box h3 {
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .list {
+      padding-left: 18px;
+    }
+
+    fieldset {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    legend {
+      font-weight: 600;
+    }
+
+    form > p {
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      flex: 0 0 7.5em;
+      white-space: nowrap;
+    }
+
+    input {
+      flex: 1;
+      min-width: 240px;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 6px 10px;
+    }
+
+    .field-error {
+      margin: 0 0 8px calc(7.5em + 8px);
+      padding: 6px 8px;
+      border-radius: 4px;
+      color: #b91c1c;
+      font-size: .95em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>BindingResult デモ</h1>
+<p class="hint" th:text="${subtitle}"></p>
+
+<!-- ★ ルートの要素で th:object を指定する（th:objectで指定したオブジェクトのフィールドが、#fields.*で参照されるため、オブジェクトがnullだとエラーになる） -->
+<div class="wrap" th:object="${userForm}">
+
+  <div class="box ok" th:if="${line}">
+    <h3>入力された内容</h3>
+    <ul class="list">
+      <li th:text="${line}"></li>
+    </ul>
+  </div>
+
+  <!-- ★ #fields.hasErrors('*') ・・・*（＝全フィールド）の中で1つ以上エラーがあるか？のboolean値を返す。 -->
+  <div class="box alert" th:if="${#fields.hasErrors('*')}">
+    <h3>入力エラーがあります</h3>
+    <ul class="list">
+      <!-- ★ #fields.errors('*')・・・*（＝全フィールド）のメッセージ一覧（List<String>）を返す。 -->
+      <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+    </ul>
+  </div>
+
+  <fieldset>
+    <legend>フォーム</legend>
+
+    <form th:action="@{/validation/binding-result}" method="post">
+      <p>
+        <label>名前 *</label>
+        <!-- ★ th:errorclass="is-invalid"・・・指定のフィールドにエラーがある時だけCSSクラスis-invalidを付与する。 -->
+        <input type="text" th:field="*{name}" th:errorclass="is-invalid"
+               placeholder="例) Taro Suzuki">
+      </p>
+      <!-- ★ #fields.hasErrors('name')・・・name フィールドで1つ以上エラーがあるか？のboolean値を返す。-->
+      <!-- ★ th:errors="*{name}"・・・name のエラーメッセージの内容で要素のコンテンツを差し替える。-->
+      <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+
+      <p>
+        <label>メール *</label>
+        <input type="text" th:field="*{email}" th:errorclass="is-invalid"
+               placeholder="example@example.com">
+      </p>
+      <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+
+      <p>
+        <label>年齢</label>
+        <input type="number" th:field="*{age}" placeholder="0以上の整数">
+      </p>
+      <p class="field-error" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
+
+      <button type="submit">送信</button>
+    </form>
+  </fieldset>
+
+</div>
+</body>
+</html>
