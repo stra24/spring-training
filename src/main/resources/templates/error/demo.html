@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>エラーデモ</title>
+  <style>
+    body {
+      margin: 24px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .btn {
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #444;
+      color: #fff;
+    }
+
+    .link {
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>エラーハンドリング デモ</h1>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1) 局所で処理（IllegalArgumentException）</h2>
+      <form action="/error-demo/iae" method="post">
+        <button class="btn" type="submit">IllegalArgumentException を投げる</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>2) グローバルで処理（NullPointerException）</h2>
+      <form action="/error-demo/npe" method="post">
+        <button class="btn" type="submit">NullPointerException を投げる</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>3) 404.html の確認</h2>
+      <a class="link" href="/no-such-path">/no-such-path へアクセス</a>
+    </section>
+
+    <section class="card">
+      <h2>4) error.html の確認（RuntimeException）</h2>
+      <form action="/error-demo/re" method="post">
+        <button class="btn" type="submit">RuntimeException を投げる</button>
+      </form>
+    </section>
+  </div>
+</div>
+</body>
+</html>

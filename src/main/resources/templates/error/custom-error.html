@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>エラー</title>
+  <style>
+    body {
+      margin: 24px;
+    }
+
+    .card {
+      max-width: 720px;
+      margin: 0 auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    dl {
+      margin: 0;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 9em 1fr;
+      border-top: 1px solid #eee;
+      padding: 8px 0;
+    }
+
+    dt {
+      margin: 0;
+      color: #555;
+      font-weight: 600;
+    }
+
+    dd {
+      margin: 0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: #444;
+      color: #fff;
+      font-size: 12px;
+    }
+
+    .actions {
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>エラーが発生しました</h1>
+
+  <dl>
+    <div class="row">
+      <dt>Handled By</dt>
+      <dd><span class="badge" th:text="${handledBy}">Controller @ExceptionHandler</span></dd>
+    </div>
+
+    <div class="row">
+      <dt>View</dt>
+      <dd th:text="${errorViewId}">templates/error/custom-error.html</dd>
+    </div>
+
+    <div class="row">
+      <dt>Exception</dt>
+      <dd th:text="${exception}">IllegalArgumentException</dd>
+    </div>
+
+    <div class="row">
+      <dt>Path</dt>
+      <dd th:text="${path}">/error-demo/iae</dd>
+    </div>
+  </dl>
+
+  <div class="actions">
+    <a href="/error-demo">デモ画面に戻る</a>
+  </div>
+</div>
+</body>
+</html>
