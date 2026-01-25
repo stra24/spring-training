@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>記事編集</title>
+  <style>
+    body {
+      margin: 24px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 900px;
+    }
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      vertical-align: top;
+    }
+    th {
+      background: #f7f7f7;
+      text-align: left;
+      width: 160px;
+    }
+    input,
+    textarea {
+      width: 100%;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 160px;
+    }
+  </style>
+</head>
+<body>
+<h2>記事編集</h2>
+
+<form th:action="@{/articles/{id}(id=${articleId})}" method="post" th:object="${articleForm}">
+  <table>
+    <tbody>
+    <tr>
+      <th>タイトル</th>
+      <td><input type="text" th:field="*{title}"></td>
+    </tr>
+    <tr>
+      <th>本文</th>
+      <td><textarea th:field="*{content}"></textarea></td>
+    </tr>
+    </tbody>
+  </table>
+  <p><button type="submit">更新する</button></p>
+</form>
+
+<p><a th:href="@{/articles}">← 一覧に戻る</a></p>
+</body>
+</html>

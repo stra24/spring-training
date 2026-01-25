@@ -44,4 +44,18 @@ public class ArticleService {
     Article article = form.toNewArticle();
     articleRepository.save(article);
   }
+
+  // 更新する。
+  @Transactional
+  public void updateArticle(Long id, ArticleForm form) {
+    // 1. 既存の記事を取得
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. 保存（idが入っているのでUPDATEになる）
+    articleRepository.save(articleForUpdate);
+  }
 }

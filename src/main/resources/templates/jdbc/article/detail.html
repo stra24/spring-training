@@ -31,6 +31,8 @@
 <body>
 <h2 th:text="${article.title}">記事タイトル</h2>
 
+<p><a th:href="@{/articles/{id}/edit(id=${article.id})}">編集する</a></p>
+
 <table>
   <tbody>
   <tr>
