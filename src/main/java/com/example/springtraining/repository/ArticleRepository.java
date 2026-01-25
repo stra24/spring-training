@@ -18,4 +18,15 @@ public class ArticleRepository {
     articleDao.findAll().forEach(list::add);
     return list;
   }
+
+  // IDの降順で並び替えた一覧を取得する。
+  public List<Article> findAllOrderByIdDesc() {
+    return articleDao.findAllOrderByIdDesc();
+  }
+
+  // IDを条件に1件を取得する。（存在しなければ例外をスロー）
+  public Article findById(Long id) {
+    return articleDao.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
+  }
 }

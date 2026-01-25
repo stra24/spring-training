@@ -39,7 +39,7 @@
   <tbody>
   <tr th:each="a : ${articles}">
     <td th:text="${a.id}">1</td>
-    <td th:text="${a.title}"></td>
+    <td><a th:href="@{/articles/{id}(id=${a.id})}" th:text="${a.title}"></a></td>
     <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
   </tr>
   </tbody>

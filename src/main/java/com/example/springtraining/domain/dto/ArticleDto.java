@@ -9,12 +9,14 @@ public class ArticleDto {
 
   Long id;
   String title;
+  String content;
   LocalDateTime updatedAt;
 
   public static ArticleDto from(Article a) {
     return new ArticleDto(
         a.getId(),
         a.getTitle(),
+        a.getContent(),
         a.getUpdatedAt()
     );
   }
