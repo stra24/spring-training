@@ -32,14 +32,14 @@ public class ArticleController {
 
   // 新規作成フォーム画面の表示
   @GetMapping("/articles/new")
-  public String newArticle(Model model) {
+  public String showArticleCreateForm(Model model) {
     model.addAttribute("articleForm", new ArticleForm());
     return "jdbc/article/new";
   }
 
   // 新規作成
   @PostMapping("/articles")
-  public String create(@ModelAttribute("articleForm") ArticleForm form) {
+  public String createArticle(@ModelAttribute("articleForm") ArticleForm form) {
     articleService.createArticle(form);
     return "redirect:/articles";
   }
