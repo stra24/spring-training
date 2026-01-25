@@ -29,4 +29,9 @@ public class ArticleRepository {
   public Optional<Article> findById(Long id) {
     return articleDao.findById(id);
   }
+
+  // 保存する。
+  public void save(Article article) {
+    articleDao.save(article);
+  }
 }

@@ -26,6 +26,8 @@
 <body>
 <h2>記事一覧</h2>
 
+<p><a th:href="@{/articles/new}">新規作成</a></p>
+
 <p th:if="${#lists.isEmpty(articles)}">記事がありません。</p>
 
 <table th:if="${!#lists.isEmpty(articles)}">

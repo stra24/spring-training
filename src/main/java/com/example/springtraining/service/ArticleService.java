@@ -2,6 +2,7 @@ package com.example.springtraining.service;
 
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,12 @@ public class ArticleService {
     Article article = articleRepository.findById(id)
         .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
     return ArticleDto.from(article);
+  }
+
+  // 新規作成する。
+  @Transactional
+  public void createArticle(ArticleForm form) {
+    Article article = form.toNewArticle();
+    articleRepository.save(article);
   }
 }
