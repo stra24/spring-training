@@ -4,6 +4,7 @@ import com.example.springtraining.dao.ArticleDao;
 import com.example.springtraining.domain.entity.Article;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -24,9 +25,8 @@ public class ArticleRepository {
     return articleDao.findAllOrderByIdDesc();
   }
 
-  // IDを条件に1件を取得する。（存在しなければ例外をスロー）
-  public Article findById(Long id) {
-    return articleDao.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした id=" + id));
+  // IDを条件に1件を取得する。
+  public Optional<Article> findById(Long id) {
+    return articleDao.findById(id);
   }
 }

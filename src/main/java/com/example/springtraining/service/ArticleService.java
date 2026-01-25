@@ -29,10 +29,11 @@ public class ArticleService {
         .toList();
   }
 
-  // IDで1件取得する。
+  // IDで1件取得する。（存在しなければ例外をスロー）
   @Transactional(readOnly = true)
   public ArticleDto getArticle(Long id) {
-    Article article = articleRepository.findById(id);
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
     return ArticleDto.from(article);
   }
 }
