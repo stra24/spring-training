@@ -18,14 +18,14 @@ public class ArticleController {
 
   // 一覧表示
   @GetMapping("/articles")
-  public String getArticles(Model model) {
-    model.addAttribute("articles", articleService.getArticlesOrderByIdDesc());
+  public String showArticles(Model model) {
+    model.addAttribute("articles", articleService.getArticles());
     return "jdbc/article/list";
   }
 
   // 詳細表示
   @GetMapping("/articles/{id}")
-  public String getArticle(@PathVariable Long id, Model model) {
+  public String showArticle(@PathVariable Long id, Model model) {
     model.addAttribute("article", articleService.getArticle(id));
     return "jdbc/article/detail";
   }
