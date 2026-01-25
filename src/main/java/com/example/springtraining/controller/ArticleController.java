@@ -13,7 +13,7 @@ public class ArticleController {
   private final ArticleService articleService;
 
   @GetMapping("/articles")
-  public String list(Model model) {
+  public String getArticles(Model model) {
     model.addAttribute("articles", articleService.listAll());
     return "jdbc/article/list";
   }
