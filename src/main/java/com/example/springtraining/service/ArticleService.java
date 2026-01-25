@@ -1,6 +1,6 @@
 package com.example.springtraining.service;
 
-import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.repository.ArticleRepository;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,9 @@ public class ArticleService {
   private final ArticleRepository repository;
 
   @Transactional(readOnly = true)
-  public List<Article> listAll() {
-    return repository.findAll();
+  public List<ArticleDto> listAll() {
+    return repository.findAll().stream()
+        .map(ArticleDto::from)
+        .toList();
   }
 }
