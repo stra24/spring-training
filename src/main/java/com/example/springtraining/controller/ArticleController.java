@@ -16,7 +16,7 @@ public class ArticleController {
   // 一覧表示
   @GetMapping("/articles")
   public String showArticles(Model model) {
-    model.addAttribute("articles", articleService.getArticles());
+    model.addAttribute("articles", articleService.getArticlesOrderByIdDesc());
     return "jdbc/article/list";
   }
 
