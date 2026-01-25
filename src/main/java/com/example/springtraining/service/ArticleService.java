@@ -11,11 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ArticleService {
 
-  private final ArticleRepository repository;
+  private final ArticleRepository articleRepository;
 
   @Transactional(readOnly = true)
   public List<ArticleDto> listAll() {
-    return repository.findAll().stream()
+    return articleRepository.findAll().stream()
         .map(ArticleDto::from)
         .toList();
   }

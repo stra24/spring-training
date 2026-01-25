@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @AllArgsConstructor
 public class ArticleController {
 
-  private final ArticleService service;
+  private final ArticleService articleService;
 
   @GetMapping("/articles")
   public String list(Model model) {
-    model.addAttribute("articles", service.listAll());
+    model.addAttribute("articles", articleService.listAll());
     return "jdbc/article/list";
   }
 }

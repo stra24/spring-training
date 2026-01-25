@@ -11,11 +11,11 @@ import org.springframework.stereotype.Repository;
 @AllArgsConstructor
 public class ArticleRepository {
 
-  private final ArticleDao dao;
+  private final ArticleDao articleDao;
 
   public List<Article> findAll() {
     List<Article> list = new ArrayList<>();
-    dao.findAll().forEach(list::add);
+    articleDao.findAll().forEach(list::add);
     return list;
   }
 }
