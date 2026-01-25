@@ -14,7 +14,7 @@ public class ArticleService {
   private final ArticleRepository articleRepository;
 
   @Transactional(readOnly = true)
-  public List<ArticleDto> listAll() {
+  public List<ArticleDto> getArticles() {
     return articleRepository.findAll().stream()
         .map(ArticleDto::from)
         .toList();
