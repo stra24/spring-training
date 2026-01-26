@@ -58,4 +58,10 @@ public class ArticleService {
     // 3. 保存（idが入っているのでUPDATEになる）
     articleRepository.save(articleForUpdate);
   }
+
+  // 削除する。
+  @Transactional
+  public void deleteArticle(Long id) {
+    articleRepository.deleteById(id);
+  }
 }

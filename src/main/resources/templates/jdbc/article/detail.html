@@ -33,6 +33,13 @@
 
 <p><a th:href="@{/articles/{id}/edit(id=${article.id})}">編集する</a></p>
 
+<form th:action="@{/articles/{id}/delete(id=${article.id})}"
+      method="post"
+      onsubmit="return confirm('本当に削除しますか？');"
+      style="margin: 0 0 16px;">
+  <button type="submit">削除する</button>
+</form>
+
 <table>
   <tbody>
   <tr>

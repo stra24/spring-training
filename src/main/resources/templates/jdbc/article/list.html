@@ -43,6 +43,14 @@
     <td th:text="${a.id}">1</td>
     <td><a th:href="@{/articles/{id}(id=${a.id})}" th:text="${a.title}"></a></td>
     <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+    <td style="border: none; background: #fff;">
+      <form th:action="@{/articles/{id}/delete(id=${a.id})}"
+            method="post"
+            onsubmit="return confirm('この記事を削除しますか？');"
+            style="display:inline;">
+        <button type="submit" style="padding:4px 10px;">削除</button>
+      </form>
+    </td>
   </tr>
   </tbody>
 </table>

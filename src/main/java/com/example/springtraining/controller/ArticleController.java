@@ -70,4 +70,11 @@ public class ArticleController {
     articleService.updateArticle(id, form);
     return "redirect:/articles/" + id;
   }
+
+  // 削除
+  @PostMapping("/articles/{id}/delete")
+  public String deleteArticle(@PathVariable Long id) {
+    articleService.deleteArticle(id);
+    return "redirect:/articles";
+  }
 }
