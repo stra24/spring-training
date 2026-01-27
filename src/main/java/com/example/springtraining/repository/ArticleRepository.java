@@ -39,4 +39,9 @@ public class ArticleRepository {
   public void deleteById(Long id) {
     articleDao.deleteById(id);
   }
+
+  // タイトルに指定のキーワードを含む記事をIDの降順で取得する。
+  public List<Article> findByTitleContainingOrderByIdDesc(String keyword) {
+    return articleDao.findByTitleContainingOrderByIdDesc(keyword);
+  }
 }

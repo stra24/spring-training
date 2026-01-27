@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
@@ -76,5 +77,16 @@ public class ArticleController {
   public String deleteArticle(@PathVariable Long id) {
     articleService.deleteArticle(id);
     return "redirect:/articles";
+  }
+
+  // 検索
+  @GetMapping("/articles/search")
+  public String searchArticles(@RequestParam String keyword, Model model) {
+    model.addAttribute(
+        "articles",
+        articleService.searchArticles(keyword)
+    );
+    model.addAttribute("keyword", keyword);
+    return "jdbc/article/list";
   }
 }

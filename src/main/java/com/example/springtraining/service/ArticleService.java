@@ -64,4 +64,10 @@ public class ArticleService {
   public void deleteArticle(Long id) {
     articleRepository.deleteById(id);
   }
+
+  // 検索する。
+  @Transactional(readOnly = true)
+  public List<Article> searchArticles(String keyword) {
+    return articleRepository.findByTitleContainingOrderByIdDesc(keyword);
+  }
 }

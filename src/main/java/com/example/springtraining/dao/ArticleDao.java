@@ -13,4 +13,7 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
       	ORDER BY id DESC
       """)
   List<Article> findAllOrderByIdDesc();
+
+  // タイトルに指定のキーワードを含む記事を、IDの降順で取得する。
+  List<Article> findByTitleContainingOrderByIdDesc(String keyword);
 }
