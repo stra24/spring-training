@@ -3,6 +3,7 @@ package com.example.springtraining.controller;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.service.ArticleService;
+import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,8 +21,12 @@ public class ArticleController {
 
   // 一覧表示
   @GetMapping("/articles")
-  public String showArticles(Model model) {
-    model.addAttribute("articles", articleService.getArticlesOrderByIdDesc());
+  public String showArticles(
+      @Nullable @RequestParam(required = false) String keyword,
+      Model model
+  ) {
+    model.addAttribute("articles", articleService.searchArticles(keyword));
+    model.addAttribute("keyword", keyword);
     return "jdbc/article/list";
   }
 
@@ -77,16 +82,5 @@ public class ArticleController {
   public String deleteArticle(@PathVariable Long id) {
     articleService.deleteArticle(id);
     return "redirect:/articles";
-  }
-
-  // 検索
-  @GetMapping("/articles/search")
-  public String searchArticles(@RequestParam String keyword, Model model) {
-    model.addAttribute(
-        "articles",
-        articleService.searchArticles(keyword)
-    );
-    model.addAttribute("keyword", keyword);
-    return "jdbc/article/list";
   }
 }

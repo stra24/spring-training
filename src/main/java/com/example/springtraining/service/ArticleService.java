@@ -4,6 +4,7 @@ import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.repository.ArticleRepository;
+import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -67,7 +68,9 @@ public class ArticleService {
 
   // 検索する。
   @Transactional(readOnly = true)
-  public List<Article> searchArticles(String keyword) {
-    return articleRepository.findByTitleContainingOrderByIdDesc(keyword);
+  public List<ArticleDto> searchArticles(@Nullable String keyword) {
+    return articleRepository.findByTitleContainingOrderByIdDesc(keyword).stream()
+        .map(ArticleDto::from)
+        .toList();
   }
 }

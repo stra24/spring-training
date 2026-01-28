@@ -2,6 +2,7 @@ package com.example.springtraining.repository;
 
 import com.example.springtraining.dao.ArticleDao;
 import com.example.springtraining.domain.entity.Article;
+import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,8 @@ public class ArticleRepository {
   }
 
   // タイトルに指定のキーワードを含む記事をIDの降順で取得する。
-  public List<Article> findByTitleContainingOrderByIdDesc(String keyword) {
-    return articleDao.findByTitleContainingOrderByIdDesc(keyword);
+  public List<Article> findByTitleContainingOrderByIdDesc(@Nullable String keyword) {
+    String safeKeyword = (keyword == null) ? "" : keyword; // nullを空文字に寄せる
+    return articleDao.findByTitleContainingOrderByIdDesc(safeKeyword);
   }
 }
