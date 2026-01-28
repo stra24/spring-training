@@ -7,6 +7,7 @@ import com.example.springtraining.repository.ArticleRepository;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,5 +73,16 @@ public class ArticleService {
     return articleRepository.findByTitleContainingOrderByIdDesc(keyword).stream()
         .map(ArticleDto::from)
         .toList();
+  }
+
+  // 検索条件で絞ったうえで、該当ページの記事を取得する。
+  @Transactional(readOnly = true)
+  public Page<ArticleDto> searchArticlePageByCondition(
+      @Nullable String keyword,
+      int page,
+      int size
+  ) {
+    return articleRepository.findPageByConditionOrderByIdDesc(keyword, page, size)
+        .map(ArticleDto::from);
   }
 }

@@ -7,19 +7,87 @@
     body {
       margin: 24px;
     }
+
     table {
       border-collapse: collapse;
       width: 100%;
       max-width: 900px;
     }
+
     th,
     td {
       border: 1px solid #ddd;
       padding: 8px 10px;
+      vertical-align: top;
     }
+
     th {
       background: #f7f7f7;
       text-align: left;
+    }
+
+    .summary {
+      margin: 8px 0 12px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .search-row input[type="text"] {
+      padding: 4px 8px;
+    }
+
+    .search-row select {
+      padding: 4px 8px;
+    }
+
+    .search-row button {
+      padding: 4px 10px;
+    }
+
+    .pagination {
+      margin-top: 16px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .page-item {
+      display: inline-block;
+    }
+
+    .page-link,
+    .page-current,
+    .page-disabled {
+      padding: 4px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-block;
+      background: #fff;
+      color: #333;
+    }
+
+    .page-current {
+      background: #333;
+      color: #fff;
+      border-color: #333;
+      cursor: default;
+    }
+
+    .page-disabled {
+      color: #aaa;
+      border-color: #eee;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -28,36 +96,99 @@
 
 <p><a th:href="@{/articles/new}">新規作成</a></p>
 
-<form th:action="@{/articles}" method="get" style="margin-bottom: 16px;">
-  <input type="text" name="keyword" th:value="${keyword}" placeholder="タイトルで検索">
+<!-- 検索フォーム -->
+<form th:action="@{/articles}" method="get" class="search-row">
+  <input type="hidden" name="page" value="0">
+  <input type="text" name="keyword" th:value="${param.keyword}" placeholder="タイトルで検索">
+
+  <!-- 表示件数のセレクトボックス -->
+  <label>
+    表示件数:
+    <select name="size" onchange="this.form.submit()">
+      <option value="3" th:selected="${pageSize == 3}">3</option>
+      <option value="5" th:selected="${pageSize == 5}">5</option>
+      <option value="7" th:selected="${pageSize == 7}">7</option>
+    </select>
+  </label>
+
   <button type="submit">検索</button>
 </form>
 
-<p th:if="${#lists.isEmpty(articles)}">記事がありません。</p>
+<!-- 全〇件中 〇件〜〇件を表示 （〇/〇 ページ） -->
+<div class="summary">
+  全<strong th:text="${articlePage.totalElements}">0</strong>件中
+  <strong
+      th:text="${articlePage.totalElements == 0 ? 0 : articlePage.number * articlePage.size + 1}">0</strong>件〜
+  <strong
+      th:text="${articlePage.number * articlePage.size + articlePage.numberOfElements}">0</strong>件を表示
+  （<span th:text="${currentPageNum + 1}">1</span>/<span th:text="${totalPageNum}">1</span> ページ）
+</div>
 
-<table th:if="${!#lists.isEmpty(articles)}">
+<!-- 検索結果（0件の場合） -->
+<p th:if="${articlePage.totalElements == 0}">記事がありません。</p>
+
+<!-- 検索結果（1件以上ある場合） -->
+<table th:if="${articlePage.totalElements > 0}">
   <thead>
   <tr>
     <th>ID</th>
     <th>タイトル</th>
     <th>更新日時</th>
+    <th>操作</th>
   </tr>
   </thead>
   <tbody>
-  <tr th:each="a : ${articles}">
+  <tr th:each="a : ${articlePage.content}">
     <td th:text="${a.id}">1</td>
-    <td><a th:href="@{/articles/{id}(id=${a.id})}" th:text="${a.title}"></a></td>
-    <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}"></td>
-    <td style="border: none; background: #fff;">
+    <td>
+      <a th:href="@{/articles/{id}(id=${a.id})}" th:text="${a.title}">タイトル</a>
+    </td>
+    <td th:text="${#temporals.format(a.updatedAt, 'yyyy-MM-dd HH:mm')}">2025-01-01 12:00</td>
+    <td style="white-space: nowrap;">
       <form th:action="@{/articles/{id}/delete(id=${a.id})}"
             method="post"
             onsubmit="return confirm('この記事を削除しますか？');"
             style="display:inline;">
-        <button type="submit" style="padding:4px 10px;">削除</button>
+        <button type="submit" style="padding: 4px 10px;">削除</button>
       </form>
     </td>
   </tr>
   </tbody>
 </table>
+
+<!-- ページネーション -->
+<div class="pagination" th:if="${totalPageNum > 1}">
+  <!-- 前へリンク -->
+  <span class="page-item" th:if="${currentPageNum > 0}">
+    <a class="page-link"
+       th:href="@{/articles(page=${currentPageNum - 1}, size=${pageSize}, keyword=${param.keyword})}">« 前へ</a>
+  </span>
+  <span class="page-item" th:if="${currentPageNum == 0}">
+    <span class="page-disabled">« 前へ</span>
+  </span>
+
+  <!-- ページ番号リンク -->
+  <span class="page-item"
+        th:each="i : ${#numbers.sequence(0, totalPageNum - 1)}">
+    <a class="page-link"
+       th:if="${i} != ${currentPageNum}"
+       th:href="@{/articles(page=${i}, size=${pageSize}, keyword=${param.keyword})}"
+       th:text="${i + 1}">1</a>
+
+    <span class="page-current"
+          th:if="${i} == ${currentPageNum}"
+          th:text="${i + 1}">1</span>
+  </span>
+
+  <!-- 次へリンク -->
+  <span class="page-item" th:if="${currentPageNum + 1 < totalPageNum}">
+    <a class="page-link"
+       th:href="@{/articles(page=${currentPageNum + 1}, size=${pageSize}, keyword=${param.keyword})}">次へ »</a>
+  </span>
+  <span class="page-item" th:if="${currentPageNum + 1 >= totalPageNum}">
+    <span class="page-disabled">次へ »</span>
+  </span>
+</div>
+
 </body>
 </html>

@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -45,5 +48,24 @@ public class ArticleRepository {
   public List<Article> findByTitleContainingOrderByIdDesc(@Nullable String keyword) {
     String safeKeyword = (keyword == null) ? "" : keyword; // nullを空文字に寄せる
     return articleDao.findByTitleContainingOrderByIdDesc(safeKeyword);
+  }
+
+  // 検索条件で絞った一覧をIDの降順でページ情報付きで取得する。
+  public Page<Article> findPageByConditionOrderByIdDesc(
+      @Nullable String keyword,
+      int page,
+      int size
+  ) {
+    String safeKeyword = (keyword == null) ? "" : keyword; // nullを空文字に寄せる
+    int offset = page * size;
+
+    List<Article> content = articleDao.findPageByConditionOrderByIdDesc(safeKeyword, size, offset);
+    long count = articleDao.countByCondition(safeKeyword);
+
+    return new PageImpl<>(
+        content,
+        PageRequest.of(page, size),
+        count
+    );
   }
 }

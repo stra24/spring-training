@@ -5,6 +5,7 @@ import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.service.ArticleService;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,16 @@ public class ArticleController {
   @GetMapping("/articles")
   public String showArticles(
       @Nullable @RequestParam(required = false) String keyword,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "5") int size,
       Model model
   ) {
-    model.addAttribute("articles", articleService.searchArticles(keyword));
-    model.addAttribute("keyword", keyword);
+    Page<ArticleDto> articlePage = articleService.searchArticlePageByCondition(keyword, page, size);
+
+    model.addAttribute("articlePage", articlePage);
+    model.addAttribute("currentPageNum", page);
+    model.addAttribute("pageSize", size);
+    model.addAttribute("totalPageNum", articlePage.getTotalPages());
     return "jdbc/article/list";
   }
 
