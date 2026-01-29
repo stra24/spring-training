@@ -5,6 +5,7 @@ import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.dto.CommentDto;
 import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.form.ArticleForm;
+import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import com.example.springtraining.repository.ArticleRepository;
 import jakarta.annotation.Nullable;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ArticleService {
 
+  private final CommentService commentService;
   private final ArticleRepository articleRepository;
 
   @Transactional(readOnly = true)
@@ -121,5 +123,19 @@ public class ArticleService {
         head.updatedAt(),
         comments
     );
+  }
+
+  // 同じコメントを2件登録しようとするが、2件目で例外を発生させる。
+  @Transactional
+  public void addCommentAndThrowException(Long articleId, CommentForm form) {
+    // 1件目の登録は成功する。
+    commentService.addComment(articleId, form);
+
+    try {
+      // 2件目の登録は例外発生により失敗する。
+      commentService.addCommentAndThrowException(articleId, form);
+    } catch (Exception e) {
+      System.out.println("2件目のコメント保存に失敗しました: " + e.getMessage());
+    }
   }
 }

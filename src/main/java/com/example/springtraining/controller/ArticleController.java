@@ -58,6 +58,16 @@ public class ArticleController {
     return "redirect:/articles/" + id;
   }
 
+  // コメント投稿（内部でロールバックされる）
+  @PostMapping("/articles/{id}/comments/rollback")
+  public String addCommentAndRollback(
+      @PathVariable Long id,
+      @ModelAttribute("commentForm") CommentForm form
+  ) {
+    articleService.addCommentAndThrowException(id, form);
+    return "redirect:/articles/" + id;
+  }
+
   // 新規作成フォーム画面の表示
   @GetMapping("/articles/new")
   public String showArticleCreateForm(Model model) {

@@ -1,5 +1,8 @@
 package com.example.springtraining.config;
 
+import jakarta.annotation.PostConstruct;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,5 +18,12 @@ public class AppConfig {
   public Clock systemClock() {
     log.info("Clock の Bean を作成して箱に入れます");
     return Clock.systemDefaultZone();
+  }
+
+  @PostConstruct
+  public void init() throws Exception {
+    // Windows環境でコンソールが文字化けしないようにする設定。
+    System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
+    System.setErr(new PrintStream(System.err, true, StandardCharsets.UTF_8));
   }
 }

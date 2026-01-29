@@ -77,6 +77,9 @@
 
     .comment-form-actions {
       margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .back-link {
@@ -144,6 +147,10 @@
       <textarea th:field="*{content}" rows="3"></textarea>
       <div class="comment-form-actions">
         <button type="submit">コメントを投稿する</button>
+
+        <button type="submit" th:formaction="@{/articles/{id}/comments/rollback(id=${article.id})}">
+          コメントを投稿する（ロールバックテスト用）
+        </button>
       </div>
     </form>
   </div>
