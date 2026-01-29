@@ -1,8 +1,11 @@
 package com.example.springtraining.service;
 
+import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
+import com.example.springtraining.domain.dto.CommentDto;
 import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.form.ArticleForm;
+import com.example.springtraining.domain.row.ArticleCommentRow;
 import com.example.springtraining.repository.ArticleRepository;
 import jakarta.annotation.Nullable;
 import java.util.List;
@@ -84,5 +87,39 @@ public class ArticleService {
   ) {
     return articleRepository.findPageByConditionOrderByIdDesc(keyword, page, size)
         .map(ArticleDto::from);
+  }
+
+  // 記事1件＋コメント一覧を取得する。
+  @Transactional(readOnly = true)
+  public ArticleDetailDto getArticleDetail(Long id) {
+
+    List<ArticleCommentRow> rows = articleRepository.findDetailRowsById(id);
+
+    // 1) 記事が存在しない場合（JOIN結果が0行）は例外を投げる。
+    if (rows.isEmpty()) {
+      throw new IllegalArgumentException("記事が見つかりませんでした。id = " + id);
+    }
+
+    // 2) 記事情報（親）は全行共通なので先頭行から拾う。
+    ArticleCommentRow head = rows.getFirst();
+
+    // 3) コメント部分だけをList化する。（LEFT JOINでコメントが無いとnullになるので除外）
+    List<CommentDto> comments = rows.stream()
+        .filter(r -> r.commentId() != null)
+        .map(r -> new CommentDto(
+            r.commentId(),
+            r.commentContent(),
+            r.commentCreatedAt()
+        ))
+        .toList();
+
+    // 4) 親＋子の形に組み立てて返す。
+    return new ArticleDetailDto(
+        head.articleId(),
+        head.title(),
+        head.content(),
+        head.updatedAt(),
+        comments
+    );
   }
 }

@@ -1,6 +1,7 @@
 package com.example.springtraining.dao;
 
 import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.row.ArticleCommentRow;
 import java.util.List;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -40,4 +41,22 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
       WHERE title LIKE CONCAT('%', :keyword, '%')
       """)
   long countByCondition(@Param("keyword") String keyword);
+
+  // IDに紐づく記事1件＋その記事のコメント一覧を取得する。
+  @Query("""
+      SELECT
+        a.id         AS article_id,
+        a.title      AS title,
+        a.content    AS content,
+        a.updated_at AS updated_at,
+        c.id         AS comment_id,
+        c.content    AS comment_content,
+        c.created_at AS comment_created_at
+      FROM articles a
+      LEFT JOIN comments c
+        ON c.article_id = a.id
+      WHERE a.id = :id
+      ORDER BY c.created_at ASC
+      """)
+  List<ArticleCommentRow> findDetailRowsById(@Param("id") Long id);
 }

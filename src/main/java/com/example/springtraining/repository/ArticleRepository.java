@@ -2,6 +2,7 @@ package com.example.springtraining.repository;
 
 import com.example.springtraining.dao.ArticleDao;
 import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.row.ArticleCommentRow;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,5 +68,10 @@ public class ArticleRepository {
         PageRequest.of(page, size),
         count
     );
+  }
+
+  // 記事とコメントのJOIN結果を取得する。
+  public List<ArticleCommentRow> findDetailRowsById(Long id) {
+    return articleDao.findDetailRowsById(id);
   }
 }

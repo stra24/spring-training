@@ -2,7 +2,9 @@ package com.example.springtraining.controller;
 
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.form.ArticleForm;
+import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.service.ArticleService;
+import com.example.springtraining.service.CommentService;
 import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class ArticleController {
 
   private final ArticleService articleService;
+  private final CommentService commentService;
 
   // 一覧表示
   @GetMapping("/articles")
@@ -37,11 +40,22 @@ public class ArticleController {
     return "jdbc/article/list";
   }
 
-  // 詳細表示
+  // 詳細表示（記事＋コメント）
   @GetMapping("/articles/{id}")
   public String showArticle(@PathVariable Long id, Model model) {
-    model.addAttribute("article", articleService.getArticle(id));
+    model.addAttribute("article", articleService.getArticleDetail(id));
+    model.addAttribute("commentForm", new CommentForm(""));
     return "jdbc/article/detail";
+  }
+
+  // コメント投稿
+  @PostMapping("/articles/{id}/comments")
+  public String addComment(
+      @PathVariable Long id,
+      @ModelAttribute("commentForm") CommentForm form
+  ) {
+    commentService.addComment(id, form);
+    return "redirect:/articles/" + id;
   }
 
   // 新規作成フォーム画面の表示

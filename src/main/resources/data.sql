@@ -1,5 +1,5 @@
 -- レコードを一度すべて削除する。（アプリ再起動時に同じレコードが増えるのを避けるため）
-TRUNCATE TABLE articles RESTART IDENTITY CASCADE;
+TRUNCATE TABLE comments, articles RESTART IDENTITY CASCADE;
 
 INSERT INTO articles (title, content, created_at, updated_at, version) VALUES
   ('はじめてのSpring Data JDBC', '最小の一覧表示を作って動作を確認します。', now(), now(), 0),
@@ -22,3 +22,9 @@ INSERT INTO articles (title, content, created_at, updated_at, version) VALUES
   ('クエリ最適化', '必要な条件で必要なデータだけ取得します。', now(), now(), 0),
   ('テストの追加', 'Repository/Serviceのテストを書いて安心します。', now(), now(), 0),
   ('まとめ', 'CRUD + 検索 + ページングの一連を復習します。', now(), now(), 0);
+
+INSERT INTO comments (article_id, content, created_at) VALUES
+  (1, 'この記事わかりやすい！', now()),
+  (1, 'JDBCの雰囲気が掴めました。', now()),
+  (2, 'findByの命名規則が助かります。', now()),
+  (3, '表で表示されると見やすいですね。', now());
