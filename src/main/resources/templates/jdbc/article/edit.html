@@ -68,6 +68,7 @@
     </tbody>
   </table>
 
+  <!-- 通常更新 / 楽観ロック -->
   <div class="actions">
     <!-- 通常更新 -->
     <button type="submit"
@@ -75,16 +76,45 @@
       更新する
     </button>
 
-    <!-- 速い更新 -->
+    <!-- 楽観ロック：速い更新 -->
     <button type="submit"
             th:formaction="@{/articles/{id}/update/fast(id=${articleId})}">
-      すぐに保存（fast）
+      楽観ロック：すぐに保存（fast）
     </button>
 
-    <!-- 遅い更新 -->
+    <!-- 楽観ロック：遅い更新 -->
     <button type="submit"
             th:formaction="@{/articles/{id}/update/slow(id=${articleId})}">
-      ゆっくり保存（slow）
+      楽観ロック：ゆっくり保存（slow）
+    </button>
+  </div>
+
+  <hr>
+
+  <!-- 悲観ロック -->
+  <div class="actions">
+    <!-- 悲観ロック @Lock：速い -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/pessimistic/lock/fast(id=${articleId})}">
+      悲観ロック（@Lock）：すぐに保存（fast）
+    </button>
+
+    <!-- 悲観ロック @Lock：遅い -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/pessimistic/lock/slow(id=${articleId})}">
+      悲観ロック（@Lock）：ゆっくり保存（slow）
+    </button>
+
+    <!-- 悲観ロック @Query：速い -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/pessimistic/sql/fast(id=${articleId})}">
+      悲観ロック（@Query）：すぐに保存（fast）
+    </button>
+
+    <!-- 悲観ロック @Query：遅い -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/pessimistic/sql/slow(id=${articleId})}">
+      悲観ロック（@Query）：ゆっくり保存（slow）
     </button>
   </div>
 </form>

@@ -3,7 +3,10 @@ package com.example.springtraining.dao;
 import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jdbc.repository.query.Query;
+import org.springframework.data.relational.core.sql.LockMode;
+import org.springframework.data.relational.repository.Lock;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -59,4 +62,12 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
       ORDER BY c.created_at ASC
       """)
   List<ArticleCommentRow> findDetailRowsById(@Param("id") Long id);
+
+  // 悲観ロックのパターンA：@Lock を使った悲観ロック（派生クエリメソッド）
+  @Lock(LockMode.PESSIMISTIC_WRITE)
+  Optional<Article> findOneById(Long id);
+
+  // 悲観ロックのパターンB：@Query + FOR UPDATE を使った悲観ロック（生SQL）
+  @Query("SELECT * FROM articles WHERE id = :id FOR UPDATE")
+  Optional<Article> findByIdForUpdate(@Param("id") Long id);
 }

@@ -141,6 +141,82 @@ public class ArticleController {
     return "redirect:/articles/" + id + "/edit";
   }
 
+  // 【悲観ロック確認用】@Lock + 速い更新
+  @PostMapping("/articles/{id}/update/pessimistic/lock/fast")
+  public String updatePessimisticLockFast(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleFastWithPessimisticLock(id, form);
+      redirectAttributes.addFlashAttribute(
+          "message",
+          "悲観ロック（@Lock）で速く更新しました。"
+      );
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
+  }
+
+  // 【悲観ロック確認用】@Lock + わざと遅い更新
+  @PostMapping("/articles/{id}/update/pessimistic/lock/slow")
+  public String updatePessimisticLockSlow(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleSlowWithPessimisticLock(id, form);
+      redirectAttributes.addFlashAttribute(
+          "message",
+          "悲観ロック（@Lock）で遅く更新しました。"
+      );
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
+  }
+
+  // 【悲観ロック確認用】@Query + 速い更新
+  @PostMapping("/articles/{id}/update/pessimistic/sql/fast")
+  public String updatePessimisticSqlFast(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleFastWithPessimisticLockWithSql(id, form);
+      redirectAttributes.addFlashAttribute(
+          "message",
+          "悲観ロック（@Query）で速く更新しました。"
+      );
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
+  }
+
+  // 【悲観ロック確認用】@Query + わざと遅い更新
+  @PostMapping("/articles/{id}/update/pessimistic/sql/slow")
+  public String updatePessimisticSqlSlow(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleSlowWithPessimisticLockWithSql(id, form);
+      redirectAttributes.addFlashAttribute(
+          "message",
+          "悲観ロック（@Query）で遅く更新しました。"
+      );
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
+  }
+
   // 削除
   @PostMapping("/articles/{id}/delete")
   public String deleteArticle(@PathVariable Long id) {

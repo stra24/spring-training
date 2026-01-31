@@ -11,6 +11,8 @@ import com.example.springtraining.repository.ArticleRepository;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class ArticleService {
 
   private final CommentService commentService;
   private final ArticleRepository articleRepository;
+
+  private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
   @Transactional(readOnly = true)
   public List<ArticleDto> getArticles() {
@@ -189,5 +193,83 @@ public class ArticleService {
           e
       );
     }
+  }
+
+  // 【悲観ロック確認用】@Lockの悲観ロック付き、かつ、遅い更新。
+  @Transactional
+  public void updateArticleSlowWithPessimisticLock(Long id, ArticleForm form) {
+    // 1. @Lock(PESSIMISTIC_WRITE) が付いているメソッドで取得 → 行ロック獲得
+    Article article = articleRepository.findByIdForUpdate(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+    log.info("@Lock + 遅い更新のメソッドで悲観ロックをしました。");
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. あえて5秒待つ（この間、同じ行を触ろうとすると待たされる）
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 何もしない
+    }
+
+    // 4. 保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    articleRepository.save(articleForUpdate);
+    log.info("@Lock + 遅い更新のメソッドで悲観ロックを解除しました。");
+  }
+
+  // 【悲観ロック確認用】@Lockの悲観ロック付き、かつ、速い更新。
+  @Transactional
+  public void updateArticleFastWithPessimisticLock(Long id, ArticleForm form) {
+    // 1. @Lock(PESSIMISTIC_WRITE) が付いているメソッドで取得 → 行ロック獲得
+    Article article = articleRepository.findByIdForUpdate(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+    log.info("@Lock + 速い更新のメソッドで悲観ロックをしました。");
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. すぐに保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    articleRepository.save(articleForUpdate);
+    log.info("@Lock + 速い更新のメソッドで悲観ロックを解除しました。");
+  }
+
+  // 【悲観ロック確認用】@Query("SELECT ... FOR UPDATE")の悲観ロック付き、かつ、遅い更新。
+  @Transactional
+  public void updateArticleSlowWithPessimisticLockWithSql(Long id, ArticleForm form) {
+    // 1. @Query("SELECT ... FOR UPDATE") が付いているメソッドで取得 → 行ロック獲得
+    Article article = articleRepository.findByIdForUpdateWithSql(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+    log.info("@Query + 遅い更新のメソッドで悲観ロックをしました。");
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. あえて5秒待つ（この間、同じ行を触ろうとすると待たされる）
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 何もしない
+    }
+
+    // 4. 保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    articleRepository.save(articleForUpdate);
+    log.info("@Query + 遅い更新のメソッドで悲観ロックを解除しました。");
+  }
+
+  // 【悲観ロック確認用】@Query("SELECT ... FOR UPDATE")の悲観ロック付き、かつ、速い更新。
+  @Transactional
+  public void updateArticleFastWithPessimisticLockWithSql(Long id, ArticleForm form) {
+    // 1. @Query("SELECT ... FOR UPDATE") が付いているメソッドで取得 → 行ロック獲得
+    Article article = articleRepository.findByIdForUpdateWithSql(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+    log.info("@Query + 速い更新のメソッドで悲観ロックをしました。");
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. すぐに保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
+    articleRepository.save(articleForUpdate);
+    log.info("@Query + 速い更新のメソッドで悲観ロックを解除しました。");
   }
 }

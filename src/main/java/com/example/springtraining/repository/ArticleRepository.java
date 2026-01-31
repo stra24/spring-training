@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Repository;
 public class ArticleRepository {
 
   private final ArticleDao articleDao;
+
+  private static final Logger log = LoggerFactory.getLogger(ArticleRepository.class);
 
   public List<Article> findAll() {
     List<Article> list = new ArrayList<>();
@@ -73,5 +77,19 @@ public class ArticleRepository {
   // 記事とコメントのJOIN結果を取得する。
   public List<ArticleCommentRow> findDetailRowsById(Long id) {
     return articleDao.findDetailRowsById(id);
+  }
+
+  // 悲観ロックのパターンA：@Lockでの悲観ロック付きで、IDを条件に1件を取得する。
+  public Optional<Article> findByIdForUpdate(Long id) {
+    Optional<Article> article = articleDao.findOneById(id);
+    log.info("@Lockで" + "id = " + id + "の記事を悲観ロックしました。");
+    return article;
+  }
+
+  // 悲観ロックのパターンB：@Queryでの悲観ロック付きで、IDを条件に1件を取得する。
+  public Optional<Article> findByIdForUpdateWithSql(Long id) {
+    Optional<Article> article = articleDao.findByIdForUpdate(id);
+    log.info("@Queryで" + "id = " + id + "の記事を悲観ロックしました。");
+    return article;
   }
 }
