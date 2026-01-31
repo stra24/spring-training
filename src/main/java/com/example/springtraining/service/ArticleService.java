@@ -11,6 +11,7 @@ import com.example.springtraining.repository.ArticleRepository;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -136,6 +137,57 @@ public class ArticleService {
       commentService.addCommentAndThrowException(articleId, form);
     } catch (Exception e) {
       System.out.println("2件目のコメント保存に失敗しました: " + e.getMessage());
+    }
+  }
+
+  // 【楽観ロック確認用】すぐ終わる通常の更新。
+  @Transactional
+  public void updateArticleFast(Long id, ArticleForm form) {
+    // 1. 既存の記事を取得
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    try {
+      // 3. 保存（idが入っているのでUPDATEになる）
+      articleRepository.save(articleForUpdate);
+    } catch (OptimisticLockingFailureException e) {
+      throw new RuntimeException(
+          "（速い更新メソッドで例外発生）他のユーザーによってすでに更新されています。最新の状態を表示してからやり直してください。",
+          e
+      );
+    }
+  }
+
+  // 【楽観ロック確認用】わざと時間がかかる更新。
+  // これを先に実行しておいて、あとから速い更新のほうを実行すると楽観ロックを再現できる。
+  @Transactional
+  public void updateArticleSlow(Long id, ArticleForm form) {
+    // 1. 既存の記事を取得
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("記事が見つかりませんでした。id = " + id));
+
+    // 2. フォームの内容を既存の記事に上書き
+    Article articleForUpdate = form.toUpdatedArticle(article);
+
+    // 3. あえて5秒待つ
+    try {
+      Thread.sleep(5000);
+    } catch (InterruptedException e) {
+      // 何もしない
+    }
+
+    try {
+      // 4. 保存（idが入っているのでUPDATEになる）
+      // 速い更新のほうで先に更新されるため、ここで例外（OptimisticLockingFailureException）が発生する想定。
+      articleRepository.save(articleForUpdate);
+    } catch (OptimisticLockingFailureException e) {
+      throw new RuntimeException(
+          "（遅い更新メソッドで例外発生）他のユーザーによってすでに更新されています。最新の状態を表示してからやり直してください。",
+          e
+      );
     }
   }
 }

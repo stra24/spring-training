@@ -12,8 +12,7 @@
       width: 100%;
       max-width: 900px;
     }
-    th,
-    td {
+    th, td {
       border: 1px solid #ddd;
       padding: 8px 10px;
       vertical-align: top;
@@ -23,20 +22,39 @@
       text-align: left;
       width: 160px;
     }
-    input,
-    textarea {
+    input, textarea {
       width: 100%;
       box-sizing: border-box;
     }
     textarea {
       height: 160px;
     }
+    .flash {
+      margin: 10px 0;
+    }
+    .flash-success {
+      color: #0a7;
+    }
+    .flash-error {
+      color: #c00;
+    }
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 <h2>記事編集</h2>
 
-<form th:action="@{/articles/{id}(id=${articleId})}" method="post" th:object="${articleForm}">
+<div class="flash">
+  <p th:if="${message}" th:text="${message}" class="flash-success"></p>
+  <p th:if="${error}" th:text="${error}" class="flash-error"></p>
+</div>
+
+<form method="post" th:object="${articleForm}">
   <table>
     <tbody>
     <tr>
@@ -49,7 +67,26 @@
     </tr>
     </tbody>
   </table>
-  <p><button type="submit">更新する</button></p>
+
+  <div class="actions">
+    <!-- 通常更新 -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}(id=${articleId})}">
+      更新する
+    </button>
+
+    <!-- 速い更新 -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/fast(id=${articleId})}">
+      すぐに保存（fast）
+    </button>
+
+    <!-- 遅い更新 -->
+    <button type="submit"
+            th:formaction="@{/articles/{id}/update/slow(id=${articleId})}">
+      ゆっくり保存（slow）
+    </button>
+  </div>
 </form>
 
 <p><a th:href="@{/articles}">← 一覧に戻る</a></p>

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @AllArgsConstructor
@@ -106,6 +107,38 @@ public class ArticleController {
   ) {
     articleService.updateArticle(id, form);
     return "redirect:/articles/" + id;
+  }
+
+  // 【楽観ロック確認用】速い更新
+  @PostMapping("/articles/{id}/update/fast")
+  public String updateFast(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleFast(id, form);
+      redirectAttributes.addFlashAttribute("message", "速い処理で更新しました。");
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
+  }
+
+  // 【楽観ロック確認用】わざと遅い更新
+  @PostMapping("/articles/{id}/update/slow")
+  public String updateSlow(
+      @PathVariable Long id,
+      @ModelAttribute("articleForm") ArticleForm form,
+      RedirectAttributes redirectAttributes
+  ) {
+    try {
+      articleService.updateArticleSlow(id, form);
+      redirectAttributes.addFlashAttribute("message", "遅い処理で更新しました。");
+    } catch (RuntimeException e) {
+      redirectAttributes.addFlashAttribute("error", e.getMessage());
+    }
+    return "redirect:/articles/" + id + "/edit";
   }
 
   // 削除

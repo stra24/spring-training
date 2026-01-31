@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Version;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Data
@@ -17,5 +18,6 @@ public class Article {
   private String content;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
+  @Version
   private Long version;
 }

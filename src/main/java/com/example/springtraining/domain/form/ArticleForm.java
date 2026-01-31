@@ -16,7 +16,7 @@ public class ArticleForm {
   public Article toNewArticle() {
     // 新規登録なので作成・更新日時は現在日時で揃える。
     LocalDateTime now = LocalDateTime.now();
-    return new Article(null, this.title, this.content, now, now, 0L);
+    return new Article(null, this.title, this.content, now, now, null);
   }
 
   // 更新用のArticleを作成して返す。
