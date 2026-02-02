@@ -5,7 +5,9 @@ import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.service.ArticleService;
 import com.example.springtraining.service.CommentService;
+import com.example.springtraining.service.TagService;
 import jakarta.annotation.Nullable;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,7 @@ public class ArticleController {
 
   private final ArticleService articleService;
   private final CommentService commentService;
+  private final TagService tagService;
 
   // 一覧表示
   @GetMapping("/articles")
@@ -72,7 +75,8 @@ public class ArticleController {
   // 新規作成フォーム画面の表示
   @GetMapping("/articles/new")
   public String showArticleCreateForm(Model model) {
-    model.addAttribute("articleForm", new ArticleForm(null, null));
+    model.addAttribute("articleForm", ArticleForm.empty());
+    model.addAttribute("tags", tagService.getTags());
     return "jdbc/article/new";
   }
 
@@ -87,15 +91,17 @@ public class ArticleController {
   @GetMapping("/articles/{id}/edit")
   public String showArticleEditForm(@PathVariable Long id, Model model) {
     ArticleDto articleDto = articleService.getArticle(id);
+    List<Long> selectedTagIds = tagService.getTagIdsByArticleId(id);
 
-    // 既存記事の値をフォーム用オブジェクトに詰め替える
     ArticleForm form = new ArticleForm(
         articleDto.getTitle(),
-        articleDto.getContent()
+        articleDto.getContent(),
+        selectedTagIds
     );
 
     model.addAttribute("articleForm", form);
-    model.addAttribute("articleId", id); // actionで使う。
+    model.addAttribute("articleId", id);
+    model.addAttribute("tags", tagService.getTags());
     return "jdbc/article/edit";
   }
 

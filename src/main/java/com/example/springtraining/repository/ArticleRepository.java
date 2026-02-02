@@ -40,8 +40,8 @@ public class ArticleRepository {
   }
 
   // 保存する。
-  public void save(Article article) {
-    articleDao.save(article);
+  public Article save(Article article) {
+    return articleDao.save(article);
   }
 
   // IDを指定して1件削除する。
@@ -91,5 +91,15 @@ public class ArticleRepository {
     Optional<Article> article = articleDao.findByIdForUpdate(id);
     log.info("@Queryで" + "id = " + id + "の記事を悲観ロックしました。");
     return article;
+  }
+
+  // 指定の記事IDの中間テーブルを削除する。
+  public void deleteArticleTags(Long articleId) {
+    articleDao.deleteArticleTags(articleId);
+  }
+
+  // 指定の記事ID・タグIDの中間テーブルを作成する。
+  public void createArticleTag(Long articleId, Long tagId) {
+    articleDao.insertArticleTag(articleId, tagId);
   }
 }

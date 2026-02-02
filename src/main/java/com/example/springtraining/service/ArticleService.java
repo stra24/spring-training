@@ -3,11 +3,13 @@ package com.example.springtraining.service;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.dto.CommentDto;
+import com.example.springtraining.domain.dto.TagDto;
 import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import com.example.springtraining.repository.ArticleRepository;
+import com.example.springtraining.repository.TagRepository;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,7 @@ public class ArticleService {
 
   private final CommentService commentService;
   private final ArticleRepository articleRepository;
+  private final TagRepository tagRepository;
 
   private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
@@ -54,7 +57,13 @@ public class ArticleService {
   @Transactional
   public void createArticle(ArticleForm form) {
     Article article = form.toNewArticle();
-    articleRepository.save(article);
+
+    // 1. 記事を保存して保存後の記事を取得。（採番されたIDが代入されてある）
+    Article createdArticle = articleRepository.save(article);
+
+    // 2. 採番された記事IDで中間テーブルに保存する。
+    List<Long> tagIds = (form.getTagIds() == null) ? List.of() : form.getTagIds();
+    tagIds.forEach(tagId -> articleRepository.createArticleTag(createdArticle.getId(), tagId));
   }
 
   // 更新する。
@@ -69,6 +78,13 @@ public class ArticleService {
 
     // 3. 保存（idが入っているのでUPDATEになる）
     articleRepository.save(articleForUpdate);
+
+    // 4. 中間テーブルを全削除
+    articleRepository.deleteArticleTags(id);
+
+    // 5. 中間テーブルに保存
+    List<Long> tagIds = (form.getTagIds() == null) ? List.of() : form.getTagIds();
+    tagIds.forEach(tagId -> articleRepository.createArticleTag(articleForUpdate.getId(), tagId));
   }
 
   // 削除する。
@@ -120,13 +136,19 @@ public class ArticleService {
         ))
         .toList();
 
-    // 4) 親＋子の形に組み立てて返す。
+    // 4) 記事IDに紐づくタグ一覧を取得する。
+    List<TagDto> tagDtos = tagRepository.findTagsByArticleId(id).stream()
+        .map(tag -> new TagDto(tag.getId(), tag.getName()))
+        .toList();
+
+    // 5) 親＋子の形に組み立てて返す。
     return new ArticleDetailDto(
         head.articleId(),
         head.title(),
         head.content(),
         head.updatedAt(),
-        comments
+        comments,
+        tagDtos
     );
   }
 

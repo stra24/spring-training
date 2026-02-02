@@ -12,4 +12,5 @@ public class ArticleDetailDto {
   String content;
   LocalDateTime updatedAt;
   List<CommentDto> comments;
+  List<TagDto> tags;
 }

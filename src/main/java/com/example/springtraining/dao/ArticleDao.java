@@ -4,6 +4,7 @@ import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.relational.core.sql.LockMode;
 import org.springframework.data.relational.repository.Lock;
@@ -70,4 +71,23 @@ public interface ArticleDao extends CrudRepository<Article, Long> {
   // 悲観ロックのパターンB：@Query + FOR UPDATE を使った悲観ロック（生SQL）
   @Query("SELECT * FROM articles WHERE id = :id FOR UPDATE")
   Optional<Article> findByIdForUpdate(@Param("id") Long id);
+
+  // 記事IDに紐づく中間テーブルを全削除する。
+  @Modifying
+  @Query("""
+      DELETE FROM article_tag
+      WHERE article_id = :articleId
+      """)
+  void deleteArticleTags(@Param("articleId") Long articleId);
+
+  // 中間テーブルに1件追加する。
+  @Modifying
+  @Query("""
+      INSERT INTO article_tag(article_id, tag_id)
+      VALUES (:articleId, :tagId)
+      """)
+  void insertArticleTag(
+      @Param("articleId") Long articleId,
+      @Param("tagId") Long tagId
+  );
 }

@@ -2,6 +2,8 @@ package com.example.springtraining.domain.form;
 
 import com.example.springtraining.domain.entity.Article;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -11,6 +13,12 @@ public class ArticleForm {
 
   private String title;
   private String content;
+  private List<Long> tagIds;
+
+  // 記事新規作成画面表示用に、空のArticleFormを作成する。
+  public static ArticleForm empty() {
+    return new ArticleForm(null, null, new ArrayList<>());
+  }
 
   // 新規登録用のArticleを作成して返す。
   public Article toNewArticle() {

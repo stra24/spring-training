@@ -22,7 +22,7 @@
       text-align: left;
       width: 160px;
     }
-    input, textarea {
+    input[type="text"], textarea {
       width: 100%;
       box-sizing: border-box;
     }
@@ -44,6 +44,16 @@
       flex-wrap: wrap;
       margin-top: 10px;
     }
+    .tag-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px 16px;
+    }
+    .tag-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
   </style>
 </head>
 <body>
@@ -64,6 +74,17 @@
     <tr>
       <th>本文</th>
       <td><textarea th:field="*{content}"></textarea></td>
+    </tr>
+    <tr>
+      <th>タグ</th>
+      <td>
+        <div class="tag-list">
+          <label class="tag-item" th:each="t : ${tags}">
+            <input type="checkbox" th:field="*{tagIds}" th:value="${t.id}">
+            <span th:text="${t.name}">Java</span>
+          </label>
+        </div>
+      </td>
     </tr>
     </tbody>
   </table>
