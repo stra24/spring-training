@@ -1,4 +1,4 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.controller.api;
 
 import java.util.Map;
 import org.springframework.web.bind.annotation.GetMapping;

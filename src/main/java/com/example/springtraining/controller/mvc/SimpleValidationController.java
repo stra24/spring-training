@@ -1,4 +1,4 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.controller.mvc;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

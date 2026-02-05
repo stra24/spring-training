@@ -1,4 +1,4 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.controller.mvc;
 
 import com.example.springtraining.domain.FullName;
 import com.example.springtraining.domain.Profile;

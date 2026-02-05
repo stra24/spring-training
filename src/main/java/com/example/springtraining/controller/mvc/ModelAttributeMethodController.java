@@ -1,4 +1,4 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.controller.mvc;
 
 import com.example.springtraining.domain.RegisterForm;
 import java.time.LocalDate;

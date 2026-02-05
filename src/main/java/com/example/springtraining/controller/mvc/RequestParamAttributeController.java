@@ -1,4 +1,4 @@
-package com.example.springtraining.controller;
+package com.example.springtraining.controller.mvc;
 
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
