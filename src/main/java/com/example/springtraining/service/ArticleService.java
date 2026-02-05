@@ -8,6 +8,7 @@ import com.example.springtraining.domain.entity.Article;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.domain.row.ArticleCommentRow;
+import com.example.springtraining.exception.ResourceNotFoundException;
 import com.example.springtraining.repository.ArticleRepository;
 import com.example.springtraining.repository.TagRepository;
 import jakarta.annotation.Nullable;
@@ -120,7 +121,7 @@ public class ArticleService {
 
     // 1) 記事が存在しない場合（JOIN結果が0行）は例外を投げる。
     if (rows.isEmpty()) {
-      throw new IllegalArgumentException("記事が見つかりませんでした。id = " + id);
+      throw new ResourceNotFoundException(Article.class, String.valueOf(id));
     }
 
     // 2) 記事情報（親）は全行共通なので先頭行から拾う。
