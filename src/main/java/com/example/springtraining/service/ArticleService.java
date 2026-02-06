@@ -5,13 +5,16 @@ import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.dto.CommentDto;
 import com.example.springtraining.domain.dto.TagDto;
 import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.entity.Comment;
 import com.example.springtraining.domain.entity.Tag;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.domain.form.CommentForm;
 import com.example.springtraining.domain.request.ArticleCreateRequest;
+import com.example.springtraining.domain.request.ArticleUpdateRequest;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import com.example.springtraining.exception.ResourceNotFoundException;
 import com.example.springtraining.repository.ArticleRepository;
+import com.example.springtraining.repository.CommentRepository;
 import com.example.springtraining.repository.TagRepository;
 import jakarta.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,6 +33,7 @@ public class ArticleService {
 
   private final CommentService commentService;
   private final ArticleRepository articleRepository;
+  private final CommentRepository commentRepository;
   private final TagRepository tagRepository;
 
   private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
@@ -108,6 +112,36 @@ public class ArticleService {
     // 5. 中間テーブルに保存
     List<Long> tagIds = (form.getTagIds() == null) ? List.of() : form.getTagIds();
     tagIds.forEach(tagId -> articleRepository.createArticleTag(articleForUpdate.getId(), tagId));
+  }
+
+  // 更新する。
+  @Transactional
+  public ArticleDetailDto updateArticle(Long id, ArticleUpdateRequest request) {
+    // 1. 既存の記事を取得する。
+    Article article = articleRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(Article.class, String.valueOf(id)));
+
+    // 2. リクエストの内容を既存の記事に上書きする。
+    Article articleForUpdate = request.toUpdatedArticle(article);
+
+    // 3. 記事を上書き保存する。
+    Article updatedArticle = articleRepository.save(articleForUpdate);
+
+    // 4. 中間テーブルを全削除する。
+    articleRepository.deleteArticleTags(id);
+
+    // 5. 中間テーブルに保存する。
+    List<Long> tagIds = (request.getTagIds() == null) ? List.of() : request.getTagIds();
+    tagIds.forEach(tagId -> articleRepository.createArticleTag(updatedArticle.getId(), tagId));
+
+    // 6. 記事に紐づくタグ一覧を取得する。
+    List<Tag> tags = tagRepository.findTagsByArticleId(updatedArticle.getId());
+
+    // 7. 記事に紐づくコメント一覧を取得する。
+    List<Comment> comments = commentRepository.findCommentsByArticleId(updatedArticle.getId());
+
+    // 8. 記事詳細を生成して返す。
+    return ArticleDetailDto.from(updatedArticle, comments, tags);
   }
 
   // 削除する。

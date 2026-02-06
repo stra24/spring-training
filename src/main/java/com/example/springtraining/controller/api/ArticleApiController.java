@@ -3,6 +3,7 @@ package com.example.springtraining.controller.api;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.request.ArticleCreateRequest;
+import com.example.springtraining.domain.request.ArticleUpdateRequest;
 import com.example.springtraining.service.ArticleService;
 import com.example.springtraining.service.CommentService;
 import com.example.springtraining.service.TagService;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,5 +47,14 @@ public class ArticleApiController {
   @ResponseStatus(HttpStatus.CREATED)
   public ArticleDetailDto createArticle(@RequestBody ArticleCreateRequest request) {
     return articleService.createArticle(request);
+  }
+
+  // 更新
+  @PutMapping("/{id}")
+  public ArticleDetailDto updateArticle(
+      @PathVariable Long id,
+      @RequestBody ArticleUpdateRequest request
+  ) {
+    return articleService.updateArticle(id, request);
   }
 }
