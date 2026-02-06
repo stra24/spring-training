@@ -32,13 +32,13 @@ public class ArticleApiController {
 
   // 一覧取得
   @GetMapping
-  public List<ArticleDto> showArticles(@Nullable @RequestParam(required = false) String keyword) {
+  public List<ArticleDto> getArticles(@Nullable @RequestParam(required = false) String keyword) {
     return articleService.searchArticles(keyword);
   }
 
   // 詳細取得（記事＋コメント）
   @GetMapping("/{id}")
-  public ArticleDetailDto showArticle(@PathVariable Long id) {
+  public ArticleDetailDto getArticle(@PathVariable Long id) {
     return articleService.getArticleDetail(id);
   }
 
