@@ -5,13 +5,16 @@ import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.dto.CommentDto;
 import com.example.springtraining.domain.dto.TagDto;
 import com.example.springtraining.domain.entity.Article;
+import com.example.springtraining.domain.entity.Tag;
 import com.example.springtraining.domain.form.ArticleForm;
 import com.example.springtraining.domain.form.CommentForm;
+import com.example.springtraining.domain.request.ArticleCreateRequest;
 import com.example.springtraining.domain.row.ArticleCommentRow;
 import com.example.springtraining.exception.ResourceNotFoundException;
 import com.example.springtraining.repository.ArticleRepository;
 import com.example.springtraining.repository.TagRepository;
 import jakarta.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -65,6 +68,25 @@ public class ArticleService {
     // 2. 採番された記事IDで中間テーブルに保存する。
     List<Long> tagIds = (form.getTagIds() == null) ? List.of() : form.getTagIds();
     tagIds.forEach(tagId -> articleRepository.createArticleTag(createdArticle.getId(), tagId));
+  }
+
+  // 新規作成する。
+  @Transactional
+  public ArticleDetailDto createArticle(ArticleCreateRequest request) {
+    Article article = request.toNewArticle();
+
+    // 1. 記事を保存して保存後の記事を取得。（採番されたIDが代入されてある）
+    Article createdArticle = articleRepository.save(article);
+
+    // 2. 採番された記事IDで中間テーブルに保存する。
+    List<Long> tagIds = (request.getTagIds() == null) ? List.of() : request.getTagIds();
+    tagIds.forEach(tagId -> articleRepository.createArticleTag(createdArticle.getId(), tagId));
+
+    // 3. 記事に紐づくタグ一覧を取得する。
+    List<Tag> tags = tagRepository.findTagsByArticleId(createdArticle.getId());
+
+    // 4. 記事詳細を生成して返す。
+    return ArticleDetailDto.from(createdArticle, new ArrayList<>(), tags);
   }
 
   // 更新する。
