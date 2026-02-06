@@ -11,6 +11,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,5 +57,12 @@ public class ArticleApiController {
       @RequestBody ArticleUpdateRequest request
   ) {
     return articleService.updateArticle(id, request);
+  }
+
+  // 削除
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteArticle(@PathVariable Long id) {
+    articleService.deleteArticle(id);
   }
 }

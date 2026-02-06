@@ -147,6 +147,10 @@ public class ArticleService {
   // 削除する。
   @Transactional
   public void deleteArticle(Long id) {
+    // 既存の記事が存在するかチェックして、存在すれば削除する。存在しなければ例外を投げる。
+    articleRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException(Article.class, String.valueOf(id)));
+
     articleRepository.deleteById(id);
   }
 
