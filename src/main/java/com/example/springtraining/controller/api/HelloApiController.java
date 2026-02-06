@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class HelloApiController {
 
   @GetMapping("/text")
-  public String getTest() {
+  public String getText() {
     // "hello" というテキストがレスポンスボディの内容として返される。
     return "hello";
   }
