@@ -393,4 +393,16 @@ public class ArticleService {
 
     return response.getBody();
   }
+
+  // 記事更新APIを呼び出す。
+  @Transactional
+  public ArticleDetailDto updateArticleByApi(Long id, ArticleUpdateRequest request) {
+    return articleApiClient.updateArticle(id, request);
+  }
+
+  // 記事削除APIを呼び出す。
+  @Transactional
+  public void deleteArticleByApi(Long id) {
+    articleApiClient.deleteArticle(id);
+  }
 }

@@ -3,6 +3,7 @@ package com.example.springtraining.client;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.request.ArticleCreateRequest;
+import com.example.springtraining.domain.request.ArticleUpdateRequest;
 import jakarta.annotation.Nullable;
 import java.net.URI;
 import java.util.Arrays;
@@ -11,9 +12,16 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
@@ -78,5 +86,62 @@ public class ArticleApiClient {
   ) {
     String url = baseUrl + "/api/articles";
     return restTemplate.postForEntity(url, request, ArticleDetailDto.class);
+  }
+
+  /**
+   * 記事を更新する（PUT /api/articles/{id}）。exchange を使って PUT を実行する。
+   */
+  public ArticleDetailDto updateArticle(Long id, ArticleUpdateRequest request) {
+    String url = baseUrl + "/api/articles/" + id;
+
+    // ヘッダーを設定（JSONを送るため、Content-Type は application/json をセットする）
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    // ボディ + ヘッダー を HttpEntity にまとめる
+    HttpEntity<ArticleUpdateRequest> httpEntity =
+        new HttpEntity<>(request, headers);
+
+    try {
+      ResponseEntity<ArticleDetailDto> response = restTemplate.exchange(
+          url,
+          HttpMethod.PUT,
+          httpEntity,
+          ArticleDetailDto.class
+      );
+
+      return response.getBody();
+
+    } catch (HttpClientErrorException.NotFound e) {
+      // RestTemplate が受け取った 404 を、呼び出し元でも ステータスコード:404 の例外 として返したいので、
+      // ResponseStatusException(404) に変換して投げ直す。
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          e.getMessage(),
+          e
+      );
+    }
+  }
+
+  /**
+   * 記事を削除する（DELETE /api/articles/{id}）。exchange を使って DELETE を実行する。
+   */
+  public void deleteArticle(Long id) {
+    String url = baseUrl + "/api/articles/" + id;
+
+    try {
+      restTemplate.exchange(
+          url,
+          HttpMethod.DELETE,
+          null, // DELETE の場合、通常ボディは不要なのでnullを指定。
+          Void.class
+      );
+
+    } catch (HttpClientErrorException.NotFound e) {
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND,
+          e.getMessage(),
+          e
+      );
+    }
   }
 }

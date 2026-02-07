@@ -3,14 +3,17 @@ package com.example.springtraining.controller.api;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.request.ArticleCreateRequest;
+import com.example.springtraining.domain.request.ArticleUpdateRequest;
 import com.example.springtraining.service.ArticleService;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,5 +51,21 @@ public class RestTemplateArticleApiController {
   @ResponseStatus(HttpStatus.CREATED)
   public ArticleDetailDto createArticleByPostForEntity(@RequestBody ArticleCreateRequest request) {
     return articleService.createArticleByPostForEntity(request);
+  }
+
+  // 更新
+  @PutMapping("/{id}")
+  public ArticleDetailDto updateArticle(
+      @PathVariable Long id,
+      @RequestBody ArticleUpdateRequest request
+  ) {
+    return articleService.updateArticleByApi(id, request);
+  }
+
+  // 削除
+  @DeleteMapping("/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteArticle(@PathVariable Long id) {
+    articleService.deleteArticleByApi(id);
   }
 }
