@@ -31,7 +31,8 @@ public class ArticleApiController {
   // 一覧取得
   @GetMapping
   public ResponseEntity<List<ArticleDto>> getArticles(
-      @Nullable @RequestParam(required = false) String keyword) {
+      @Nullable @RequestParam(required = false) String keyword
+  ) {
     List<ArticleDto> dtoList = articleService.searchArticles(keyword);
     return ResponseEntity.ok(dtoList);
   }
