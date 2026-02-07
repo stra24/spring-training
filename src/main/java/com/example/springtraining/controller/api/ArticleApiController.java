@@ -61,4 +61,10 @@ public class ArticleApiController {
   public void deleteArticle(@PathVariable Long id) {
     articleService.deleteArticle(id);
   }
+
+  // RuntimeExceptionを発生させる
+  @GetMapping("/error")
+  public ArticleDto errorDemo() {
+    throw new RuntimeException("テスト用の想定外エラーです");
+  }
 }

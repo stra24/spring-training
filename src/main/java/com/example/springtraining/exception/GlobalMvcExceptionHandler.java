@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ControllerAdvice
-public class GlobalExceptionHandler {
+/**
+ * Thymeleaf向けの共通例外ハンドラ。
+ */
+@ControllerAdvice(basePackages = "com.example.springtraining.controller.mvc")
+public class GlobalMvcExceptionHandler {
 
   // NullPointerException を拾う
   @ExceptionHandler(NullPointerException.class)
