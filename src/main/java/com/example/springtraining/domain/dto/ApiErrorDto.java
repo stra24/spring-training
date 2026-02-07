@@ -5,7 +5,7 @@ import java.time.Instant;
 /**
  * REST API 共通のエラーレスポンス。
  */
-public record ApiErrorResponse(
+public record ApiErrorDto(
     int status,
     String message,
     String path,

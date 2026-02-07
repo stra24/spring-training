@@ -1,6 +1,6 @@
 package com.example.springtraining.exception;
 
-import com.example.springtraining.domain.dto.ApiErrorResponse;
+import com.example.springtraining.domain.dto.ApiErrorDto;
 import jakarta.servlet.http.HttpServletRequest;
 import java.time.Instant;
 import org.slf4j.Logger;
@@ -22,11 +22,11 @@ public class GlobalApiExceptionHandler {
    * リソースが見つからない場合（404）の例外処理を行う。
    */
   @ExceptionHandler(ResourceNotFoundException.class)
-  public ResponseEntity<ApiErrorResponse> handleResourceNotFoundException(
+  public ResponseEntity<ApiErrorDto> handleResourceNotFoundException(
       ResourceNotFoundException ex,
       HttpServletRequest request
   ) {
-    ApiErrorResponse body = new ApiErrorResponse(
+    ApiErrorDto body = new ApiErrorDto(
         HttpStatus.NOT_FOUND.value(),
         ex.getMessage(),
         request.getRequestURI(),
@@ -40,14 +40,14 @@ public class GlobalApiExceptionHandler {
    * 「想定外エラー」（500）の例外処理を行う。
    */
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<ApiErrorResponse> handleException(
+  public ResponseEntity<ApiErrorDto> handleException(
       Exception ex,
       HttpServletRequest request
   ) {
     // ログ出力
     log.error(ex.getMessage());
 
-    ApiErrorResponse body = new ApiErrorResponse(
+    ApiErrorDto body = new ApiErrorDto(
         HttpStatus.INTERNAL_SERVER_ERROR.value(),
         "予期しないエラーが発生しました。",
         request.getRequestURI(),
