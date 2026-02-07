@@ -3,8 +3,6 @@ package com.example.springtraining.controller.api;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.service.ArticleService;
-import com.example.springtraining.service.CommentService;
-import com.example.springtraining.service.TagService;
 import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,8 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleApiController {
 
   private final ArticleService articleService;
-  private final CommentService commentService;
-  private final TagService tagService;
 
   // 一覧取得
   @GetMapping
