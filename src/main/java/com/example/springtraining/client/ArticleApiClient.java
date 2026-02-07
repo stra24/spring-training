@@ -2,6 +2,7 @@ package com.example.springtraining.client;
 
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
+import jakarta.annotation.Nullable;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,7 +31,7 @@ public class ArticleApiClient {
   /**
    * 記事一覧を取得する（GET /api/articles）。getForObject を使って「レスポンスボディだけ」を受け取る例。
    */
-  public List<ArticleDto> getArticles(String keyword) {
+  public List<ArticleDto> getArticles(@Nullable String keyword) {
     URI uri = UriComponentsBuilder
         .fromUriString(baseUrl)
         .path("/api/articles")
