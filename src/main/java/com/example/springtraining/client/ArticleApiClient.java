@@ -2,6 +2,7 @@ package com.example.springtraining.client;
 
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
+import com.example.springtraining.domain.request.ArticleCreateRequest;
 import jakarta.annotation.Nullable;
 import java.net.URI;
 import java.util.Arrays;
@@ -57,5 +58,25 @@ public class ArticleApiClient {
 
     // GET /api/articles/{id} のAPIを実行して、そのレスポンス全体を受け取る。
     return restTemplate.getForEntity(url, ArticleDetailDto.class);
+  }
+
+  /**
+   * 記事を登録する（POST /api/articles）。postForObject を使って、レスポンスボディだけを受け取る例。
+   */
+  public ArticleDetailDto createArticleByPostForObject(
+      ArticleCreateRequest request
+  ) {
+    String url = baseUrl + "/api/articles";
+    return restTemplate.postForObject(url, request, ArticleDetailDto.class);
+  }
+
+  /**
+   * 記事を登録する（POST /api/articles）。postForEntityを使って、レスポンス全体を受け取る例。
+   */
+  public ResponseEntity<ArticleDetailDto> createArticleByPostForEntity(
+      ArticleCreateRequest request
+  ) {
+    String url = baseUrl + "/api/articles";
+    return restTemplate.postForEntity(url, request, ArticleDetailDto.class);
   }
 }

@@ -375,4 +375,22 @@ public class ArticleService {
 
     return response.getBody();
   }
+
+  // 記事登録APIを呼び出す。（postForObjectを使用）
+  @Transactional
+  public ArticleDetailDto createArticleByPostForObject(ArticleCreateRequest request) {
+    return articleApiClient.createArticleByPostForObject(request);
+  }
+
+  // 記事登録APIを呼び出す。（postForEntityを使用）
+  @Transactional
+  public ArticleDetailDto createArticleByPostForEntity(ArticleCreateRequest request) {
+    ResponseEntity<ArticleDetailDto> response =
+        articleApiClient.createArticleByPostForEntity(request);
+
+    log.info("ステータスコード: {}", response.getStatusCode());
+    log.info("レスポンスヘッダー: {}", response.getHeaders());
+
+    return response.getBody();
+  }
 }
