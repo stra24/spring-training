@@ -38,6 +38,8 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jdbc' // Spring Data JDBC 本体
     runtimeOnly 'org.postgresql:postgresql' // PostgreSQL の JDBC ドライバ
+
+    implementation 'org.springframework.boot:spring-boot-starter-restclient' // RestTemplateを使う際に必要
 }
 
 tasks.named('test') {

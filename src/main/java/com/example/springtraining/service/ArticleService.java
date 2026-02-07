@@ -1,5 +1,6 @@
 package com.example.springtraining.service;
 
+import com.example.springtraining.client.ArticleApiClient;
 import com.example.springtraining.domain.dto.ArticleDetailDto;
 import com.example.springtraining.domain.dto.ArticleDto;
 import com.example.springtraining.domain.dto.CommentDto;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public class ArticleService {
   private final ArticleRepository articleRepository;
   private final CommentRepository commentRepository;
   private final TagRepository tagRepository;
+  private final ArticleApiClient articleApiClient;
 
   private static final Logger log = LoggerFactory.getLogger(ArticleService.class);
 
@@ -354,5 +357,22 @@ public class ArticleService {
     // 3. すぐに保存（本Serviceのメソッド終了時にトランザクションが終わり、ロックが解放される）
     articleRepository.save(articleForUpdate);
     log.info("@Query + 速い更新のメソッドで悲観ロックを解除しました。");
+  }
+
+  // 記事一覧取得APIを呼び出して、記事一覧を取得。
+  @Transactional(readOnly = true)
+  public List<ArticleDto> getArticlesByApi(@Nullable String keyword) {
+    return articleApiClient.getArticles(keyword);
+  }
+
+  // 記事詳細取得APIを呼び出して、記事詳細を取得。
+  @Transactional(readOnly = true)
+  public ArticleDetailDto getArticleByApi(Long id) {
+    ResponseEntity<ArticleDetailDto> response = articleApiClient.getArticle(id);
+
+    log.info("ステータスコード: {}", response.getStatusCode());
+    log.info("レスポンスヘッダー: {}", response.getHeaders());
+
+    return response.getBody();
   }
 }
