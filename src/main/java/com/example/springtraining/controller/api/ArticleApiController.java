@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,8 +30,10 @@ public class ArticleApiController {
 
   // 一覧取得
   @GetMapping
-  public List<ArticleDto> getArticles(@Nullable @RequestParam(required = false) String keyword) {
-    return articleService.searchArticles(keyword);
+  public ResponseEntity<List<ArticleDto>> getArticles(
+      @Nullable @RequestParam(required = false) String keyword) {
+    List<ArticleDto> dtoList = articleService.searchArticles(keyword);
+    return ResponseEntity.ok(dtoList);
   }
 
   // 詳細取得（記事＋コメント）
@@ -57,9 +60,9 @@ public class ArticleApiController {
 
   // 削除
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteArticle(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
     articleService.deleteArticle(id);
+    return ResponseEntity.noContent().build();
   }
 
   // RuntimeExceptionを発生させる
